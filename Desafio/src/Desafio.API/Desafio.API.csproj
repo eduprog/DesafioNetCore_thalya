@@ -15,4 +15,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Desafio.Infrastructure\Desafio.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

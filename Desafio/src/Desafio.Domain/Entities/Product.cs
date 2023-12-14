@@ -1,4 +1,4 @@
-﻿namespace Desafio.Domain.Entities;
+﻿namespace Desafio.Domain;
 
 public class Product : Entity
 {
