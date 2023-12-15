@@ -7,7 +7,8 @@ public static class Startup
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
-        services.AddDatabaseInformation(config);
+        services
+            .AddDatabaseInformation(config);
         return services;
     }
 }

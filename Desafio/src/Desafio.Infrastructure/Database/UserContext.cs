@@ -3,15 +3,13 @@ using Desafio.Domain;
 
 namespace Desafio.Infrastructure;
 
-public class Context : DbContext
+public class UserContext : DbContext
 {
     #region DbSet
-    public DbSet<Unit> Units => Set<Unit>();
-    public DbSet<Person> People => Set<Person>();
-    public DbSet<Product> Products => Set<Product>();
+    public DbSet<User> Users => Set<User>();
     #endregion
 
-    public Context(DbContextOptions<Context> options) : base(options)
+    public UserContext(DbContextOptions<UserContext> options) : base(options)
     {
 
     }

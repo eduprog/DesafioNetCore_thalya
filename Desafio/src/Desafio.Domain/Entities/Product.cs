@@ -7,7 +7,7 @@ public class Product : Entity
     public string Acronym { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public decimal StoredQuantity { get; set; }
-    public bool Active { get; set; } = true;
+    public bool Enable { get; set; } = true;
     public bool Salable { get; set; } = false;
     public string BarCode { get; set; } = string.Empty;
 

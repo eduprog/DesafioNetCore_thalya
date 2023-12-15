@@ -18,7 +18,21 @@ internal static class StartupDatabase
 
             //Utilizar Postgres
 
-            var strConnectionUser = config.GetConnectionString("Host=localhost;Port=5432;Database=desafio_identity;Username=postgres;Password=12345");
+            var strConnectionUser = config.GetConnectionString("PgsqlConnectionIdentity");
+            options.UseNpgsql(strConnectionUser);
+        });
+
+        services.AddDbContext<Context>(options =>
+        {
+            //Utilizar Banco InMemory
+            //options.UseInMemoryDatabase(databaseName: "Desafio_Identidade");
+            //services.AddInicialInformation(config);
+
+            //Utilizar SqLite
+
+            //Utilizar Postgres
+
+            var strConnectionUser = config.GetConnectionString("PgsqlConnection");
             options.UseNpgsql(strConnectionUser);
         });
 
@@ -26,4 +40,5 @@ internal static class StartupDatabase
         //services.AddScoped<IEmpresaRepository, EmpresaRepository>();
         return services;
     }
+    
 }
