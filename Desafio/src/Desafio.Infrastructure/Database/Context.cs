@@ -3,13 +3,18 @@ using Desafio.Domain;
 
 namespace Desafio.Infrastructure;
 
-public class Context : DbContext
+public class UserContext : DbContext
 {
-    public DbSet<Person> People => Set<Person>();
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        string stringConnection = "Host=localhost;Port=5432;Database=microplan;Username=postgres;Password=12345";
+    public DbSet<User> Users => Set<User>();
 
-        optionsBuilder.UseNpgsql(stringConnection);
+    public UserContext(DbContextOptions<UserContext> options) : base(options)
+    {
+
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.HasDefaultSchema("public");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserContext).Assembly);
     }
 }
