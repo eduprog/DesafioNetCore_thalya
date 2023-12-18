@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Desafio.Infrastructure.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20231215204200_V_00_01")]
+    [Migration("20231218120543_V_00_01")]
     partial class V_00_01
     {
         /// <inheritdoc />
