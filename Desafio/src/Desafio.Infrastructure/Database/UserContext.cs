@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Desafio.Domain;
+using Desafio.Infrastructure.Mapping;
 
 namespace Desafio.Infrastructure;
 
@@ -17,6 +18,6 @@ public class UserContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("public");
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserContext).Assembly);
+        modelBuilder.ApplyConfiguration(new UserMapping());
     }
 }

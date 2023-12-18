@@ -10,31 +10,15 @@ internal static class StartupDatabase
     {
         services.AddDbContext<UserContext>(options =>
         {
-            //Utilizar Banco InMemory
-            //options.UseInMemoryDatabase(databaseName: "Desafio_Identidade");
-            //services.AddInicialInformation(config);
-
-            //Utilizar SqLite
-
             //Utilizar Postgres
-
-            var strConnectionUser = config.GetConnectionString("PgsqlConnectionIdentity");
-            options.UseNpgsql(strConnectionUser);
+            options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
         });
 
-        services.AddDbContext<Context>(options =>
-        {
-            //Utilizar Banco InMemory
-            //options.UseInMemoryDatabase(databaseName: "Desafio_Identidade");
-            //services.AddInicialInformation(config);
-
-            //Utilizar SqLite
-
-            //Utilizar Postgres
-
-            var strConnectionUser = config.GetConnectionString("PgsqlConnection");
-            options.UseNpgsql(strConnectionUser);
-        });
+        //services.AddDbContext<AppDbContext>(options =>
+        //{
+        //    //Utilizar Postgres
+        //    options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
+        //});
 
         //services.AddScoped<IPessoaRepository, PessoaRepository>();
         //services.AddScoped<IEmpresaRepository, EmpresaRepository>();
