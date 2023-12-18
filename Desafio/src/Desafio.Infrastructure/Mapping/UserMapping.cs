@@ -14,9 +14,9 @@ public class UserMapping : IEntityTypeConfiguration<User>
         user.HasKey(x => x.Id);
 
         user.Property( x=> x.Name).HasColumnName("name").IsRequired();
-        user.Property( x=> x.NickName).HasColumnName("nick_name").IsRequired();
-        user.Property( x=> x.Email).HasColumnName("email").IsRequired();
-        user.Property( x=> x.Document).HasColumnName("document").IsRequired();
+        user.Property( x=> x.NickName).HasColumnName("nick_name");
+        user.Property( x=> x.Email).HasColumnName("email");
+        user.Property( x=> x.Document).HasColumnName("document");
         user.Property( x=> x.Password).HasColumnName("password").IsRequired();
         user.Property( x=> x.UserLevel).HasColumnName("user_level").IsRequired();
 
