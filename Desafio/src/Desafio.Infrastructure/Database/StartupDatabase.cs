@@ -14,11 +14,11 @@ internal static class StartupDatabase
             options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
         });
 
-        //services.AddDbContext<AppDbContext>(options =>
-        //{
-        //    //Utilizar Postgres
-        //    options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
-        //});
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            //Utilizar Postgres
+            options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
+        });
 
         //services.AddScoped<IPessoaRepository, PessoaRepository>();
         //services.AddScoped<IEmpresaRepository, EmpresaRepository>();
