@@ -1,6 +1,6 @@
 ﻿using Desafio.Domain;
 
-namespace Desafio.Application;
+namespace Desafio.Infrastructure;
 public interface IPersonService
 {
     Task InsertAsync(Person product);

@@ -1,20 +1,20 @@
 ﻿using Desafio.Domain;
 
-namespace Desafio.Application;
+namespace Desafio.Infrastructure;
 
-public class UnitService : IUnitService
+public class ProductService : IProductService
 {
-    public Task<Unit> GetAllAsync()
+    public Task<Product> GetAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<Unit> GetByIdAsync(int id)
+    public Task<Product> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task InsertAsync(Unit product)
+    public Task InsertAsync(Product product)
     {
         throw new NotImplementedException();
     }
@@ -24,7 +24,7 @@ public class UnitService : IUnitService
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Unit product)
+    public Task UpdateAsync(Product product)
     {
         throw new NotImplementedException();
     }

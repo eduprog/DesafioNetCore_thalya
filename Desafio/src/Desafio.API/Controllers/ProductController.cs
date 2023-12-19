@@ -1,15 +1,25 @@
 ﻿using Desafio.Domain;
+using Desafio.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ProductController
+public class UnitController : ControllerBase
 {
-    [HttpGet()]
-    public async Task<IEnumerable<Product>> GetAll()
+    private readonly IUnitService _unitService;
+
+    public UnitController(IUnitService unitService)
     {
-        return null;
+        _unitService = unitService;
+    }
+
+    [HttpPost]
+    public async Task<Guid> PostUnitAsync(Unit unit)
+    {
+        Unit newUnit = await _unitService.InsertAsync(unit);
+        Guid idUnit = newUnit.Id;
+        return idUnit;
     }
 }

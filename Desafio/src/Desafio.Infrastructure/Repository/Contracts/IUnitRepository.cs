@@ -8,5 +8,5 @@ public interface IUnitRepository
     Task UpdateAsync(Unit product);
     Task RemoveAsync(int id);
     Task<Unit> GetByIdAsync(int id);
-    Task<Unit> GetAllAsync();
+    Task<List<Unit>> GetAllAsync();
 }

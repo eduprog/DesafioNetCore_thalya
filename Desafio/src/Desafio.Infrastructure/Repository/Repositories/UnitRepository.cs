@@ -4,7 +4,7 @@ namespace Desafio.Infrastructure;
 
 public class UnitRepository : IUnitRepository
 {
-    public Task<Unit> GetAllAsync()
+    public Task<List<Unit>> GetAllAsync()
     {
         throw new NotImplementedException();
     }

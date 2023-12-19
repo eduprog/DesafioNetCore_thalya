@@ -5,13 +5,13 @@ VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1ED062F-715B-47AF-85C5-6676267E7934}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desafio.Domain", "src\Desafio.Domain\Desafio.Domain.csproj", "{EFDD38E2-4243-4188-8D9C-C503140C9F9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.Domain", "src\Desafio.Domain\Desafio.Domain.csproj", "{EFDD38E2-4243-4188-8D9C-C503140C9F9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desafio.Application", "src\Desafio.Application\Desafio.Application.csproj", "{43202B12-41A5-46C8-8BB8-D15442C2D606}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.Application", "src\Desafio.Application\Desafio.Application.csproj", "{43202B12-41A5-46C8-8BB8-D15442C2D606}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desafio.Infrastructure", "src\Desafio.Infrastructure\Desafio.Infrastructure.csproj", "{1D69DDD7-836F-4AEA-9CCE-3F45E949F282}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.Infrastructure", "src\Desafio.Infrastructure\Desafio.Infrastructure.csproj", "{1D69DDD7-836F-4AEA-9CCE-3F45E949F282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desafio.API", "src\Desafio.API\Desafio.API.csproj", "{2BB6329D-985C-4F68-8380-D1436242A9D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.API", "src\Desafio.API\Desafio.API.csproj", "{2BB6329D-985C-4F68-8380-D1436242A9D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,4 @@
-﻿using Desafio.Application;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Desafio.Infrastructure;
 
