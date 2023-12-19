@@ -20,8 +20,11 @@ internal static class StartupDatabase
             options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
         });
 
-        //services.AddScoped<IPessoaRepository, PessoaRepository>();
-        //services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUnitRepository, UnitRepository>();
+
         return services;
     }
     
