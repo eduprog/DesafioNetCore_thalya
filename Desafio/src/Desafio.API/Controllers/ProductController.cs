@@ -22,4 +22,9 @@ public class UnitController : ControllerBase
         Guid idUnit = newUnit.Id;
         return idUnit;
     }
+    //[HttpGet("{acronym:string}")]
+    //public async Task<Unit> GetUnitAsync(string acronym)
+    //{
+    //    return await _unitService.GetByAcronymAsync(acronym);
+    //}
 }

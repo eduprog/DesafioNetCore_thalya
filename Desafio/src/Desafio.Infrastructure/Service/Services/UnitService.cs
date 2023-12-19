@@ -17,25 +17,26 @@ public class UnitService : IUnitService
         return getUnits;
     }
 
-    public async Task<Unit> GetByIdAsync(int id)
+    public async Task<Unit> GetByAcronymAsync(string acronym)
     {
-        var unit = await _unitRepository.GetByIdAsync(id);
+        var unit = await _unitRepository.GetByAcronymAsync(acronym);
         return unit;
     }
 
     public async Task<Unit> InsertAsync(Unit unit)
     {
+        unit.Id = Guid.NewGuid();
         await _unitRepository.InsertAsync(unit);
         return unit;
     }
 
-    public async Task RemoveAsync(int id)
+    public async Task RemoveAsync(string acronym)
     {
-        await _unitRepository.RemoveAsync(id);
+        await _unitRepository.RemoveAsync(acronym);
     }
 
-    public async Task UpdateAsync(Unit unit)
+    public void UpdateAsync(Unit unit)
     {
-        await _unitRepository.UpdateAsync(unit);
+        _unitRepository.UpdateAsync(unit);
     }
 }

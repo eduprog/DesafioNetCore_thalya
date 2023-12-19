@@ -5,8 +5,9 @@ namespace Desafio.Infrastructure;
 public interface IUnitRepository
 {
     Task InsertAsync(Unit product);
-    Task UpdateAsync(Unit product);
-    Task RemoveAsync(int id);
-    Task<Unit> GetByIdAsync(int id);
+    void UpdateAsync(Unit product);
+    Task RemoveAsync(string acronym);
+    Task<Unit> GetByAcronymAsync(string acronym);
     Task<List<Unit>> GetAllAsync();
+    Task<int> SaveChangesAsync();
 }

@@ -1,31 +1,49 @@
 ﻿using Desafio.Domain;
+using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace Desafio.Infrastructure;
 
 public class UnitRepository : IUnitRepository
 {
-    public Task<List<Unit>> GetAllAsync()
+
+    private readonly AppDbContext _appDbContext;
+
+    public UnitRepository(AppDbContext appDbContext)
     {
-        throw new NotImplementedException();
+        _appDbContext = appDbContext;
     }
 
-    public Task<Unit> GetByIdAsync(int id)
+    public async Task<List<Unit>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _appDbContext.Units.ToListAsync();
     }
 
-    public Task InsertAsync(Unit product)
+    public async Task<Unit> GetByAcronymAsync(string acronym)
     {
-        throw new NotImplementedException();
+        return await _appDbContext.Units.FirstOrDefaultAsync(x => x.Acronym == acronym);
     }
 
-    public Task RemoveAsync(int id)
+    public async Task InsertAsync(Unit unit)
     {
-        throw new NotImplementedException();
+        await _appDbContext.Units.AddAsync(unit);
+        await SaveChangesAsync();
     }
 
-    public Task UpdateAsync(Unit product)
+    public async Task RemoveAsync(string acronym)
     {
-        throw new NotImplementedException();
+        Unit unit = await GetByAcronymAsync(acronym);
+        _appDbContext.Units.Remove(unit);
+        await SaveChangesAsync();
+    }
+
+    public async void UpdateAsync(Unit unit)
+    {
+        _appDbContext.Update(unit);
+        await SaveChangesAsync();
+    }
+    public async Task<int> SaveChangesAsync()
+    {
+        return await _appDbContext.SaveChangesAsync();
     }
 }
