@@ -22,9 +22,16 @@ public class UnitController : ControllerBase
         Guid idUnit = newUnit.Id;
         return idUnit;
     }
-    //[HttpGet("{acronym:string}")]
-    //public async Task<Unit> GetUnitAsync(string acronym)
-    //{
-    //    return await _unitService.GetByAcronymAsync(acronym);
-    //}
+    [HttpGet]
+    public async Task<Unit> GetUnitAsync(string acronym)
+    {
+        return await _unitService.GetByAcronymAsync(acronym.ToUpper());
+    }
+    [HttpPut]
+    public async Task<string> PutUnitAsync(Unit unit)
+    {
+        Unit putUnit = await _unitService.GetByAcronymAsync(unit.Acronym.ToUpper());
+        _unitService.UpdateAsync(putUnit);
+        return "Editado com Sucesso";
+    }
 }

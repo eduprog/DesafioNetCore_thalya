@@ -9,7 +9,7 @@ public static class Startup
     {
         services
             .AddDatabaseInformation(config)
-            .AddServices();
+            .AddServices(config);
         return services;
     }
 }

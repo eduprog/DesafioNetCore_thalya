@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Desafio.Domain;
 
 namespace Desafio.Infrastructure;
 
@@ -13,6 +15,11 @@ internal static class StartupDatabase
             //Utilizar Postgres
             options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
         });
+
+        services.AddDefaultIdentity<User>() 
+            .AddRoles<IdentityRole>() 
+            .AddEntityFrameworkStores<UserContext>()
+            .AddDefaultTokenProviders();
 
         services.AddDbContext<AppDbContext>(options =>
         {
