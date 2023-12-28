@@ -39,11 +39,8 @@ namespace Desafio.API
         {
             if (userContext.Users.Any()) return;
 
-            var idUsuario = Guid.NewGuid();
-
             await userContext.Users.AddAsync(new User()
             {
-                Id = idUsuario,
                 Name = "Defaut User",
                 Password = "1", //LEMBRAR DE SALVAR EM HASH
                 UserLevel = EUserLevel.Administrator

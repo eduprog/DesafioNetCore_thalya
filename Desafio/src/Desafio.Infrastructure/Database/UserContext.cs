@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Desafio.Infrastructure;
 
-public class UserContext : IdentityDbContext
+public class UserContext : IdentityDbContext<User>
 {
     #region DbSet
     public DbSet<User> Users => Set<User>();

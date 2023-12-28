@@ -31,14 +31,19 @@ namespace Desafio.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "user",
                 schema: "public",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    nick_name = table.Column<string>(type: "text", nullable: true),
+                    email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    document = table.Column<string>(type: "text", nullable: true),
+                    password = table.Column<string>(type: "text", nullable: false),
+                    user_level = table.Column<int>(type: "integer", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: true),
@@ -50,24 +55,6 @@ namespace Desafio.Infrastructure.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "user",
-                schema: "public",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    nick_name = table.Column<string>(type: "text", nullable: true),
-                    email = table.Column<string>(type: "text", nullable: true),
-                    document = table.Column<string>(type: "text", nullable: true),
-                    password = table.Column<string>(type: "text", nullable: false),
-                    user_level = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,11 +99,11 @@ namespace Desafio.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        name: "FK_AspNetUserClaims_user_UserId",
                         column: x => x.UserId,
                         principalSchema: "public",
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalTable: "user",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -134,11 +121,11 @@ namespace Desafio.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        name: "FK_AspNetUserLogins_user_UserId",
                         column: x => x.UserId,
                         principalSchema: "public",
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalTable: "user",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -161,11 +148,11 @@ namespace Desafio.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        name: "FK_AspNetUserRoles_user_UserId",
                         column: x => x.UserId,
                         principalSchema: "public",
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalTable: "user",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -183,11 +170,11 @@ namespace Desafio.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        name: "FK_AspNetUserTokens_user_UserId",
                         column: x => x.UserId,
                         principalSchema: "public",
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalTable: "user",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -225,13 +212,13 @@ namespace Desafio.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 schema: "public",
-                table: "AspNetUsers",
+                table: "user",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 schema: "public",
-                table: "AspNetUsers",
+                table: "user",
                 column: "NormalizedUserName",
                 unique: true);
         }
@@ -260,15 +247,11 @@ namespace Desafio.Infrastructure.Migrations
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "user",
-                schema: "public");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles",
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers",
+                name: "user",
                 schema: "public");
         }
     }

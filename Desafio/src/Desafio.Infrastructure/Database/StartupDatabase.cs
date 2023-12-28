@@ -16,16 +16,22 @@ internal static class StartupDatabase
             options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
         });
 
-        services.AddDefaultIdentity<User>() 
-            .AddRoles<IdentityRole>() 
-            .AddEntityFrameworkStores<UserContext>()
-            .AddDefaultTokenProviders();
-
         services.AddDbContext<AppDbContext>(options =>
         {
             //Utilizar Postgres
             options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
         });
+
+
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<UserContext>()
+            .AddDefaultTokenProviders();
+
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+        });
+
 
         services.AddScoped<IPersonRepository, PersonRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
