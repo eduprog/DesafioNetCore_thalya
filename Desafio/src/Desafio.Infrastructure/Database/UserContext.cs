@@ -8,7 +8,7 @@ namespace Desafio.Infrastructure;
 public class UserContext : IdentityDbContext<User>
 {
     #region DbSet
-    public DbSet<User> Users => Set<User>();
+    //public DbSet<User> Users => Set<User>();
     #endregion
 
     public UserContext(DbContextOptions<UserContext> options) : base(options)
@@ -20,6 +20,6 @@ public class UserContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema("public");
-        modelBuilder.ApplyConfiguration(new UserMapping());
+        //modelBuilder.ApplyConfiguration(new UserMapping());
     }
 }

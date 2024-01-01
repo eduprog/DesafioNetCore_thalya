@@ -31,22 +31,23 @@ namespace Desafio.API
             await userContext.Database.MigrateAsync();
             await appDbContext.Database.MigrateAsync();
 
-            await EnsureSeedProducts(userContext);
+            //Usar caso for necessário criar dados iniciais
+            //await EnsureSeedProducts(userContext);
 
         }
 
-        public static async Task EnsureSeedProducts(UserContext userContext)
-        {
-            if (userContext.Users.Any()) return;
+        //public static async Task EnsureSeedProducts(UserContext userContext)
+        //{
+        //    if (userContext.Users.Any()) return;
 
-            await userContext.Users.AddAsync(new User()
-            {
-                Name = "Defaut User",
-                Password = "1", //LEMBRAR DE SALVAR EM HASH
-                UserLevel = EUserLevel.Administrator
-            });
+        //    await userContext.Users.AddAsync(new User()
+        //    {
+        //        Name = "Defaut User",
+        //        Password = "1", //LEMBRAR DE SALVAR EM HASH
+        //        UserLevel = EUserLevel.Administrator
+        //    });
 
-            await userContext.SaveChangesAsync();
-        }
+        //    await userContext.SaveChangesAsync();
+        //}
     }
 }
