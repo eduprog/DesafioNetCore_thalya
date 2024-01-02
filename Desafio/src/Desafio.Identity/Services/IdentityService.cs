@@ -1,8 +1,10 @@
 ﻿using Desafio.Application;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace Desafio.Identity;
 
@@ -25,20 +27,25 @@ public class IdentityService : IIdentityService
     {
         var result = await _signInManager.PasswordSignInAsync(loginUserRequest.Email, loginUserRequest.Password, false, true);
         if (result.Succeeded)
-            return await GenerateTokenAsync(loginUserRequest.Email);
+            return GenerateToken(loginUserRequest.Email);
 
         LoginUserResponse loginUserResponse = new LoginUserResponse(result.Succeeded);
-        if(!result.Succeeded)
+
+        List<string> errors = new List<string>();
+        if (!result.Succeeded)
         {
             if (result.IsLockedOut)
-                loginUserResponse.InsertError("E-mail is blocked.");
+                errors.Add("E-mail is blocked.");
             else if (result.IsNotAllowed)
-                loginUserResponse.InsertError("Permission Denied.");
+                errors.Add("Permission Denied.");
             else if (result.RequiresTwoFactor)
-                loginUserResponse.InsertError("Confirm your login in your second confirmation factor.");
+                errors.Add("Confirm your login in your second confirmation factor.");
             else
-                loginUserResponse.InsertError("Incorrect Login or Password.");
+                errors.Add("Incorrect Login or Password.");
+
+            loginUserResponse.InsertErrors(errors);
         }
+
         return loginUserResponse;
     }
 
@@ -63,30 +70,27 @@ public class IdentityService : IIdentityService
 
         return userRegisterResponse;
     }
-    private async Task<LoginUserResponse> GenerateTokenAsync(string email)
+    private LoginUserResponse GenerateToken(string email)
     {
-        var user = await _userManager.FindByEmailAsync(email);
-        var tokenClaims = await GetClaimsAsync(user);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
-        var dataExpiration = DateTime.Now.AddSeconds(_jwtOptions.Expiration);
+        var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+        {
+            Issuer = _jwtOptions.Sender,
+            Audience = _jwtOptions.ValidIn,
+            Expires = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        });
 
-        var jwt = new JwtSecurityToken(
-            issuer: _jwtOptions.Issuer,
-            audience: _jwtOptions.Audience,
-            //claims: tokenClaims,
-            notBefore: DateTime.Now,
-            expires: dataExpiration,
-            signingCredentials: _jwtOptions.SigningCredentials
-        );
-
-        var token = new JwtSecurityTokenHandler().WriteToken(jwt);
+        var encodedToken = tokenHandler.WriteToken(token);
 
         return new LoginUserResponse
         {
             Success = true,
-            Token = token,
-            DataExpiration = dataExpiration
-        };
+            Token = encodedToken,
+            DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour)
+        }; 
     }
     private async Task<IList<Claim>> GetClaimsAsync(IdentityUser user)
     {

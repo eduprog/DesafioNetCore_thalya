@@ -12,13 +12,6 @@ internal static class StartupService
 {
     internal static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        
-
-        services.AddDefaultIdentity<IdentityUser>()
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<IdentityContext>()
-            .AddDefaultTokenProviders();
-
         services.AddScoped<IPersonService, PersonService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUnitService, UnitService>();

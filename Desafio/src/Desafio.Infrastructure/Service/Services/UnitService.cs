@@ -1,4 +1,5 @@
-﻿using Desafio.Domain;
+﻿using Desafio.Application;
+using Desafio.Domain;
 
 namespace Desafio.Infrastructure;
 
@@ -23,11 +24,23 @@ public class UnitService : IUnitService
         return unit;
     }
 
-    public async Task<Unit> InsertAsync(Unit unit)
+    public async Task<UnitResponse> InsertAsync(UnitRequest unitRequest)
     {
+        Unit unit = new Unit();
         unit.Id = Guid.NewGuid();
+        unit.Description = unitRequest.Description;
+        unit.Acronym = unitRequest.Acronym;
+
         await _unitRepository.InsertAsync(unit);
-        return unit;
+
+        //adicionar verificação de erro
+
+        var unitResponse = new UnitResponse
+        {
+            Success = true
+        };
+
+        return unitResponse;
     }
 
     public async Task RemoveAsync(string acronym)

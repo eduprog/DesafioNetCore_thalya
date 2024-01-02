@@ -1,12 +1,10 @@
 ﻿using Desafio.Application;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio.API;
 
-[ApiController]
-[Route("[controller]")]
-
-public class UserController : ControllerBase
+public class UserController : DesafioControllerBase
 {
     private IIdentityService _identityService;
 

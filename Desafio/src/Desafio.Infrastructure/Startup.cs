@@ -11,7 +11,7 @@ public static class Startup
         services
             .AddDatabaseInformation(config)
             .AddServices(config)
-            .AddAuthenticationInformation(config);
+            .AddIdentityConfiguration(config);
         return services;
     }
 }

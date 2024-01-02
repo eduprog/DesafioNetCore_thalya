@@ -8,7 +8,7 @@ public class LoginUserResponse
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Token { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    //[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTime DataExpiration { get; set; }
     public List<string> Errors { get; set; }
 
