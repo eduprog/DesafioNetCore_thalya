@@ -1,5 +1,4 @@
-﻿using Desafio.Domain;
-using Desafio.Domain.Enum;
+﻿using Desafio.Identity.Database;
 using Desafio.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,10 +24,10 @@ namespace Desafio.API
             using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
-            var userContext = scope.ServiceProvider.GetRequiredService<UserContext>();
+            var identityContext = scope.ServiceProvider.GetRequiredService<IdentityContext>();
             var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            await userContext.Database.MigrateAsync();
+            await identityContext.Database.MigrateAsync();
             await appDbContext.Database.MigrateAsync();
 
             //Usar caso for necessário criar dados iniciais

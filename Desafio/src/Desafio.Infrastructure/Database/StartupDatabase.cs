@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Desafio.Domain;
+using Desafio.Identity.Database;
 
 namespace Desafio.Infrastructure;
 
@@ -10,7 +11,7 @@ internal static class StartupDatabase
 {
     internal static IServiceCollection AddDatabaseInformation(this IServiceCollection services, IConfiguration config)
     {
-        services.AddDbContext<UserContext>(options =>
+        services.AddDbContext<IdentityContext>(options =>
         {
             //Utilizar Postgres
             options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
@@ -21,17 +22,6 @@ internal static class StartupDatabase
             //Utilizar Postgres
             options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
         });
-
-
-        services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<UserContext>()
-            .AddDefaultTokenProviders();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.User.RequireUniqueEmail = true;
-        });
-
 
         services.AddScoped<IPersonRepository, PersonRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();

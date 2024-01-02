@@ -26,6 +26,12 @@ public class LoginUserResponse
     }
 
     //Adicionar lista de erros se tiver
-    public void InsertErrors(IEnumerable<string> errors) => Errors.AddRange(errors);
-    public void InsertError(string error) => Errors.Add(error);
+    public void InsertErrors(IEnumerable<string> errors) 
+    { 
+        Errors.AddRange(errors); 
+    }
+    public void InsertError(string error) 
+    {
+        Errors.Add(error); 
+    }
 }
