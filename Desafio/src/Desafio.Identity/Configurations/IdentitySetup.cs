@@ -1,9 +1,11 @@
 ﻿using Desafio.Identity.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Desafio.Identity;
@@ -42,6 +44,5 @@ public static class IdentitySetup
                 ValidIssuer = jwtOptions.Sender
             };
         });
-
     }
 }

@@ -1,5 +1,7 @@
-﻿using Desafio.Identity.Database;
+﻿using Desafio.Domain.Enum;
+using Desafio.Identity.Database;
 using Desafio.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.API
@@ -31,22 +33,30 @@ namespace Desafio.API
             await appDbContext.Database.MigrateAsync();
 
             //Usar caso for necessário criar dados iniciais
-            //await EnsureSeedProducts(userContext);
+            await EnsureSeedProducts(identityContext, appDbContext);
 
         }
 
-        //public static async Task EnsureSeedProducts(UserContext userContext)
-        //{
-        //    if (userContext.Users.Any()) return;
+        public static async Task EnsureSeedProducts(IdentityContext identityContext, AppDbContext appDbContext)
+        {
+            EUserLevel[] roles = (EUserLevel[])Enum.GetValues(typeof(EUserLevel));
+            List<string> register = new List<string>();
+            foreach(var role in roles)
+            {
+                if(!identityContext.Roles.Any(x => x.Name == role.ToString()))
+                {
+                    IdentityRole identityRole = new IdentityRole
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = role.ToString(),
+                        NormalizedName = role.ToString()
+                    };
+                    await identityContext.Roles.AddAsync(identityRole);
+                }
 
-        //    await userContext.Users.AddAsync(new User()
-        //    {
-        //        Name = "Defaut User",
-        //        Password = "1", //LEMBRAR DE SALVAR EM HASH
-        //        UserLevel = EUserLevel.Administrator
-        //    });
+            }
 
-        //    await userContext.SaveChangesAsync();
-        //}
+            await identityContext.SaveChangesAsync();
+        }
     }
 }
