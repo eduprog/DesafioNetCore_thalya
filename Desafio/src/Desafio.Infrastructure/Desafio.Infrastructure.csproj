@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Desafio.Domain\Desafio.Domain.csproj" />
+    <ProjectReference Include="..\Desafio.Identity\Desafio.Identity.csproj" />
   </ItemGroup>
 
 </Project>

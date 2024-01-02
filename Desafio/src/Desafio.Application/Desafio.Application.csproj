@@ -6,9 +6,4 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Desafio.Domain\Desafio.Domain.csproj" />
-    <ProjectReference Include="..\Desafio.Infrastructure\Desafio.Infrastructure.csproj" />
-  </ItemGroup>
-
 </Project>

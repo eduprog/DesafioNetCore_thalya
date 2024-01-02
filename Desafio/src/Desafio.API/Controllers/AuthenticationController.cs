@@ -1,4 +1,5 @@
-﻿using Desafio.Domain;
+﻿using Desafio.Application;
+using Desafio.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -19,7 +20,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("nova-conta")]
-    public async Task<ActionResult> Register(RegisterUserViewModel registerUser)
+    public async Task<ActionResult> Register(RegisterUserRequest registerUser)
     {
 
         if (!ModelState.IsValid)
@@ -45,7 +46,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("entrar")]
-    public async Task<ActionResult> Login(LoginUserViewModel loginUser)
+    public async Task<ActionResult> Login(LoginUserRequest loginUser)
     {
         if (!ModelState.IsValid) return BadRequest(loginUser);
 
@@ -69,29 +70,4 @@ public class AuthenticationController : ControllerBase
             data = loginUser
         });
     }
-}
-
-public class RegisterUserViewModel
-{
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [EmailAddress(ErrorMessage = "O campo {0} está em formato inválido")]
-    public string Email { get; set; }
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 6)]
-    public string Password { get; set; }
-
-    [Compare("Password", ErrorMessage = "O campo {0} é obrigatório")]
-    public string ConfirmPassword { get; set; }
-}
-public class LoginUserViewModel
-{
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [EmailAddress(ErrorMessage = "O campo {0} está em formato inválido")]
-    public string Email { get; set; }
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 6)]
-    public string Password { get; set; }
-
 }

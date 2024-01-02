@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Desafio.Identity;
 
 namespace Desafio.Infrastructure;
 
@@ -9,7 +10,8 @@ public static class Startup
     {
         services
             .AddDatabaseInformation(config)
-            .AddServices(config);
+            .AddServices(config)
+            .AddAuthenticationInformation(config);
         return services;
     }
 }

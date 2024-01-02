@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Desafio.Application;
+using Desafio.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+//using Desafio.Identity;
 
 namespace Desafio.Infrastructure;
 
@@ -11,6 +14,8 @@ internal static class StartupService
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUnitService, UnitService>();
         services.AddScoped<IUserService, UserService>();
+
+        services.AddScoped<IIdentityService, IdentityService>();
 
         return services;
     }
