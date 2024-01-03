@@ -40,7 +40,7 @@ public class UnitRepository : IUnitRepository
     public async void UpdateAsync(Unit unit)
     {
         _appDbContext.Update(unit);
-        await SaveChangesAsync();
+        var teste = await SaveChangesAsync();
     }
     public async Task<int> SaveChangesAsync()
     {

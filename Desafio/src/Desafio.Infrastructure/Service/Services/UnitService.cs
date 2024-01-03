@@ -12,35 +12,67 @@ public class UnitService : IUnitService
         _unitRepository = unitRepository;
     }
 
-    public async Task<List<Unit>> GetAllAsync()
+    public async Task<List<UnitResponse>> GetAllAsync()
     {
-        var getUnits = await _unitRepository.GetAllAsync();
-        return getUnits;
+        //var getUnits = await _unitRepository.GetAllAsync();
+        //return getUnits;
+        return null;
     }
 
-    public async Task<Unit> GetByAcronymAsync(string acronym)
+    public async Task<UnitResponse> GetByAcronymAsync(string acronym)
     {
         var unit = await _unitRepository.GetByAcronymAsync(acronym);
-        return unit;
+
+        if(unit != null)
+        {
+            var unitResponse = new UnitResponse
+            {
+                Success = true,
+                Unit = unit,
+            };
+
+            return unitResponse;
+        }
+        else
+        {
+            UnitResponse unitResponse = new UnitResponse(false);
+            unitResponse.InsertError("The unit was not found.");
+
+            return unitResponse;
+        }
     }
 
     public async Task<UnitResponse> InsertAsync(UnitRequest unitRequest)
     {
-        Unit unit = new Unit();
-        unit.Id = Guid.NewGuid();
-        unit.Description = unitRequest.Description;
-        unit.Acronym = unitRequest.Acronym;
+        //verifica se unidade já existe
+        var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
 
-        await _unitRepository.InsertAsync(unit);
-
-        //adicionar verificação de erro
-
-        var unitResponse = new UnitResponse
+        if (existingUnit == null)
         {
-            Success = true
-        };
+            Unit unit = new Unit();
+            unit.Id = Guid.NewGuid();
+            unit.Description = unitRequest.Description.ToUpper();
+            unit.Acronym = unitRequest.Acronym.ToUpper();
 
-        return unitResponse;
+            await _unitRepository.InsertAsync(unit);
+
+            //adicionar verificação de erro
+
+            var unitResponse = new UnitResponse
+            {
+                Success = true,
+                Unit = unit,
+            };
+
+            return unitResponse;
+        }
+        else
+        {
+            UnitResponse unitResponse = new UnitResponse(false);
+            unitResponse.InsertError("The unit already exists.");
+
+            return unitResponse;
+        }
     }
 
     public async Task RemoveAsync(string acronym)
@@ -48,8 +80,31 @@ public class UnitService : IUnitService
         await _unitRepository.RemoveAsync(acronym);
     }
 
-    public void UpdateAsync(Unit unit)
+    public async Task<UnitResponse> UpdateAsync(UnitRequest unitRequest)
     {
-        _unitRepository.UpdateAsync(unit);
+        //verifica se unidade já existe
+        var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
+
+        if (existingUnit != null)
+        {
+            _unitRepository.UpdateAsync(existingUnit);
+
+            //adicionar verificação de erro
+
+            var unitResponse = new UnitResponse
+            {
+                Success = true,
+                Unit = existingUnit,
+            };
+
+            return unitResponse;
+        }
+        else
+        {
+            UnitResponse unitResponse = new UnitResponse(false);
+            unitResponse.InsertError("The unit was not found.");
+
+            return unitResponse;
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Desafio.Application;
 using Desafio.Domain;
-using Desafio.Identity;
 using Desafio.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,7 @@ public class UnitController : DesafioControllerBase
         _unitService = unitService;
     }
 
-    [Authorize(Roles = Roles.ADMINISTRATOR)]
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
     [HttpPost]
     public async Task<ActionResult<UnitResponse>> PostUnitAsync(UnitRequest unitRequest)
     {
@@ -25,24 +24,44 @@ public class UnitController : DesafioControllerBase
             return BadRequest(ModelState);
         }
 
-        var resultado = await _unitService.InsertAsync(unitRequest);
-        if (resultado.Success)
-            return Ok(resultado);
-        else if (resultado.Errors.Count > 0)
-            return BadRequest(resultado);
+        var result = await _unitService.InsertAsync(unitRequest);
+        if (result.Success)
+            return Ok(result);
+        else if (result.Errors.Count > 0)
+            return BadRequest(result);
 
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
-    //[HttpGet]
-    //public async Task<Unit> GetUnitAsync(string acronym)
-    //{
-    //    return await _unitService.GetByAcronymAsync(acronym.ToUpper());
-    //}
-    //[HttpPut]
-    //public async Task<string> PutUnitAsync(Unit unit)
-    //{
-    //    Unit putUnit = await _unitService.GetByAcronymAsync(unit.Acronym.ToUpper());
-    //    _unitService.UpdateAsync(putUnit);
-    //    return "Editado com Sucesso";
-    //}
+
+    [HttpGet]
+    public async Task<ActionResult<UnitResponse>> GetUnitAsync(string acronym)
+    {
+        var result = await _unitService.GetByAcronymAsync(acronym.ToUpper());
+        
+        if (result.Success)
+            return Ok(result);
+        else if (result.Errors.Count > 0)
+            return BadRequest(result);
+
+        return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpPut]
+    public async Task<ActionResult<UnitResponse>> PutUnitAsync(UnitRequest unitRequest)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var result = await _unitService.UpdateAsync(unitRequest);
+
+        if (result.Success)
+            return Ok(result);
+        else if (result.Errors.Count > 0)
+            return BadRequest(result);
+
+        return StatusCode(StatusCodes.Status500InternalServerError);
+
+    }
 }

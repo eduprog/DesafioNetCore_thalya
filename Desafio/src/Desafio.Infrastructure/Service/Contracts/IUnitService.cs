@@ -4,9 +4,9 @@ using Desafio.Domain;
 namespace Desafio.Infrastructure;
 public interface IUnitService
 {
-    Task<UnitResponse> InsertAsync(UnitRequest unit);
-    void UpdateAsync(Unit product);
+    Task<UnitResponse> InsertAsync(UnitRequest unitRequest);
+    Task<UnitResponse> UpdateAsync(UnitRequest unitRequest);
     Task RemoveAsync(string acronym);
-    Task<Unit> GetByAcronymAsync(string acronym);
-    Task<List<Unit>> GetAllAsync();
+    Task<UnitResponse> GetByAcronymAsync(string acronym);
+    Task<List<UnitResponse>> GetAllAsync();
 }

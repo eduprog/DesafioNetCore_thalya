@@ -1,6 +1,6 @@
-﻿using Desafio.Domain.Enum;
+﻿using Desafio.Application;
 
-namespace Desafio.Application;
+namespace Desafio.Identity;
 
 public interface IIdentityService
 {

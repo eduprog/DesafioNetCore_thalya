@@ -40,7 +40,6 @@ namespace Desafio.API
         public static async Task EnsureSeedProducts(IdentityContext identityContext, AppDbContext appDbContext)
         {
             EUserLevel[] roles = (EUserLevel[])Enum.GetValues(typeof(EUserLevel));
-            List<string> register = new List<string>();
             foreach(var role in roles)
             {
                 if(!identityContext.Roles.Any(x => x.Name == role.ToString().ToUpper()))

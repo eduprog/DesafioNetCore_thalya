@@ -1,5 +1,5 @@
 ﻿using Desafio.Application;
-using Microsoft.AspNetCore.Authorization;
+using Desafio.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio.API;

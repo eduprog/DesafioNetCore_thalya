@@ -4,8 +4,9 @@ namespace Desafio.Application;
 
 public class UnitRequest
 {
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Required(ErrorMessage = "The field {0} is required")]
     public string Acronym { get; set; }
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Required(ErrorMessage = "The field {0} is required")]
     public string Description { get; set; }
+    //public Guid Id { get; set; }
 }

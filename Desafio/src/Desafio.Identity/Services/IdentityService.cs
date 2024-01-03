@@ -29,7 +29,7 @@ public class IdentityService : IIdentityService
     {
         var result = await _signInManager.PasswordSignInAsync(loginUserRequest.Email, loginUserRequest.Password, false, true);
         if (result.Succeeded)
-            return GenerateToken(loginUserRequest.Email);
+            return await GenerateToken(loginUserRequest.Email);
 
         LoginUserResponse loginUserResponse = new LoginUserResponse(result.Succeeded);
 
@@ -66,7 +66,7 @@ public class IdentityService : IIdentityService
             //desbloquear usuário já que não terá e-mail de confirmação
             await _userManager.SetLockoutEnabledAsync(identityUser, false);
 
-        string roleDescription = registerUserRequest.Role.GetEnumDescription();
+        string roleDescription = registerUserRequest.Role.ToString();
         var addToRoleResult = await _userManager.AddToRoleAsync(identityUser, roleDescription);
 
         RegisterUserResponse userRegisterResponse = new RegisterUserResponse(result.Succeeded);
@@ -76,8 +76,24 @@ public class IdentityService : IIdentityService
         return userRegisterResponse;
     }
 
-    private LoginUserResponse GenerateToken(string email)
+    private async Task<LoginUserResponse> GenerateToken(string email)
     {
+        var user = await _userManager.FindByEmailAsync(email);
+        var claims = await _userManager.GetClaimsAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); //jwt ID
+        claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString())); //criação
+        claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)); //emissão
+
+        foreach (var role in roles)
+            claims.Add(new Claim("role", role));
+
+        var identityClaims = new ClaimsIdentity();
+        identityClaims.AddClaims(claims);
+
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
@@ -85,6 +101,7 @@ public class IdentityService : IIdentityService
         {
             Issuer = _jwtOptions.Sender,
             Audience = _jwtOptions.ValidIn,
+            Subject = identityClaims,
             Expires = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         });
@@ -98,20 +115,9 @@ public class IdentityService : IIdentityService
             DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour)
         }; 
     }
-    private async Task<IList<Claim>> GetClaimsAsync(IdentityUser user)
+    //Converter corretamente os segundos da data
+    private static long ToUnixEpochDate(DateTime date)
     {
-        var claims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
-
-        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id)); 
-        claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); //jwt ID
-        claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, DateTime.Now.ToString())); //criação
-        claims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())); //emissão
-
-        foreach (var role in roles)
-            claims.Add(new Claim("role", role));
-
-        return claims;
+        return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }
 }
