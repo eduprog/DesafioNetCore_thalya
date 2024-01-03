@@ -43,13 +43,13 @@ namespace Desafio.API
             List<string> register = new List<string>();
             foreach(var role in roles)
             {
-                if(!identityContext.Roles.Any(x => x.Name == role.ToString()))
+                if(!identityContext.Roles.Any(x => x.Name == role.ToString().ToUpper()))
                 {
                     IdentityRole identityRole = new IdentityRole
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Name = role.ToString(),
-                        NormalizedName = role.ToString()
+                        Name = role.ToString().ToUpper(),
+                        NormalizedName = role.ToString().ToUpper()
                     };
                     await identityContext.Roles.AddAsync(identityRole);
                 }

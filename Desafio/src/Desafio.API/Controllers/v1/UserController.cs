@@ -24,6 +24,8 @@ public class UserController : DesafioControllerBase
         var resultado = await _identityService.RegisterUserAsync(registerUserRequest);
         if (resultado.Success)
             return Ok(resultado);
+
+            
         else if (resultado.Errors.Count  > 0) 
             return BadRequest(resultado);
 

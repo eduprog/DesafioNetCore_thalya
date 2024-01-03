@@ -1,4 +1,6 @@
 ﻿using Desafio.Application;
+using Desafio.Domain;
+using Desafio.Domain.Enum;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -64,12 +66,16 @@ public class IdentityService : IIdentityService
             //desbloquear usuário já que não terá e-mail de confirmação
             await _userManager.SetLockoutEnabledAsync(identityUser, false);
 
+        string roleDescription = registerUserRequest.Role.GetEnumDescription();
+        var addToRoleResult = await _userManager.AddToRoleAsync(identityUser, roleDescription);
+
         RegisterUserResponse userRegisterResponse = new RegisterUserResponse(result.Succeeded);
         if (!result.Succeeded && result.Errors.Count() > 0)
             userRegisterResponse.InsertErrors(result.Errors.Select(x => x.Description));
 
         return userRegisterResponse;
     }
+
     private LoginUserResponse GenerateToken(string email)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio.API;
 
-[Authorize]
 public class UnitController : DesafioControllerBase
 {
     private readonly IUnitService _unitService;
@@ -17,6 +16,7 @@ public class UnitController : DesafioControllerBase
         _unitService = unitService;
     }
 
+    [Authorize(Roles = Roles.ADMINISTRATOR)]
     [HttpPost]
     public async Task<ActionResult<UnitResponse>> PostUnitAsync(UnitRequest unitRequest)
     {
