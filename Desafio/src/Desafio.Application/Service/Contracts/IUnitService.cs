@@ -1,7 +1,4 @@
-﻿using Desafio.Application;
-using Desafio.Domain;
-
-namespace Desafio.Infrastructure;
+﻿namespace Desafio.Application;
 public interface IUnitService
 {
     Task<UnitResponse> InsertAsync(UnitRequest unitRequest);

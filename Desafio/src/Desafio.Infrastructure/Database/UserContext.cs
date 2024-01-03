@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Desafio.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Desafio.Identity.Database;
 
 namespace Desafio.Infrastructure;
 

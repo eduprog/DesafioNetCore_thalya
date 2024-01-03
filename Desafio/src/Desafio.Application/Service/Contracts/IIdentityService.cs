@@ -1,6 +1,4 @@
-﻿using Desafio.Application;
-
-namespace Desafio.Identity;
+﻿namespace Desafio.Application;
 
 public interface IIdentityService
 {

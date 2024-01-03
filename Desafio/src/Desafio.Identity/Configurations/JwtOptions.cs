@@ -1,6 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
-namespace Desafio.Identity;
+﻿namespace Desafio.Identity;
 
 public class JwtOptions
 {

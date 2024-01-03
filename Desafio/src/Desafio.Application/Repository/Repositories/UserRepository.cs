@@ -1,20 +1,20 @@
 ﻿using Desafio.Domain;
 
-namespace Desafio.Infrastructure;
+namespace Desafio.Application;
 
-public class PersonRepository : IPersonRepository
+internal class UserRepository : IUserRepository
 {
-    public Task<Person> GetAllAsync()
+    public Task<User> GetAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<Person> GetByIdAsync(int id)
+    public Task<User> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task InsertAsync(Person product)
+    public Task InsertAsync(User product)
     {
         throw new NotImplementedException();
     }
@@ -24,8 +24,9 @@ public class PersonRepository : IPersonRepository
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Person product)
+    public Task UpdateAsync(User product)
     {
         throw new NotImplementedException();
     }
 }
+

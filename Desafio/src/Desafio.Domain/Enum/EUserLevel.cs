@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Desafio.Domain.Enum;
+namespace Desafio.Domain;
 
 public enum EUserLevel
 {

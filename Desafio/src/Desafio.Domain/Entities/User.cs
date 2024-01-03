@@ -1,4 +1,4 @@
-﻿using Desafio.Domain.Enum;
+﻿using Desafio.Domain;
 using Microsoft.AspNetCore.Identity;
 
 namespace Desafio.Domain;

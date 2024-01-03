@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Desafio.Domain;
 using Desafio.Infrastructure.Mapping;
+using Desafio.Domain;
 
 namespace Desafio.Infrastructure;
 

@@ -1,7 +1,7 @@
 ﻿
 using Desafio.Domain;
 
-namespace Desafio.Infrastructure;
+namespace Desafio.Application;
 
 public class ProductRepository : IProductRepository
 {

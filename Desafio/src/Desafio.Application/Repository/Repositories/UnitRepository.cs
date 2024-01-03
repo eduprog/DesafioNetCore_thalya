@@ -1,14 +1,15 @@
 ﻿using Desafio.Domain;
+using Desafio.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
 
-namespace Desafio.Infrastructure;
+namespace Desafio.Application;
 
 public class UnitRepository : IUnitRepository
 {
 
     private readonly AppDbContext _appDbContext;
-
+    
     public UnitRepository(AppDbContext appDbContext)
     {
         _appDbContext = appDbContext;

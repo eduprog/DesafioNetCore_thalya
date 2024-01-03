@@ -1,8 +1,5 @@
 ﻿using Desafio.Application;
-using Desafio.Domain;
 using Desafio.Identity;
-using Desafio.Identity.Database;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

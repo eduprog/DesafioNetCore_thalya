@@ -1,8 +1,8 @@
 ﻿using Desafio.Domain;
 
-namespace Desafio.Infrastructure;
+namespace Desafio.Application;
 
-public interface IUserService
+public interface IUserRepository
 {
     Task InsertAsync(User product);
     Task UpdateAsync(User product);

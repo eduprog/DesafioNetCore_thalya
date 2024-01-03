@@ -1,4 +1,4 @@
-﻿using Desafio.Domain.Enum;
+﻿using Desafio.Domain;
 using System.ComponentModel.DataAnnotations;
 
 namespace Desafio.Application;

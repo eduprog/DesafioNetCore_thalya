@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Desafio.Identity.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
-using Desafio.Domain;
-using Desafio.Identity.Database;
 
 namespace Desafio.Infrastructure;
 
@@ -22,11 +20,6 @@ internal static class StartupDatabase
             //Utilizar Postgres
             options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
         });
-
-        services.AddScoped<IPersonRepository, PersonRepository>();
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUnitRepository, UnitRepository>();
 
         return services;
     }

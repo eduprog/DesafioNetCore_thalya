@@ -1,5 +1,7 @@
 using Desafio.API;
 using Desafio.Infrastructure;
+using Desafio.Identity;
+using Desafio.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -8,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddVersioning();
     builder.Services.AddSwagger();
     builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddIdentityConfiguration(builder.Configuration);
+    builder.Services.AddApplicationConfigurations(builder.Configuration);
 }
 
 var app = builder.Build();

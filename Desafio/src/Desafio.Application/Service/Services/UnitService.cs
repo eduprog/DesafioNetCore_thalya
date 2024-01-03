@@ -1,7 +1,6 @@
-﻿using Desafio.Application;
-using Desafio.Domain;
+﻿using Desafio.Domain;
 
-namespace Desafio.Infrastructure;
+namespace Desafio.Application;
 
 public class UnitService : IUnitService
 {

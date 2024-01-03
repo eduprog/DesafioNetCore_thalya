@@ -1,6 +1,4 @@
 ﻿using Desafio.Application;
-using Desafio.Domain;
-using Desafio.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

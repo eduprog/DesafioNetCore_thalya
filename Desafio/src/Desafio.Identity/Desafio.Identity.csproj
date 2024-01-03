@@ -12,8 +12,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Desafio.Application\Desafio.Application.csproj" />
-  </ItemGroup>
-
 </Project>
