@@ -32,7 +32,7 @@ public class UnitController : DesafioControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
 
-    [HttpGet]
+    [HttpGet("get-by-acronym")]
     public async Task<ActionResult<UnitResponse>> GetUnitAsync(string acronym)
     {
         var result = await _unitService.GetByAcronymAsync(acronym.ToUpper());
@@ -45,15 +45,17 @@ public class UnitController : DesafioControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
 
-    [HttpGet("getAll")]
-    public async Task<ActionResult<Unit>> GetAllUnitSAsync()
+    [HttpGet("get-all")]
+    public async Task<ActionResult<UnitResponse>> GetAllUnitSAsync()
     {
         var result = await _unitService.GetAllAsync();
 
-        if (result.Count() > 0)
+        if (result.Success)
             return Ok(result);
-        else
-            return NotFound(result);
+        else if (result.Errors.Count > 0)
+            return BadRequest(result);
+
+        return StatusCode(StatusCodes.Status500InternalServerError);
 
     }
 
@@ -66,6 +68,24 @@ public class UnitController : DesafioControllerBase
             return BadRequest(ModelState);
         }
         var result = await _unitService.UpdateAsync(unitRequest);
+
+        if (result.Success)
+            return Ok(result);
+        else if (result.Errors.Count > 0)
+            return BadRequest(result);
+
+        return StatusCode(StatusCodes.Status500InternalServerError);
+
+    }
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpDelete]
+    public async Task<ActionResult<UnitResponse>> DeleteUnitAsync(string acronym)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var result = await _unitService.RemoveAsync(acronym.ToUpper());
 
         if (result.Success)
             return Ok(result);

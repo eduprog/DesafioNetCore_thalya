@@ -44,12 +44,16 @@ public class UnitRepository : IUnitRepository
         try
         {
             Unit unit = await GetByAcronymAsync(acronym);
+            if(unit == null)
+            {
+                throw new Exception($"Unit {acronym} doesn't exists.");
+            }
             _appDbContext.Units.Remove(unit);
             await SaveChangesAsync();
         }
         catch (Exception)
         {
-            throw new Exception("Error while removing unit"); 
+            throw; 
         }
         
     }
@@ -79,5 +83,10 @@ public class UnitRepository : IUnitRepository
             throw new Exception("Error while saving unit");
         }
         
+    }
+
+    public bool HasBeenUsedBefore(string acronym)
+    {
+        return _appDbContext.Products.Any(x => x.Acronym == acronym);
     }
 }

@@ -10,4 +10,5 @@ public interface IUnitRepository
     Task<Unit> GetByAcronymAsync(string acronym);
     Task<List<Unit>> GetAllAsync();
     Task<int> SaveChangesAsync();
+    bool HasBeenUsedBefore(string acronym);
 }

@@ -11,11 +11,27 @@ public class UnitService : IUnitService
         _unitRepository = unitRepository;
     }
 
-    public async Task<List<Unit>> GetAllAsync()
+    public async Task<UnitResponse> GetAllAsync()
     {
-        var getUnits = await _unitRepository.GetAllAsync();
+        var units = await _unitRepository.GetAllAsync();
 
-        return getUnits;
+        if (units != null)
+        {
+            var unitResponse = new UnitResponse
+            {
+                Success = true
+            };
+            unitResponse.InsertUnits(units);
+
+            return unitResponse;
+        }
+        else
+        {
+            UnitResponse unitResponse = new UnitResponse(false);
+            unitResponse.InsertError("The unit was not found.");
+
+            return unitResponse;
+        }
     }
 
     public async Task<UnitResponse> GetByAcronymAsync(string acronym)
@@ -85,17 +101,37 @@ public class UnitService : IUnitService
         
     }
 
-    public async Task RemoveAsync(string acronym)
+    public async Task<UnitResponse> RemoveAsync(string acronym)
     {
         try
         {
-            await _unitRepository.RemoveAsync(acronym);
+            if (_unitRepository.HasBeenUsedBefore(acronym))
+            {
+                UnitResponse unitResponse = new UnitResponse(false);
+                unitResponse.InsertError("It's not possible to remove a unit that is being used in a product.");
+
+                return unitResponse;
+            }
+            else
+            {
+                await _unitRepository.RemoveAsync(acronym);
+
+                var unitResponse = new UnitResponse
+                {
+                    Success = true
+                };
+
+                return unitResponse;
+            }
+            
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            UnitResponse unitResponse = new UnitResponse(false);
+            unitResponse.InsertError(ex.Message);
 
-            throw;
+            return unitResponse;
         }
     }
 
@@ -115,11 +151,11 @@ public class UnitService : IUnitService
 
                 //adicionar verificação de erro
 
-            var unitResponse = new UnitResponse
-            {
-                Success = true,
-                Unit = existingUnit,
-            };
+                var unitResponse = new UnitResponse
+                {
+                    Success = true,
+                    Unit = existingUnit,
+                };
 
                 return unitResponse;
             }
