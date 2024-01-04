@@ -72,8 +72,6 @@ public class UnitService : IUnitService
 
                 await _unitRepository.InsertAsync(unit);
 
-                //adicionar verificação de erro
-
             var unitResponse = new UnitResponse
             {
                 Success = true,
@@ -97,7 +95,6 @@ public class UnitService : IUnitService
 
             return unitResponse;
         }
-        //verifica se unidade já existe
         
     }
 
@@ -139,7 +136,6 @@ public class UnitService : IUnitService
     {
         try
         {
-            //verifica se unidade já existe
             var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
 
             if (existingUnit != null)
@@ -148,8 +144,6 @@ public class UnitService : IUnitService
                 existingUnit.Description = unitRequest.Description.ToUpper();
 
                 await _unitRepository.UpdateAsync(existingUnit);
-
-                //adicionar verificação de erro
 
                 var unitResponse = new UnitResponse
                 {

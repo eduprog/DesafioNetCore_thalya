@@ -12,7 +12,6 @@ internal static class StartupService
         services.AddScoped<IPersonService, PersonService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUnitService, UnitService>();
-        //services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserService, UserService>();
         
 
