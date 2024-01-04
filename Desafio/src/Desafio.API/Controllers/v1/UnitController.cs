@@ -1,4 +1,5 @@
-﻿using Desafio.Application;
+﻿using AutoMapper;
+using Desafio.Application;
 using Desafio.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,20 +9,21 @@ namespace Desafio.API;
 public class UnitController : DesafioControllerBase
 {
     private readonly IUnitService _unitService;
+    private readonly IMapper _mapper;
 
-    public UnitController(IUnitService unitService)
+    public UnitController(IUnitService unitService,
+                            IMapper mapper)
     {
         _unitService = unitService;
+        _mapper = mapper;
     }
 
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
     [HttpPost]
     public async Task<ActionResult<UnitResponse>> PostUnitAsync(UnitRequest unitRequest)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+
+        if (!ModelState.IsValid)  return CustomResponse(ModelState);
 
         var result = await _unitService.InsertAsync(unitRequest);
         if (result.Success)

@@ -1,4 +1,5 @@
 ﻿using Desafio.Application;
+using Desafio.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -10,12 +11,12 @@ namespace Desafio.Identity;
 
 public class UserService : IUserService
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
     private readonly JwtOptions _jwtOptions;
 
-    public UserService(SignInManager<IdentityUser> signInManager, 
-                           UserManager<IdentityUser> userManager,
+    public UserService(SignInManager<User> signInManager, 
+                           UserManager<User> userManager,
                            IOptions<JwtOptions> jwtOptions)
     {
         _signInManager = signInManager;
@@ -67,8 +68,12 @@ public class UserService : IUserService
 
     public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest)
     {
-        IdentityUser identityUser = new ()
+        //OLHAAAAAARRRRR
+        User identityUser = new()
         {
+            Name = registerUserRequest.Name,
+            NickName = registerUserRequest.NickName,
+            Document = registerUserRequest.Document,
             UserName = registerUserRequest.Email,
             Email = registerUserRequest.Email,
             //não vai trabalhar com e-mail de confirmação
@@ -80,7 +85,7 @@ public class UserService : IUserService
             //desbloquear usuário já que não terá e-mail de confirmação
             await _userManager.SetLockoutEnabledAsync(identityUser, false);
 
-        string roleDescription = registerUserRequest.Role.ToString();
+        string roleDescription = registerUserRequest.UserLevel.ToString();
         var addToRoleResult = await _userManager.AddToRoleAsync(identityUser, roleDescription);
 
         RegisterUserResponse userRegisterResponse = new RegisterUserResponse(result.Succeeded);

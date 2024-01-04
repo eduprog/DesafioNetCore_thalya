@@ -14,7 +14,7 @@ internal static class StartupService
         services.AddScoped<IUnitService, UnitService>();
         services.AddScoped<IUserService, UserService>();
         
-
+        
         return services;
     }
 }
