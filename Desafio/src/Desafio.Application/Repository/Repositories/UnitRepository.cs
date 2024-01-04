@@ -27,24 +27,57 @@ public class UnitRepository : IUnitRepository
 
     public async Task InsertAsync(Unit unit)
     {
-        await _appDbContext.Units.AddAsync(unit);
-        await SaveChangesAsync();
+        try
+        {
+            await _appDbContext.Units.AddAsync(unit);
+            await SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while inserting unit");
+        }
+        
     }
 
     public async Task RemoveAsync(string acronym)
     {
-        Unit unit = await GetByAcronymAsync(acronym);
-        _appDbContext.Units.Remove(unit);
-        await SaveChangesAsync();
+        try
+        {
+            Unit unit = await GetByAcronymAsync(acronym);
+            _appDbContext.Units.Remove(unit);
+            await SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while removing unit"); 
+        }
+        
     }
 
-    public async void UpdateAsync(Unit unit)
+    public async Task<Unit> UpdateAsync(Unit unit)
     {
-        _appDbContext.Update(unit);
-        var teste = await SaveChangesAsync();
+        try
+        {
+            _appDbContext.Update(unit);
+            await SaveChangesAsync();
+            return unit;
+        }
+        catch (Exception)
+        { 
+            throw new Exception("Error while updating unit");
+        }
+        
     }
     public async Task<int> SaveChangesAsync()
     {
-        return await _appDbContext.SaveChangesAsync();
+        try
+        {
+            return await _appDbContext.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while saving unit");
+        }
+        
     }
 }

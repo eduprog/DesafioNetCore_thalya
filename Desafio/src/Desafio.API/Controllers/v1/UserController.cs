@@ -6,9 +6,9 @@ namespace Desafio.API;
 
 public class UserController : DesafioControllerBase
 {
-    private IIdentityService _identityService;
+    private IUserService _identityService;
 
-    public UserController(IIdentityService identityService)
+    public UserController(IUserService identityService)
     {
         _identityService = identityService;
     }
@@ -43,4 +43,6 @@ public class UserController : DesafioControllerBase
 
         return Unauthorized(resultado);
     }
+
+    //implementar exclusão, edição e listagem das permissões
 }

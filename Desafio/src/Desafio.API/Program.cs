@@ -20,11 +20,6 @@ var app = builder.Build();
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
-    /*app.UseCors(builder => builder
-        .SetIsOriginAllowed(orign => true)
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials());*/
     app.MapControllers();
     app.UseDbMigrationHelper();
 

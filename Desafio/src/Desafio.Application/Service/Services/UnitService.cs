@@ -11,11 +11,11 @@ public class UnitService : IUnitService
         _unitRepository = unitRepository;
     }
 
-    public async Task<List<UnitResponse>> GetAllAsync()
+    public async Task<List<Unit>> GetAllAsync()
     {
-        //var getUnits = await _unitRepository.GetAllAsync();
-        //return getUnits;
-        return null;
+        var getUnits = await _unitRepository.GetAllAsync();
+
+        return getUnits;
     }
 
     public async Task<UnitResponse> GetByAcronymAsync(string acronym)
@@ -29,7 +29,7 @@ public class UnitService : IUnitService
                 Success = true,
                 Unit = unit,
             };
-
+            
             return unitResponse;
         }
         else
@@ -43,19 +43,20 @@ public class UnitService : IUnitService
 
     public async Task<UnitResponse> InsertAsync(UnitRequest unitRequest)
     {
-        //verifica se unidade já existe
-        var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
-
-        if (existingUnit == null)
+        try
         {
-            Unit unit = new Unit();
-            unit.Id = Guid.NewGuid();
-            unit.Description = unitRequest.Description.ToUpper();
-            unit.Acronym = unitRequest.Acronym.ToUpper();
+            var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
 
-            await _unitRepository.InsertAsync(unit);
+            if (existingUnit == null)
+            {
+                Unit unit = new Unit();
+                unit.Id = Guid.NewGuid();
+                unit.Description = unitRequest.Description.ToUpper();
+                unit.Acronym = unitRequest.Acronym.ToUpper();
 
-            //adicionar verificação de erro
+                await _unitRepository.InsertAsync(unit);
+
+                //adicionar verificação de erro
 
             var unitResponse = new UnitResponse
             {
@@ -63,32 +64,56 @@ public class UnitService : IUnitService
                 Unit = unit,
             };
 
-            return unitResponse;
+                return unitResponse;
+            }
+            else
+            {
+            UnitResponse unitResponse = new UnitResponse(false);
+                unitResponse.InsertError("The unit already exists.");
+
+                return unitResponse;
+            }
         }
-        else
+        catch (Exception ex) 
         {
             UnitResponse unitResponse = new UnitResponse(false);
-            unitResponse.InsertError("The unit already exists.");
+            unitResponse.InsertError(ex.Message);
 
             return unitResponse;
         }
+        //verifica se unidade já existe
+        
     }
 
     public async Task RemoveAsync(string acronym)
     {
-        await _unitRepository.RemoveAsync(acronym);
+        try
+        {
+            await _unitRepository.RemoveAsync(acronym);
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 
     public async Task<UnitResponse> UpdateAsync(UnitRequest unitRequest)
     {
-        //verifica se unidade já existe
-        var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
-
-        if (existingUnit != null)
+        try
         {
-            _unitRepository.UpdateAsync(existingUnit);
+            //verifica se unidade já existe
+            var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
 
-            //adicionar verificação de erro
+            if (existingUnit != null)
+            {
+                existingUnit.Acronym = unitRequest.Acronym.ToUpper();
+                existingUnit.Description = unitRequest.Description.ToUpper();
+
+                await _unitRepository.UpdateAsync(existingUnit);
+
+                //adicionar verificação de erro
 
             var unitResponse = new UnitResponse
             {
@@ -96,12 +121,20 @@ public class UnitService : IUnitService
                 Unit = existingUnit,
             };
 
-            return unitResponse;
+                return unitResponse;
+            }
+            else
+            {
+                UnitResponse unitResponse = new UnitResponse(false);
+                unitResponse.InsertError("The unit was not found.");
+
+                return unitResponse;
+            }
         }
-        else
+        catch (Exception ex)
         {
             UnitResponse unitResponse = new UnitResponse(false);
-            unitResponse.InsertError("The unit was not found.");
+            unitResponse.InsertError(ex.Message);
 
             return unitResponse;
         }

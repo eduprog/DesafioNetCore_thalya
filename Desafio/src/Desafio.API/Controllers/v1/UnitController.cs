@@ -1,4 +1,5 @@
 ﻿using Desafio.Application;
+using Desafio.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +43,18 @@ public class UnitController : DesafioControllerBase
             return BadRequest(result);
 
         return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    [HttpGet("getAll")]
+    public async Task<ActionResult<Unit>> GetAllUnitSAsync()
+    {
+        var result = await _unitService.GetAllAsync();
+
+        if (result.Count() > 0)
+            return Ok(result);
+        else
+            return NotFound(result);
+
     }
 
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
