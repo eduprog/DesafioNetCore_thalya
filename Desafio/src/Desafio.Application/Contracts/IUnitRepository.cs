@@ -11,4 +11,5 @@ public interface IUnitRepository
     Task<List<Unit>> GetAllAsync();
     Task<int> SaveChangesAsync();
     bool HasBeenUsedBefore(string acronym);
+    bool IsRegistered(string acronym);
 }

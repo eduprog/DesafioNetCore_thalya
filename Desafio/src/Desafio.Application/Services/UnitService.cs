@@ -123,6 +123,7 @@ public class UnitService : ServiceBase, IUnitService
     }
     public bool UnitAlreadyExists(string acronym)
     {
-        return _unitRepository.GetByAcronymAsync(acronym) != null;
+        var unitExists = _unitRepository.IsRegistered(acronym);
+        return unitExists;
     }
 }

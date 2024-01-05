@@ -89,4 +89,8 @@ public class UnitRepository : IUnitRepository
     {
         return _appDbContext.Products.Any(x => x.Acronym == acronym);
     }
+    public bool IsRegistered(string acronym)
+    {
+        return _appDbContext.Units.Any(x => x.Acronym == acronym);
+    }
 }

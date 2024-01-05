@@ -13,7 +13,7 @@ public class UnitValidation : AbstractValidator<Unit>
 
         RuleFor(x => x.Acronym)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
-            .Must(BeUniqueAcronym).WithMessage("The Acronym must be unique")
+            .Must(UniqueAcronym).WithMessage("The Acronym must be unique")
             .Length(2, 4)
             .WithMessage("The field {PropertyName} must have between {MinLength} and {MaxLength} caracters");
         RuleFor(x => x.Description)
@@ -22,10 +22,10 @@ public class UnitValidation : AbstractValidator<Unit>
             .WithMessage("The field {PropertyName} must have between {MinLength} and {MaxLength} caracters");
     }
 
-    private bool BeUniqueAcronym(string acronym)
+    private bool UniqueAcronym(string acronym)
     {
-        // Verificar se a unidade é única no banco de dados
-        var teste= _unitService.UnitAlreadyExists(acronym);
-        return !_unitService.UnitAlreadyExists(acronym);
+        // Verificar se existe cadastro dessa unidade
+        var teste = !_unitService.UnitAlreadyExists(acronym);
+        return teste;
     }
 }
