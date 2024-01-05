@@ -134,6 +134,25 @@ public class UserService : ServiceBase, IUserService
         return mappedUsers;
     }
 
+    public async Task<IEnumerable<UserResponse>> GetAllUsersByRoleAsync(string role)
+    {
+        IEnumerable<User> users = await _userManager.GetUsersInRoleAsync(role);
+
+        var usersRoles = users.Select(user => new UserResponse
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Document = user.Document,
+            Name = user.Name,
+            NickName = user.NickName,
+            UserName = user.Name,
+            Roles = _userManager.GetRolesAsync(user).Result
+        });
+
+        return usersRoles;
+    }
+
+
     public bool EmailAlreadyExisists(string email)
     {
         return _userManager.FindByEmailAsync(email) != null;

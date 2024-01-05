@@ -1,4 +1,5 @@
 ﻿using Desafio.Application;
+using Desafio.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio.API;
@@ -37,6 +38,30 @@ public class UserController : DesafioControllerBase
     public async Task<ActionResult<UserResponse>> GetAllUsers()
     {
         var result = await _userService.GetAllAsync();
+
+        return CustomResponse(result);
+    }
+
+    [HttpGet("get-all-administrator-users")]
+    public async Task<ActionResult<UserResponse>> GetAllAdministratorUsers()
+    {
+        var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Administrator.ToString().ToUpper());
+
+        return CustomResponse(result);
+    }
+
+    [HttpGet("get-all-manager-users")]
+    public async Task<ActionResult<UserResponse>> GetAllManagerUsers()
+    {
+        var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Manager.ToString().ToUpper());
+
+        return CustomResponse(result);
+    }
+
+    [HttpGet("get-all-seller-users")]
+    public async Task<ActionResult<UserResponse>> GetAllSellerUsers()
+    {
+        var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Seller.ToString().ToUpper());
 
         return CustomResponse(result);
     }
