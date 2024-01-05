@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Desafio.Domain;
-using System.Collections.Generic;
 
 namespace Desafio.Application;
 

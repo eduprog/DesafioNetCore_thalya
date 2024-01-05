@@ -1,7 +1,6 @@
 ﻿using Desafio.Domain;
 using Desafio.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace Desafio.Application;
 

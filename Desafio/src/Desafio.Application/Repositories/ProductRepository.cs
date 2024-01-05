@@ -1,5 +1,4 @@
-﻿
-using Desafio.Domain;
+﻿using Desafio.Domain;
 
 namespace Desafio.Application;
 

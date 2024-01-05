@@ -24,7 +24,7 @@ public class UnitValidation : AbstractValidator<Unit>
 
     private bool BeUniqueAcronym(string acronym)
     {
-        // Verificar se o acrônimo é único no banco de dados
+        // Verificar se a unidade é única no banco de dados
         var teste= _unitService.UnitAlreadyExists(acronym);
         return !_unitService.UnitAlreadyExists(acronym);
     }

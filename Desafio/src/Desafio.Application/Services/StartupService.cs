@@ -1,6 +1,5 @@
 ﻿using Desafio.Application;
 using Desafio.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desafio.Infrastructure;

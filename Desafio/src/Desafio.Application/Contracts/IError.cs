@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Desafio.Application;
+﻿namespace Desafio.Application;
 
 public interface IError
 {
