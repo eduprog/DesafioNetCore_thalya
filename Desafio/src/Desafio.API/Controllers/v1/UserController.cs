@@ -8,7 +8,7 @@ public class UserController : DesafioControllerBase
 {
     private IUserService _identityService;
 
-    public UserController(IUserService identityService)
+    public UserController(IUserService identityService, IError error) : base(error)
     {
         _identityService = identityService;
     }
@@ -20,7 +20,6 @@ public class UserController : DesafioControllerBase
         {
             return BadRequest(ModelState);
         }
-
         var resultado = await _identityService.RegisterUserAsync(registerUserRequest);
         if (resultado.Success)
             return Ok(resultado);

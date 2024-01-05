@@ -29,6 +29,7 @@ public class UnitRepository : IUnitRepository
     {
         try
         {
+            unit.Id = Guid.NewGuid();
             await _appDbContext.Units.AddAsync(unit);
             await SaveChangesAsync();
         }

@@ -8,6 +8,7 @@ namespace Desafio.API.Configurations
     {
         public AutoMapperConfig()
         {
+            CreateMap<Unit, UnitRequest>().ReverseMap();
             CreateMap<Unit, UnitResponse>().ReverseMap();
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Desafio.Application;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Desafio.API;
@@ -7,7 +8,13 @@ namespace Desafio.API;
 [Route("[controller]")]
 public abstract class DesafioControllerBase : ControllerBase
 {
-    protected ICollection<string> Errors { get; set; } = new List<string>();
+    protected readonly IError _error;
+
+    protected DesafioControllerBase(IError error)
+    {
+        _error = error;
+    }
+
     protected ActionResult CustomResponse(object result = null)
     {
         if (IsValid())
@@ -22,7 +29,7 @@ public abstract class DesafioControllerBase : ControllerBase
         return BadRequest(new
         {
             sucess = false,
-            errors = Errors.ToList()
+            errors = _error.GetErrors().Select(x => x.Error)
         });
     }
     protected ActionResult CustomResponse(ModelStateDictionary modelState)
@@ -45,10 +52,10 @@ public abstract class DesafioControllerBase : ControllerBase
     }
     protected void NotifyErrors (string message)
     {
-        Errors.Add(message);
+        _error.Handle(new ErrorMessage(message));
     }
-    public bool IsValid()
+    protected bool IsValid()
     {
-        return !Errors.Any();
+        return !_error.HasError();
     }
 }

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Desafio.Application;
-using Desafio.Domain;
+﻿using Desafio.Application;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,92 +7,72 @@ namespace Desafio.API;
 public class UnitController : DesafioControllerBase
 {
     private readonly IUnitService _unitService;
-    private readonly IMapper _mapper;
 
-    public UnitController(IUnitService unitService,
-                            IMapper mapper)
+    public UnitController(IUnitService unitService, IError error) : base(error)
     {
         _unitService = unitService;
-        _mapper = mapper;
     }
 
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
     [HttpPost]
     public async Task<ActionResult<UnitResponse>> PostUnitAsync(UnitRequest unitRequest)
     {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        if (!ModelState.IsValid)  return CustomResponse(ModelState);
+        await _unitService.InsertAsync(unitRequest);
 
-        var result = await _unitService.InsertAsync(unitRequest);
-        if (result.Success)
-            return Ok(result);
-        else if (result.Errors.Count > 0)
-            return BadRequest(result);
-
-        return StatusCode(StatusCodes.Status500InternalServerError);
+        return CustomResponse(ModelState);
     }
 
-    [HttpGet("get-by-acronym")]
-    public async Task<ActionResult<UnitResponse>> GetUnitAsync(string acronym)
-    {
-        var result = await _unitService.GetByAcronymAsync(acronym.ToUpper());
-        
-        if (result.Success)
-            return Ok(result);
-        else if (result.Errors.Count > 0)
-            return BadRequest(result);
+    //[HttpGet("get-by-acronym")]
+    //public async Task<ActionResult<UnitResponse>> GetUnitAsync(string acronym)
+    //{
+    //    var result = await _unitService.GetByAcronymAsync(acronym.ToUpper());
 
-        return StatusCode(StatusCodes.Status500InternalServerError);
-    }
+    //    return CustomResponse(ModelState);
 
-    [HttpGet("get-all")]
-    public async Task<ActionResult<UnitResponse>> GetAllUnitSAsync()
-    {
-        var result = await _unitService.GetAllAsync();
+    //    //return StatusCode(StatusCodes.Status500InternalServerError);
+    //}
 
-        if (result.Success)
-            return Ok(result);
-        else if (result.Errors.Count > 0)
-            return BadRequest(result);
+    //[HttpGet("get-all")]
+    //public async Task<IEnumerable<UnitResponse>> GetAllUnitSAsync()
+    //{
+    //    var unit = await _unitService.GetAllAsync();
 
-        return StatusCode(StatusCodes.Status500InternalServerError);
+    //    return unit;
 
-    }
+    //    //return StatusCode(StatusCodes.Status500InternalServerError);
 
-    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpPut]
-    public async Task<ActionResult<UnitResponse>> PutUnitAsync(UnitRequest unitRequest)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        var result = await _unitService.UpdateAsync(unitRequest);
+    //}
 
-        if (result.Success)
-            return Ok(result);
-        else if (result.Errors.Count > 0)
-            return BadRequest(result);
+    //[Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    //[HttpPut]
+    //public async Task<ActionResult<UnitResponse>> PutUnitAsync(UnitRequest unitRequest)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return BadRequest(ModelState);
+    //    }
+    //    var result = await _unitService.UpdateAsync(unitRequest);
 
-        return StatusCode(StatusCodes.Status500InternalServerError);
+    //    return CustomResponse(ModelState);
 
-    }
-    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpDelete]
-    public async Task<ActionResult<UnitResponse>> DeleteUnitAsync(string acronym)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        var result = await _unitService.RemoveAsync(acronym.ToUpper());
+    //    //return StatusCode(StatusCodes.Status500InternalServerError);
 
-        if (result.Success)
-            return Ok(result);
-        else if (result.Errors.Count > 0)
-            return BadRequest(result);
+    //}
+    //[Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    //[HttpDelete]
+    //public async Task<ActionResult<UnitResponse>> DeleteUnitAsync(string acronym)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return BadRequest(ModelState);
+    //    }
+    //    var result = await _unitService.RemoveAsync(acronym.ToUpper());
 
-        return StatusCode(StatusCodes.Status500InternalServerError);
+    //    return CustomResponse(ModelState);
 
-    }
+    //    //return StatusCode(StatusCodes.Status500InternalServerError);
+
+    //}
 }

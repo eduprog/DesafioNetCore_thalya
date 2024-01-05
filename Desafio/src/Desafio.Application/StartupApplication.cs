@@ -16,7 +16,7 @@ public static class StartupApplication
     {
         services
             .AddRepositories(config)
-            .AddServices(config);
+            .AddServices();
         return services;
     }
 }

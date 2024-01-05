@@ -4,9 +4,19 @@ namespace Desafio.Application;
 
 public class UnitRequest
 {
+    private string _acronym;
+    private string _description;
+
     [Required(ErrorMessage = "The field {0} is required")]
-    public string Acronym { get; set; }
-    [Required(ErrorMessage = "The field {0} is required")]
-    public string Description { get; set; }
-    //public Guid Id { get; set; }
+    public string Acronym 
+    {
+        get => _acronym;
+        set => _acronym = value?.ToUpper();
+    }
+[Required(ErrorMessage = "The field {0} is required")]
+    public string Description
+    {
+        get => _description;
+        set => _description = value?.ToUpper();
+    }
 }

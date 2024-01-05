@@ -7,5 +7,6 @@ public interface IUnitService
     Task<UnitResponse> UpdateAsync(UnitRequest unitRequest);
     Task<UnitResponse> RemoveAsync(string acronym);
     Task<UnitResponse> GetByAcronymAsync(string acronym);
-    Task<UnitResponse> GetAllAsync();
+    Task<IEnumerable<UnitResponse>> GetAllAsync();
+    Task<bool> UnitAlreadyExists(string acronym);
 }
