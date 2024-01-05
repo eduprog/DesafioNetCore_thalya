@@ -5,11 +5,11 @@ namespace Desafio.API;
 
 public class UserController : DesafioControllerBase
 {
-    private IUserService _identityService;
+    private IUserService _userService;
 
     public UserController(IUserService identityService, IError error) : base(error)
     {
-        _identityService = identityService;
+        _userService = identityService;
     }
 
     [HttpPost("register")]
@@ -17,29 +17,20 @@ public class UserController : DesafioControllerBase
     {
         if(!ModelState.IsValid)
         {
-            return BadRequest(ModelState);
+            return CustomResponse(ModelState);
         }
-        var resultado = await _identityService.RegisterUserAsync(registerUserRequest);
-        if (resultado.Success)
-            return Ok(resultado);
-
-            
-        else if (resultado.Errors.Count  > 0) 
-            return BadRequest(resultado);
-
-        return StatusCode(StatusCodes.Status500InternalServerError);
+        var resultado = await _userService.RegisterUserAsync(registerUserRequest);
+        
+        return CustomResponse(resultado);   
     }
     [HttpPost("login")]
     public async Task<ActionResult<LoginUserResponse>> LoginUserAsync(LoginUserRequest loginUserRequest)
     {
-        if(!ModelState.IsValid) 
-            return BadRequest();
+        if(!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var resultado = await _identityService.LoginAsync(loginUserRequest);
-        if(resultado.Success)
-            return Ok(resultado);
+        var resultado = await _userService.LoginAsync(loginUserRequest);
 
-        return Unauthorized(resultado);
+        return CustomResponse(resultado);
     }
 
     //implementar exclusão, edição e listagem das permissões

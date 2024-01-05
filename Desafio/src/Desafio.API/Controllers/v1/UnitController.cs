@@ -19,9 +19,9 @@ public class UnitController : DesafioControllerBase
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        await _unitService.InsertAsync(unitRequest);
+        UnitResponse result = await _unitService.InsertAsync(unitRequest);
 
-        return CustomResponse(ModelState);
+        return CustomResponse(result);
     }
 
     //[HttpGet("get-by-acronym")]

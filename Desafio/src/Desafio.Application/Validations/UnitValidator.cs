@@ -3,11 +3,11 @@ using FluentValidation;
 
 namespace Desafio.Application;
 
-public class UnitValidation : AbstractValidator<Unit>
+public class UnitValidator : AbstractValidator<Unit>
 {
     private readonly IUnitService _unitService;
 
-    public UnitValidation(IUnitService unitService)
+    public UnitValidator(IUnitService unitService)
     {
         _unitService = unitService;
 

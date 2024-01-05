@@ -9,7 +9,6 @@ internal static class StartupRepositories
     {
         services.AddScoped<IPersonRepository, PersonRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitRepository, UnitRepository>();
 
         return services;

@@ -1,6 +1,7 @@
 ﻿using Desafio.Domain;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Identity;
 
 namespace Desafio.Application;
 
@@ -27,6 +28,16 @@ public abstract class ServiceBase
     }
 
     protected bool ExecuteValidation<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : Entity
+    {
+        var validator = validacao.Validate(entidade);
+
+        if (validator.IsValid) return true;
+
+        Notificate(validator);
+
+        return false;
+    }
+    protected bool ExecuteValidationIdentity<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : IdentityUser
     {
         var validator = validacao.Validate(entidade);
 

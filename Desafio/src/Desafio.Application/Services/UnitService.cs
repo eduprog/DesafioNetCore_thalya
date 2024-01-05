@@ -7,18 +7,16 @@ public class UnitService : ServiceBase, IUnitService
 {
     private readonly IUnitRepository _unitRepository;
     private readonly IMapper _mapper;
-    private readonly IError _error;
 
     public UnitService(IUnitRepository unitRepository, IMapper mapper, IError error) : base(error)
     {
         _unitRepository = unitRepository;
         _mapper = mapper;
-        _error = error;
     }
 
     public async Task<IEnumerable<UnitResponse>> GetAllAsync()
     {
-        var units = _mapper.Map< IEnumerable<UnitResponse>>(await _unitRepository.GetAllAsync());
+        var units = _mapper.Map<IEnumerable<UnitResponse>>(await _unitRepository.GetAllAsync());
 
         return units;
     }
@@ -46,7 +44,7 @@ public class UnitService : ServiceBase, IUnitService
     {
         var unit = _mapper.Map<Unit>(unitRequest);
 
-        if (!ExecuteValidation(new UnitValidation(this), unit)) 
+        if (!ExecuteValidation(new UnitValidator(this), unit)) 
         {
             return null;
         }
