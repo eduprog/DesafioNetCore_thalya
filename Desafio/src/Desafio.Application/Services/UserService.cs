@@ -2,12 +2,13 @@
 using Desafio.Application;
 using Desafio.Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Desafio.Identity;
 
@@ -30,8 +31,8 @@ public class UserService : ServiceBase, IUserService
         _jwtOptions = jwtOptions.Value;
         _mapper = mapper;
         _error = error;
-    } 
-
+    }
+    #region Insert and Login   
     public async Task<LoginUserResponse> LoginAsync(LoginUserRequest loginUserRequest)
     {
         var result = await _signInManager.PasswordSignInAsync(loginUserRequest.Email, loginUserRequest.Password, false, true);
@@ -106,10 +107,35 @@ public class UserService : ServiceBase, IUserService
             DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour)
         }; 
     }
-
+    
     //Converter corretamente os segundos da data
     private static long ToUnixEpochDate(DateTime date)
     {
         return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+    }
+    #endregion
+
+    public async Task<IEnumerable<UserResponse>> GetAllAsync()
+    {
+        IEnumerable<User> users = await _userManager.Users.ToListAsync();
+
+        var usersRoles = users.Select(async user => new UserResponse
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Document = user.Document,
+            Name = user.Name,
+            NickName = user.NickName,
+            UserName = user.Name,
+            Roles = await _userManager.GetRolesAsync(user).ConfigureAwait(true)
+        });
+
+        var mappedUsers = await Task.WhenAll(usersRoles);
+        return mappedUsers;
+    }
+
+    public bool EmailAlreadyExisists(string email)
+    {
+        return _userManager.FindByEmailAsync(email) != null;
     }
 }

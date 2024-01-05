@@ -121,7 +121,6 @@ public class UnitService : ServiceBase, IUnitService
     }
     public bool UnitAlreadyExists(string acronym)
     {
-        var unitExists = _unitRepository.IsRegistered(acronym);
-        return unitExists;
+        return _unitRepository.IsRegistered(acronym);
     }
 }

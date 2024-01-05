@@ -25,7 +25,6 @@ public class UnitValidator : AbstractValidator<Unit>
     private bool UniqueAcronym(string acronym)
     {
         // Verificar se existe cadastro dessa unidade
-        var teste = !_unitService.UnitAlreadyExists(acronym);
-        return teste;
+        return !_unitService.UnitAlreadyExists(acronym);
     }
 }

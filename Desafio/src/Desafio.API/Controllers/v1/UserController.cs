@@ -19,19 +19,26 @@ public class UserController : DesafioControllerBase
         {
             return CustomResponse(ModelState);
         }
-        var resultado = await _userService.RegisterUserAsync(registerUserRequest);
+        var result = await _userService.RegisterUserAsync(registerUserRequest);
         
-        return CustomResponse(resultado);   
+        return CustomResponse(result);   
     }
     [HttpPost("login")]
     public async Task<ActionResult<LoginUserResponse>> LoginUserAsync(LoginUserRequest loginUserRequest)
     {
         if(!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var resultado = await _userService.LoginAsync(loginUserRequest);
+        var result = await _userService.LoginAsync(loginUserRequest);
 
-        return CustomResponse(resultado);
+        return CustomResponse(result);
     }
 
+    [HttpGet("get-all-users")]
+    public async Task<ActionResult<UserResponse>> GetAllUsers()
+    {
+        var result = await _userService.GetAllAsync();
+
+        return CustomResponse(result);
+    }
     //implementar exclusão, edição e listagem das permissões
 }
