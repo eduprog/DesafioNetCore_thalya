@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace Desafio.Application;
 
-public class UnitService : IUnitService
+public class UnitService : ServiceBase, IUnitService
 {
     private readonly IUnitRepository _unitRepository;
     private readonly IMapper _mapper;
     private readonly IError _error;
 
-    public UnitService(IUnitRepository unitRepository, IMapper mapper, IError error)
+    public UnitService(IUnitRepository unitRepository, IMapper mapper, IError error) : base(error)
     {
         _unitRepository = unitRepository;
         _mapper = mapper;
@@ -21,20 +21,7 @@ public class UnitService : IUnitService
     {
         var units = _mapper.Map< IEnumerable<UnitResponse>>(await _unitRepository.GetAllAsync());
 
-        if (units != null)
-        {
-
-            var unitResponse = new List<UnitResponse>();
-
-            return unitResponse;
-        }
-        else
-        {
-            var unitResponse = new List<UnitResponse>();
-            //unitResponse.InsertError("The unit was not found.");
-
-            return unitResponse;
-        }
+        return units;
     }
 
     public async Task<UnitResponse> GetByAcronymAsync(string acronym)
@@ -58,16 +45,16 @@ public class UnitService : IUnitService
 
     public async Task<UnitResponse> InsertAsync(UnitRequest unitRequest)
     {
-        if (await UnitAlreadyExists(unitRequest.Acronym.ToUpper()))
+        var unit = _mapper.Map<Unit>(unitRequest);
+
+        if (!ExecuteValidation(new UnitValidation(this), unit)) 
         {
-            _error.Handle(new ErrorMessage("The Acronym already exists."));
             return null;
         }
-
-        var unit = _mapper.Map<Unit>(unitRequest);
+        
         await _unitRepository.InsertAsync(unit);
-
-        return null;
+        var newUnit = _mapper.Map<UnitResponse>(unit);
+        return newUnit;
 
     }
 
@@ -135,8 +122,8 @@ public class UnitService : IUnitService
             return unitResponse;
         }
     }
-    public async Task<bool> UnitAlreadyExists(string acronym)
+    public bool UnitAlreadyExists(string acronym)
     {
-        return await _unitRepository.GetByAcronymAsync(acronym) != null;
+        return _unitRepository.GetByAcronymAsync(acronym) != null;
     }
 }
