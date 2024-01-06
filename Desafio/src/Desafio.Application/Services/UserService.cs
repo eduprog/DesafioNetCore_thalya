@@ -46,6 +46,11 @@ public class UserService : ServiceBase, IUserService
         var identityUser = _mapper.Map<User>(registerUserRequest);
         identityUser.EmailConfirmed = true;
 
+        if (!ExecuteValidationIdentity(new UserValidator(this), identityUser))
+        {
+            return null;
+        }
+
         var result = await _userManager.CreateAsync(identityUser, registerUserRequest.Password);
 
         if (!result.Succeeded)
@@ -115,7 +120,7 @@ public class UserService : ServiceBase, IUserService
     }
     #endregion
 
-    public async Task<IEnumerable<UserResponse>> GetAllAsync()
+    public async Task<IEnumerable<UserResponse>> GetAllAsync(bool selectRoles)
     {
         IEnumerable<User> users = await _userManager.Users.ToListAsync();
 
@@ -127,7 +132,7 @@ public class UserService : ServiceBase, IUserService
             Name = user.Name,
             NickName = user.NickName,
             UserName = user.Name,
-            Roles = await _userManager.GetRolesAsync(user).ConfigureAwait(true)
+            Roles = selectRoles ? await _userManager.GetRolesAsync(user).ConfigureAwait(true) : null
         });
 
         var mappedUsers = await Task.WhenAll(usersRoles);
@@ -155,6 +160,63 @@ public class UserService : ServiceBase, IUserService
 
     public bool EmailAlreadyExisists(string email)
     {
-        return _userManager.FindByEmailAsync(email) != null;
+        return _userManager.Users.FirstOrDefault(x => x.Email == email) != null;
     }
+    public bool DocumentAlreadyExisists(string document)
+    {
+        return _userManager.Users.FirstOrDefault(x => x.Document == document) != null;
+    }
+    public bool IsValidDocument(string document)
+    {
+        string documentNumber = OnlyDocumentNumbers(document);
+        bool validLength = documentNumber.Length == 11 || documentNumber.Length == 14;
+
+        if (string.IsNullOrWhiteSpace(documentNumber) || HasRepeatedValues(documentNumber) || !validLength)
+        {
+            return false;
+        }
+
+        return true;
+
+    }
+    public static string OnlyDocumentNumbers(string document)
+    {
+        var onlyNumber = "";
+        foreach (var value in document)
+        {
+            if (char.IsDigit(value))
+            {
+                onlyNumber += value;
+            }
+        }
+        return onlyNumber.Trim();
+    }
+    private static bool HasRepeatedValues(string document)
+    {
+        string[] invalidNumbers =
+        {
+                "00000000000",
+                "11111111111",
+                "22222222222",
+                "33333333333",
+                "44444444444",
+                "55555555555",
+                "66666666666",
+                "77777777777",
+                "88888888888",
+                "99999999999",
+                "00000000000000",
+                "11111111111111",
+                "22222222222222",
+                "33333333333333",
+                "44444444444444",
+                "55555555555555",
+                "66666666666666",
+                "77777777777777",
+                "88888888888888",
+                "99999999999999"
+            };
+        return invalidNumbers.Contains(document);
+    }
+    
 }

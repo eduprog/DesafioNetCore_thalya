@@ -37,15 +37,28 @@ public class UserController : DesafioControllerBase
     [HttpGet("get-all-users")]
     public async Task<ActionResult<UserResponse>> GetAllUsers()
     {
-        var result = await _userService.GetAllAsync();
+        var result = await _userService.GetAllAsync(false);
+        
+        if (result.Count() == 0) return CustomResponse(result, "No users were found.");
 
         return CustomResponse(result);
     }
 
+    [HttpGet("get-all-users-roles")]
+    public async Task<ActionResult<UserResponse>> GetAllUsersRoles()
+    {
+        var result = await _userService.GetAllAsync(true);
+
+        if (result.Count() == 0) return CustomResponse(result, "No users were found.");
+
+        return CustomResponse(result);
+    }
     [HttpGet("get-all-administrator-users")]
     public async Task<ActionResult<UserResponse>> GetAllAdministratorUsers()
     {
         var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Administrator.ToString().ToUpper());
+
+        if (result.Count() == 0) return CustomResponse(result, "No administrator users were found.");
 
         return CustomResponse(result);
     }
@@ -54,7 +67,9 @@ public class UserController : DesafioControllerBase
     public async Task<ActionResult<UserResponse>> GetAllManagerUsers()
     {
         var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Manager.ToString().ToUpper());
-
+        
+        if(result.Count() ==  0) return CustomResponse(result, "No manager users were found.");
+        
         return CustomResponse(result);
     }
 
@@ -62,6 +77,8 @@ public class UserController : DesafioControllerBase
     public async Task<ActionResult<UserResponse>> GetAllSellerUsers()
     {
         var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Seller.ToString().ToUpper());
+
+        if (result.Count() == 0) return CustomResponse(result, "No seller users were found.");
 
         return CustomResponse(result);
     }

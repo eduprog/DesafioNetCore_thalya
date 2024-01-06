@@ -15,10 +15,19 @@ public abstract class DesafioControllerBase : ControllerBase
         _error = error;
     }
 
-    protected ActionResult CustomResponse(object result = null)
+    protected ActionResult CustomResponse(object result = null, string message = null)
     {
         if (IsValid())
         {
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                return Ok(new
+                {
+                    sucess = true,
+                    data = message
+                });
+            }
+
             return Ok(new
             {
                 sucess = true,
