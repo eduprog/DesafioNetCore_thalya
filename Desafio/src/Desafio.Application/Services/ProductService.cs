@@ -1,31 +1,83 @@
-﻿using Desafio.Domain;
+﻿using AutoMapper;
+using Desafio.Domain;
 
 namespace Desafio.Application;
 
-public class ProductService : IProductService
+public class ProductService : ServiceBase, IProductService
 {
-    public Task<Product> GetAllAsync()
+    private readonly IProductRepository _productRepository;
+    private readonly IMapper _mapper;
+
+    public ProductService(IProductRepository productRepository, IMapper mapper, IError error) : base(error)
     {
-        throw new NotImplementedException();
+        _productRepository = productRepository;
+        _mapper = mapper;
     }
 
-    public Task<Product> GetByIdAsync(int id)
+    public async Task<IEnumerable<ProductResponse>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var result = _mapper.Map<IEnumerable<ProductResponse>>(await _productRepository.GetAllAsync());
+
+        return result;
     }
 
-    public Task InsertAsync(Product product)
+    public async Task<ProductResponse> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var product = await _productRepository.GetByIdAsync(id);
+
+        return _mapper.Map<ProductResponse>(product);
     }
 
-    public Task RemoveAsync(int id)
+    public async Task<ProductResponse> InsertAsync(InsertProductRequest productRequest)
     {
-        throw new NotImplementedException();
+
+        var product = _mapper.Map<Product>(productRequest);
+
+        if (!ExecuteValidation(new ProductValidator(this), product))
+        {
+            return null;
+        }
+
+        product.ShortId = GenerateShortId("PRODUCT");
+
+        await _productRepository.InsertAsync(product);
+        var newProduct = _mapper.Map<ProductResponse>(product);
+        return newProduct;
     }
 
-    public Task UpdateAsync(Product product)
+    public async Task<ProductResponse> RemoveAsync(Guid id)
     {
-        throw new NotImplementedException();
+        await _productRepository.RemoveAsync(id);
+
+        return null;
+    }
+
+    public async Task<ProductResponse> UpdateAsync(ProductRequest productRequest)
+    {
+        var existingUnit = await _productRepository.GetByIdAsync(productRequest.Id);
+
+        if (existingUnit != null)
+        {
+            existingUnit.StoredQuantity = productRequest.StoredQuantity;
+            existingUnit.Price = productRequest.Price;
+            existingUnit.BarCode = productRequest.BarCode;
+            existingUnit.Salable = productRequest.Salable;
+            existingUnit.Acronym = productRequest.Acronym;
+            existingUnit.Description = productRequest.Description;
+            existingUnit.Enable = productRequest.Enable;
+            existingUnit.Id = productRequest.Id;
+            existingUnit.ShortDescription = productRequest.ShortDescription;
+
+            await _productRepository.UpdateAsync(existingUnit);
+
+            var unitResponse = _mapper.Map<ProductResponse>(existingUnit);
+
+            return unitResponse;
+        }
+        else
+        {
+            Notificate("The product was not found.");
+            return null;
+        }
     }
 }

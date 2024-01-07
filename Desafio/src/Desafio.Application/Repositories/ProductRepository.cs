@@ -1,31 +1,84 @@
 ﻿using Desafio.Domain;
+using Desafio.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.Application;
 
 public class ProductRepository : IProductRepository
 {
-    public Task<Product> GetAllAsync()
+    private readonly AppDbContext _appDbContext;
+
+    public ProductRepository(AppDbContext appDbContext)
     {
-        throw new NotImplementedException();
+        _appDbContext = appDbContext;
     }
 
-    public Task<Product> GetByIdAsync(int id)
+    public async Task<List<Product>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _appDbContext.Products.ToListAsync();
     }
 
-    public Task InsertAsync(Product product)
+    public async Task<Product> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _appDbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public Task RemoveAsync(int id)
+    public async Task InsertAsync(Product product)
     {
-        throw new NotImplementedException();
+        try
+        {
+            product.Id = Guid.NewGuid();
+            product.Unit = _appDbContext.Units.FirstOrDefault();
+            await _appDbContext.Products.AddAsync(product);
+            await SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while inserting product");
+        }
     }
 
-    public Task UpdateAsync(Product product)
+    public async Task RemoveAsync(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Product product = await GetByIdAsync(id);
+            if (product == null)
+            {
+                throw new Exception($"Product {id} doesn't exists.");
+            }
+            _appDbContext.Products.Remove(product);
+            await SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<int> SaveChangesAsync()
+    {
+        try
+        {
+            return await _appDbContext.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while saving product");
+        }
+    }
+
+    public async Task<Product> UpdateAsync(Product product)
+    {
+        try
+        {
+            _appDbContext.Update(product);
+            await SaveChangesAsync();
+            return product;
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while updating product");
+        }
     }
 }

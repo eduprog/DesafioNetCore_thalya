@@ -3,10 +3,10 @@
 namespace Desafio.Application;
 public interface IProductService
 {
-    Task InsertAsync(Product product);
-    Task UpdateAsync(Product product);
-    Task RemoveAsync(int id);
-    Task<Product> GetByIdAsync(int id);
-    Task<Product> GetAllAsync();
+    Task<ProductResponse> InsertAsync(InsertProductRequest productRequest);
+    Task<ProductResponse> UpdateAsync(ProductRequest productRequest);
+    Task<ProductResponse> RemoveAsync(Guid id);
+    Task<ProductResponse> GetByIdAsync(Guid id);
+    Task<IEnumerable<ProductResponse>> GetAllAsync();
 }
 
