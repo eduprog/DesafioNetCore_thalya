@@ -3,17 +3,20 @@ using System;
 using Desafio.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Desafio.Infrastructure.Migrations.AppDb
+namespace Desafio.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240107160634_AppDbContext_V_00_01")]
+    partial class AppDbContext_V_00_01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,6 +66,11 @@ namespace Desafio.Infrastructure.Migrations.AppDb
                         .HasColumnType("text")
                         .HasColumnName("notes");
 
+                    b.Property<string>("ShortId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("short_id");
+
                     b.HasKey("Id");
 
                     b.ToTable("person", "public");
@@ -108,6 +116,11 @@ namespace Desafio.Infrastructure.Migrations.AppDb
                         .HasColumnType("text")
                         .HasColumnName("short_description");
 
+                    b.Property<string>("ShortId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("short_id");
+
                     b.Property<decimal>("StoredQuantity")
                         .HasPrecision(15, 4)
                         .HasColumnType("numeric(15,4)")
@@ -134,6 +147,11 @@ namespace Desafio.Infrastructure.Migrations.AppDb
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<string>("ShortId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("short_id");
 
                     b.HasKey("Acronym");
 

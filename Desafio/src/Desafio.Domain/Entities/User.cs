@@ -7,4 +7,5 @@ public class User : IdentityUser
     public string Name { get; set; } = string.Empty;
     public string NickName { get; set; } = string.Empty;
     public string Document { get; set; } = string.Empty;
+    public string ShortId { get; set; } = string.Empty;
 }

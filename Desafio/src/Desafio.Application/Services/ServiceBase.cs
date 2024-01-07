@@ -47,4 +47,20 @@ public abstract class ServiceBase
 
         return false;
     }
+    protected string GenerateShortId(string input)
+    {
+        DateTime date = DateTime.Now;
+
+        string newId = $"{date:yyyyMMddHHmmss}-{input}";
+
+        byte[] bytesBase64 = System.Text.Encoding.ASCII.GetBytes(newId);
+        string idBase64 = Convert.ToBase64String(bytesBase64);
+
+        string shortId = new string(idBase64
+            .Where(x => char.IsLetterOrDigit(x))
+            .ToArray())
+            .Substring(0, 10);
+
+        return shortId;
+    }
 }

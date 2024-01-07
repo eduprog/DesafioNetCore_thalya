@@ -51,6 +51,7 @@ public class UserService : ServiceBase, IUserService
             return null;
         }
 
+        identityUser.ShortId = GenerateShortId("USER");
         var result = await _userManager.CreateAsync(identityUser, registerUserRequest.Password);
 
         if (!result.Succeeded)

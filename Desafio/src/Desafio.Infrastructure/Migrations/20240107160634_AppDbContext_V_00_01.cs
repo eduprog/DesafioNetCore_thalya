@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Desafio.Infrastructure.Migrations.AppDb
+namespace Desafio.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class AppDbContext_V_00_01 : Migration
@@ -26,7 +26,8 @@ namespace Desafio.Infrastructure.Migrations.AppDb
                     enable = table.Column<bool>(type: "boolean", nullable: false),
                     can_sell = table.Column<bool>(type: "boolean", nullable: false),
                     notes = table.Column<string>(type: "text", nullable: false),
-                    alternative_code = table.Column<string>(type: "text", nullable: false)
+                    alternative_code = table.Column<string>(type: "text", nullable: false),
+                    short_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,7 +41,8 @@ namespace Desafio.Infrastructure.Migrations.AppDb
                 {
                     acronym = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
-                    id = table.Column<Guid>(type: "uuid", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    short_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,7 +62,8 @@ namespace Desafio.Infrastructure.Migrations.AppDb
                     stored_quantity = table.Column<decimal>(type: "numeric(15,4)", precision: 15, scale: 4, nullable: false),
                     enable = table.Column<bool>(type: "boolean", nullable: false),
                     salable = table.Column<bool>(type: "boolean", nullable: false),
-                    bar_code = table.Column<string>(type: "text", nullable: false)
+                    bar_code = table.Column<string>(type: "text", nullable: false),
+                    short_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

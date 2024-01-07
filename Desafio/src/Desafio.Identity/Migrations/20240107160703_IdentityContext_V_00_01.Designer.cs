@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Desafio.Identity.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20240104182156_IdentityContext_V_00_01")]
+    [Migration("20240107160703_IdentityContext_V_00_01")]
     partial class IdentityContext_V_00_01
     {
         /// <inheritdoc />
@@ -77,6 +77,9 @@ namespace Desafio.Identity.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShortId")
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")

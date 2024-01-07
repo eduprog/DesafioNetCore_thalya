@@ -8,5 +8,5 @@ public class LoginUserResponse
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Token { get; set; }
     public DateTime DataExpiration { get; set; }
-    
+    public string ShortId { get; set; }
 }

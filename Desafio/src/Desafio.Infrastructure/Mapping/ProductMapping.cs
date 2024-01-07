@@ -21,6 +21,7 @@ public class ProductMapping : IEntityTypeConfiguration<Product>
         product.Property(x => x.Enable).HasColumnName("enable").IsRequired();
         product.Property(x => x.Salable).HasColumnName("salable").IsRequired();
         product.Property(x => x.BarCode).HasColumnName("bar_code").IsRequired();
+        product.Property(x => x.ShortId).HasColumnName("short_id").IsRequired();
 
         #region Relations
         product.HasOne(x => x.Unit)
