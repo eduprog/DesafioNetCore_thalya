@@ -20,6 +20,12 @@ public class ProductService : ServiceBase, IProductService
 
         return result;
     }
+    public async Task<IEnumerable<ProductResponse>> GetAllSalableAsync()
+    {
+        var result = _mapper.Map<IEnumerable<ProductResponse>>(await _productRepository.GetAllSalableAsync());
+
+        return result;
+    }
 
     public async Task<ProductResponse> GetByIdAsync(Guid id)
     {

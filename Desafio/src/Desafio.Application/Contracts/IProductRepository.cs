@@ -9,5 +9,6 @@ public interface IProductRepository
     Task RemoveAsync(Guid id);
     Task<Product> GetByIdAsync(Guid id);
     Task<List<Product>> GetAllAsync();
+    Task<List<Product>> GetAllSalableAsync();
     Task<int> SaveChangesAsync();
 }

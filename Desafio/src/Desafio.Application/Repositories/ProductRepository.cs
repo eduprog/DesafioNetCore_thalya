@@ -17,6 +17,10 @@ public class ProductRepository : IProductRepository
     {
         return await _appDbContext.Products.ToListAsync();
     }
+    public async Task<List<Product>> GetAllSalableAsync()
+    {
+        return await _appDbContext.Products.Where(x => x.Salable).ToListAsync();
+    }
 
     public async Task<Product> GetByIdAsync(Guid id)
     {

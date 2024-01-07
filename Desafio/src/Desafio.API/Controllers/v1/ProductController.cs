@@ -34,7 +34,15 @@ public class ProductController : DesafioControllerBase
     }
 
     [HttpGet("get-all")]
-    public async Task<ActionResult<IEnumerable<ProductResponse>>> GetAllProductSAsync()
+    public async Task<ActionResult<IEnumerable<ProductResponse>>> GetAllProductsAsync()
+    {
+        IEnumerable<ProductResponse> result = await _productService.GetAllAsync();
+        if (!result.Any()) return CustomResponseList(result, "No Products were found.");
+
+        return CustomResponseList(result);
+    }
+    [HttpGet("get-all-salable")]
+    public async Task<ActionResult<IEnumerable<ProductResponse>>> GetAllSalabeProductsAsync()
     {
         IEnumerable<ProductResponse> result = await _productService.GetAllAsync();
         if (!result.Any()) return CustomResponseList(result, "No Products were found.");

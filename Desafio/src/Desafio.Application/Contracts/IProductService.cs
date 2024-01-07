@@ -8,5 +8,6 @@ public interface IProductService
     Task<ProductResponse> RemoveAsync(Guid id);
     Task<ProductResponse> GetByIdAsync(Guid id);
     Task<IEnumerable<ProductResponse>> GetAllAsync();
+    Task<IEnumerable<ProductResponse>> GetAllSalableAsync();
 }
 
