@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Desafio.Domain;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace Desafio.Application;
 
@@ -16,28 +18,16 @@ public class UnitService : ServiceBase, IUnitService
 
     public async Task<IEnumerable<UnitResponse>> GetAllAsync()
     {
-        var units = _mapper.Map<IEnumerable<UnitResponse>>(await _unitRepository.GetAllAsync());
+        var result = _mapper.Map<IEnumerable<UnitResponse>>(await _unitRepository.GetAllAsync());
 
-        return units;
+        return result;
     }
 
     public async Task<UnitResponse> GetByAcronymAsync(string acronym)
     {
         var unit = await _unitRepository.GetByAcronymAsync(acronym);
 
-        if(unit != null)
-        {
-            var unitResponse = new UnitResponse();
-            
-            return unitResponse;
-        }
-        else
-        {
-            UnitResponse unitResponse = new UnitResponse();
-            //unitResponse.InsertError("The unit was not found.");
-
-            return unitResponse;
-        }
+        return _mapper.Map<UnitResponse>(unit);
     }
 
     public async Task<UnitResponse> InsertAsync(UnitRequest unitRequest)
@@ -63,18 +53,14 @@ public class UnitService : ServiceBase, IUnitService
         {
             if (_unitRepository.HasBeenUsedBefore(acronym))
             {
-                UnitResponse unitResponse = new UnitResponse();
-                //unitResponse.InsertError("It's not possible to remove a unit that is being used in a product.");
-
-                return unitResponse;
+                Notificate("It's not possible to remove a unit that is being used in a product.");
+                return null;
             }
             else
             {
                 await _unitRepository.RemoveAsync(acronym);
 
-                var unitResponse = new UnitResponse();
-
-                return unitResponse;
+                return null;
             }
             
 
@@ -96,21 +82,21 @@ public class UnitService : ServiceBase, IUnitService
 
             if (existingUnit != null)
             {
+                var unit = _mapper.Map<Unit>(unitRequest);
+
                 existingUnit.Acronym = unitRequest.Acronym.ToUpper();
                 existingUnit.Description = unitRequest.Description.ToUpper();
 
                 await _unitRepository.UpdateAsync(existingUnit);
 
-                var unitResponse = new UnitResponse();
+                var unitResponse = _mapper.Map<UnitResponse>(existingUnit);
 
                 return unitResponse;
             }
             else
             {
-                UnitResponse unitResponse = new UnitResponse();
-                //unitResponse.InsertError("The unit was not found.");
-
-                return unitResponse;
+                Notificate("The unit was not found.");
+                return null;
             }
         }
         catch (Exception ex)

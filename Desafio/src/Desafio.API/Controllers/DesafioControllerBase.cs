@@ -41,6 +41,32 @@ public abstract class DesafioControllerBase : ControllerBase
             errors = _error.GetErrors().Select(x => x.Error)
         });
     }
+    protected ActionResult CustomResponseList<T>(IEnumerable<T> result, string message = null)
+    {
+        if (IsValid())
+        {
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                return Ok(new
+                {
+                    sucess = true,
+                    data = message
+                });
+            }
+
+            return Ok(new
+            {
+                sucess = true,
+                data = result
+            });
+        }
+
+        return BadRequest(new
+        {
+            sucess = false,
+            errors = _error.GetErrors().Select(x => x.Error)
+        });
+    }
     protected ActionResult CustomResponse(ModelStateDictionary modelState)
     {
         if(!ModelState.IsValid) NotificateErrorInvalidModel(modelState);
