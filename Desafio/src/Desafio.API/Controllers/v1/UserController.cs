@@ -55,6 +55,7 @@ public class UserController : DesafioControllerBase
 
         return CustomResponse(result);
     }
+
     [HttpGet("get-all-administrator-users")]
     public async Task<ActionResult<UserResponse>> GetAllAdministratorUsers()
     {
@@ -87,7 +88,19 @@ public class UserController : DesafioControllerBase
 
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
     [HttpPut]
-    public async Task<ActionResult<UserResponse>> PutUserAsync(UserRequest userRequest)
+    public async Task<ActionResult<UserResponse>> PutUserAsync(UpdateUserRequest userRequest)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        UserResponse result = await _userService.UpdateAsync(userRequest);
+
+        return CustomResponse(result);
+
+    }
+
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpPut("put-login")]
+    public async Task<ActionResult<UserResponse>> PutLoginUserAsync(UpdateLoginUserRequest userRequest)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 

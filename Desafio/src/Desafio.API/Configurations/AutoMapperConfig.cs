@@ -14,6 +14,9 @@ namespace Desafio.API.Configurations
             CreateMap<User, LoginUserResponse>().ReverseMap();
             CreateMap<User, RegisterUserRequest>().ReverseMap();
             CreateMap<User, RegisterUserResponse>().ReverseMap();
+            CreateMap<User, UserResponse>().ReverseMap();
+            CreateMap<User, UpdateUserRequest>().ReverseMap();
+            CreateMap<User, UpdateLoginUserRequest>().ReverseMap();
             CreateMap<Product, InsertProductRequest>().ReverseMap();
             CreateMap<Product, ProductResponse>().ReverseMap();
         }

@@ -23,6 +23,14 @@ public abstract class ServiceBase
         }
     }
 
+    protected void Notificate(IEnumerable<IdentityError> identityError)
+    {
+        foreach (var error in identityError)
+        {
+            Notificate(error.Description);
+        }
+    }
+
     protected void Notificate(string mensagem)
     {
         _error.Handle(new ErrorMessage(mensagem));

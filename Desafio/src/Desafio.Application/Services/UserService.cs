@@ -38,6 +38,7 @@ public class UserService : ServiceBase, IUserService
         var result = await _signInManager.PasswordSignInAsync(loginUserRequest.Email, loginUserRequest.Password, false, true);
         if (result.Succeeded) return await GenerateToken(loginUserRequest.Email);
 
+        Notificate("Incorrect email or password.");
         return null;
     }
 
@@ -86,6 +87,7 @@ public class UserService : ServiceBase, IUserService
             Name = user.Name,
             NickName = user.NickName,
             UserName = user.Name,
+            ShortId = user.ShortId,
             Roles = selectRoles ? await _userManager.GetRolesAsync(user).ConfigureAwait(true) : null
         });
 
@@ -105,37 +107,74 @@ public class UserService : ServiceBase, IUserService
             Name = user.Name,
             NickName = user.NickName,
             UserName = user.Name,
+            ShortId = user.ShortId,
             Roles = _userManager.GetRolesAsync(user).Result
         });
 
         return usersRoles;
     }
-
-    public async Task<UserResponse> UpdateAsync (UserRequest userRequest)
+    public async Task<UserResponse> UpdateAsync(UpdateUserRequest userRequest)
     {
         var existingUser = await _userManager.FindByEmailAsync(userRequest.Email);
+        var existingRole = await _userManager.GetRolesAsync(existingUser);
 
-
-        if (existingUser != null)
-        {
-            //propriedades usuario
-
-            //await _userManager.UpdateAsync(existingUser);
-
-            //var userResponse = _mapper.Map<UserResponse>(existingUser);
-
-            return new UserResponse();
-        }
-        else
+        if (existingUser == null)
         {
             Notificate("The user was not found.");
             return null;
         }
+
+        existingUser.Document = userRequest.Document ?? existingUser.Document;
+        existingUser.Name = userRequest.Name ?? existingUser.Name;
+        existingUser.UserName = userRequest.UserName ?? existingUser.UserName;
+        existingUser.Email = userRequest.Email;
+        existingUser.NickName = userRequest.NickName ?? existingUser.NickName;
+
+        await _userManager.UpdateAsync(existingUser);
+
+        string newRole = userRequest.UserLevel.ToString();
+        await _userManager.RemoveFromRoleAsync(existingUser, existingRole.FirstOrDefault());
+        await _userManager.AddToRoleAsync(existingUser, newRole);
+
+        var userResponse = _mapper.Map<UserResponse>(existingUser);
+
+        userResponse.Roles.Add(newRole);
+
+        return userResponse;
+
     }
+    public async Task<UserResponse> UpdateAsync (UpdateLoginUserRequest userRequest)
+    {
+        var existingUser = await _userManager.FindByEmailAsync(userRequest.Email);
+
+        if (existingUser == null)
+        {
+            Notificate("The user was not found.");
+            return null;
+        }
+
+        var result = await _userManager.ChangePasswordAsync(existingUser, userRequest.CurrentPassword, userRequest.NewPassword);
+        if(result.Succeeded) 
+        {
+            var userResponse = _mapper.Map<UserResponse>(existingUser);
+
+            return userResponse;
+        }
+
+        Notificate(result.Errors);
+        return null;
+        
+    }
+
+
     public async Task<UserResponse> RemoveAsync(string email)
     {
         var existingUser = await _userManager.FindByEmailAsync(email);
-
+        if(existingUser == null)
+        {
+            Notificate("Email was not found.");
+            return null;
+        }
         await _userManager.DeleteAsync(existingUser);
 
         return null;

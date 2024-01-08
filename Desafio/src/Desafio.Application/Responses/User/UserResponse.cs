@@ -12,6 +12,6 @@ public class UserResponse
     public string Document { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public IList<string> Roles { get; set; }
+    public IList<string> Roles { get; set; } = new List<string>();
     public string ShortId { get; set; }
 }

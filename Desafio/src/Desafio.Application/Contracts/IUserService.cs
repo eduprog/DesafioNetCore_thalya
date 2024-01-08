@@ -6,7 +6,8 @@ public interface IUserService
     Task<LoginUserResponse> LoginAsync(LoginUserRequest loginUserRequest);
     Task<IEnumerable<UserResponse>> GetAllAsync(bool selectRoles);
     Task<IEnumerable<UserResponse>> GetAllUsersByRoleAsync(string role);
-    Task<UserResponse> UpdateAsync(UserRequest userRequest);
+    Task<UserResponse> UpdateAsync(UpdateUserRequest userRequest);
+    Task<UserResponse> UpdateAsync(UpdateLoginUserRequest userRequest);
     Task<UserResponse> RemoveAsync(string email);
     bool EmailAlreadyExisists(string email);
     bool DocumentAlreadyExisists(string document);
