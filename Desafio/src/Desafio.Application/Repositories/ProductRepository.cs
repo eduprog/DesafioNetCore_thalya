@@ -22,6 +22,11 @@ public class ProductRepository : IProductRepository
         return await _appDbContext.Products.Where(x => x.Salable).ToListAsync();
     }
 
+    public async Task<Product> GetByBarCode(string barCode)
+    {
+        return await _appDbContext.Products.FirstAsync(x => x.BarCode == barCode);
+    }
+
     public async Task<Product> GetByIdAsync(Guid id)
     {
         return await _appDbContext.Products.FirstOrDefaultAsync(x => x.Id == id);

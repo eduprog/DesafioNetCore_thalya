@@ -17,10 +17,8 @@ public class UserController : DesafioControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<RegisterUserResponse>> RegisterUserAsync(RegisterUserRequest registerUserRequest)
     {
-        if(!ModelState.IsValid)
-        {
-            return CustomResponse(ModelState);
-        }
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
         var result = await _userService.RegisterUserAsync(registerUserRequest);
         
         return CustomResponse(result);   

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Desafio.Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace Desafio.Application;
 
@@ -12,6 +13,11 @@ public class ProductService : ServiceBase, IProductService
     {
         _productRepository = productRepository;
         _mapper = mapper;
+    }
+
+    public bool ExistingBarCode(string barCode)
+    {
+        return _productRepository.GetByBarCode(barCode) != null;
     }
 
     public async Task<IEnumerable<ProductResponse>> GetAllAsync()

@@ -9,5 +9,6 @@ public interface IProductService
     Task<ProductResponse> GetByIdAsync(Guid id);
     Task<IEnumerable<ProductResponse>> GetAllAsync();
     Task<IEnumerable<ProductResponse>> GetAllSalableAsync();
+    bool ExistingBarCode(string barCode);
 }
 
