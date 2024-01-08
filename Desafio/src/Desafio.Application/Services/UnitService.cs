@@ -28,6 +28,13 @@ public class UnitService : ServiceBase, IUnitService
         return _mapper.Map<UnitResponse>(unit);
     }
 
+    public async Task<UnitResponse> GetByShortIdAsync(string shortId)
+    {
+        var unit = await _unitRepository.GetByShortIdAsync(shortId);
+
+        return _mapper.Map<UnitResponse>(unit);
+    }
+
     public async Task<UnitResponse> InsertAsync(UnitRequest unitRequest)
     {
         var unit = _mapper.Map<Unit>(unitRequest);

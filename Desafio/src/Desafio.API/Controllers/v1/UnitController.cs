@@ -27,7 +27,16 @@ public class UnitController : DesafioControllerBase
     [HttpGet("get-by-acronym")]
     public async Task<ActionResult<UnitResponse>> GetUnitAsync(string acronym)
     {
-        var result = await _unitService.GetByAcronymAsync(acronym.ToUpper());
+        var result = await _unitService.GetByAcronymAsync(acronym);
+
+        return CustomResponse(result);
+
+    }
+
+    [HttpGet("get-by-short-id")]
+    public async Task<ActionResult<UnitResponse>> GetUnitByShortIdAsync(string shortId)
+    {
+        var result = await _unitService.GetByShortIdAsync(shortId);
 
         return CustomResponse(result);
 

@@ -24,6 +24,11 @@ public class UnitRepository : IUnitRepository
         return await _appDbContext.Units.FirstOrDefaultAsync(x => x.Acronym == acronym);
     }
 
+    public async Task<Unit> GetByShortIdAsync(string shortId)
+    {
+        return await _appDbContext.Units.FirstOrDefaultAsync(x => x.ShortId == shortId);
+    }
+
     public async Task InsertAsync(Unit unit)
     {
         try
