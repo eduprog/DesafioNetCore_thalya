@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -32,9 +31,10 @@ public class UserService : ServiceBase, IUserService
         _mapper = mapper;
         _error = error;
     }
-    #region Insert and Login   
+    #region Controller Methods
     public async Task<LoginUserResponse> LoginAsync(LoginUserRequest loginUserRequest)
     {
+        //usar mapper
         var result = await _signInManager.PasswordSignInAsync(loginUserRequest.Email, loginUserRequest.Password, false, true);
         if (result.Succeeded) return await GenerateToken(loginUserRequest.Email);
 
@@ -74,53 +74,6 @@ public class UserService : ServiceBase, IUserService
         return userRegisterResponse;
     }
 
-    private async Task<LoginUserResponse> GenerateToken(string email)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
-        var claims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
-
-        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-        claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); //jwt ID
-        claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString())); //criação
-        claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)); //emissão
-
-        foreach (var role in roles)
-            claims.Add(new Claim("role", role));
-
-        var identityClaims = new ClaimsIdentity();
-        identityClaims.AddClaims(claims);
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
-
-        var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
-        {
-            Issuer = _jwtOptions.Sender,
-            Audience = _jwtOptions.ValidIn,
-            Subject = identityClaims,
-            Expires = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        });
-
-        var encodedToken = tokenHandler.WriteToken(token);
-
-        return new LoginUserResponse
-        {
-            Email = email,
-            Token = encodedToken,
-            DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour)
-        }; 
-    }
-    
-    //Converter corretamente os segundos da data
-    private static long ToUnixEpochDate(DateTime date)
-    {
-        return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
-    }
-    #endregion
-
     public async Task<IEnumerable<UserResponse>> GetAllAsync(bool selectRoles)
     {
         IEnumerable<User> users = await _userManager.Users.ToListAsync();
@@ -158,7 +111,86 @@ public class UserService : ServiceBase, IUserService
         return usersRoles;
     }
 
+    public async Task<UserResponse> UpdateAsync (UserRequest userRequest)
+    {
+        var existingUser = await _userManager.FindByEmailAsync(userRequest.Email);
 
+
+        if (existingUser != null)
+        {
+            //propriedades usuario
+
+            //await _userManager.UpdateAsync(existingUser);
+
+            //var userResponse = _mapper.Map<UserResponse>(existingUser);
+
+            return new UserResponse();
+        }
+        else
+        {
+            Notificate("The user was not found.");
+            return null;
+        }
+    }
+    public async Task<UserResponse> RemoveAsync(string email)
+    {
+        var existingUser = await _userManager.FindByEmailAsync(email);
+
+        await _userManager.DeleteAsync(existingUser);
+
+        return null;
+    }
+    #endregion
+
+    #region Helper Methods 
+    private async Task<LoginUserResponse> GenerateToken(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        var claims = await _userManager.GetClaimsAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); //jwt ID
+        claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString())); //criação
+        claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)); //emissão
+
+        foreach (var role in roles)
+            claims.Add(new Claim("role", role));
+
+        var identityClaims = new ClaimsIdentity();
+        identityClaims.AddClaims(claims);
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+        var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+        {
+            Issuer = _jwtOptions.Sender,
+            Audience = _jwtOptions.ValidIn,
+            Subject = identityClaims,
+            Expires = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        });
+
+        var encodedToken = tokenHandler.WriteToken(token);
+
+        return new LoginUserResponse
+        {
+            Email = email,
+            Token = encodedToken,
+            DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour)
+        };
+    }
+
+    //Converter corretamente os segundos da data
+    private static long ToUnixEpochDate(DateTime date)
+    {
+        return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+    }
+    #endregion
+
+    #region Validations Methods
     public bool EmailAlreadyExisists(string email)
     {
         return _userManager.Users.FirstOrDefault(x => x.Email == email) != null;
@@ -219,5 +251,5 @@ public class UserService : ServiceBase, IUserService
             };
         return invalidNumbers.Contains(document);
     }
-    
+    #endregion
 }

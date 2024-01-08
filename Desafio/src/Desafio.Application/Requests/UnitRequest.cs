@@ -13,7 +13,7 @@ public class UnitRequest
         get => _acronym;
         set => _acronym = value?.ToUpper();
     }
-[Required(ErrorMessage = "The field {0} is required")]
+    [Required(ErrorMessage = "The field {0} is required")]
     public string Description
     {
         get => _description;

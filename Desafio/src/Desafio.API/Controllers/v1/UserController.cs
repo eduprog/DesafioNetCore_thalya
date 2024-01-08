@@ -1,5 +1,6 @@
 ﻿using Desafio.Application;
 using Desafio.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio.API;
@@ -24,6 +25,7 @@ public class UserController : DesafioControllerBase
         
         return CustomResponse(result);   
     }
+    
     [HttpPost("login")]
     public async Task<ActionResult<LoginUserResponse>> LoginUserAsync(LoginUserRequest loginUserRequest)
     {
@@ -82,5 +84,28 @@ public class UserController : DesafioControllerBase
 
         return CustomResponse(result);
     }
-    //implementar exclusão, edição e listagem das permissões
+
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpPut]
+    public async Task<ActionResult<UserResponse>> PutUserAsync(UserRequest userRequest)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        UserResponse result = await _userService.UpdateAsync(userRequest);
+
+        return CustomResponse(result);
+
+    }
+
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpDelete]
+    public async Task<ActionResult<UserResponse>> DeleteUserAsync(string email)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        var result = await _userService.RemoveAsync(email);
+
+        return CustomResponse(result);
+
+    }
 }

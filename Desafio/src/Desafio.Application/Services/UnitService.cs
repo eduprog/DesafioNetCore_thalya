@@ -32,7 +32,7 @@ public class UnitService : ServiceBase, IUnitService
     {
         var unit = _mapper.Map<Unit>(unitRequest);
 
-        if (!ExecuteValidation(new UnitValidator(this), unit)) 
+        if (!ExecuteValidation(new UnitValidator(this), unit))
         {
             return null;
         }
@@ -47,17 +47,21 @@ public class UnitService : ServiceBase, IUnitService
 
     public async Task<UnitResponse> RemoveAsync(string acronym)
     {
-        if (_unitRepository.HasBeenUsedBefore(acronym))
+        var unit = await _unitRepository.GetByAcronymAsync(acronym);
+        if (unit == null)
         {
-            Notificate("It's not possible to remove a unit that is being used in a product.");
+            Notificate("The unit was not found");
             return null;
         }
-        else
-        {
-            await _unitRepository.RemoveAsync(acronym);
 
+        if (!ExecuteValidation(new UnitValidator(this, removeUnit: true), unit))
+        {
             return null;
         }
+
+        await _unitRepository.RemoveAsync(acronym);
+
+        return null;
     }
 
     public async Task<UnitResponse> UpdateAsync(UnitRequest unitRequest)
@@ -84,5 +88,9 @@ public class UnitService : ServiceBase, IUnitService
     public bool UnitAlreadyExists(string acronym)
     {
         return _unitRepository.IsRegistered(acronym);
+    }
+    public bool HasBeenUsedBefore(string acronym)
+    {
+        return _unitRepository.HasBeenUsedBefore(acronym);
     }
 }

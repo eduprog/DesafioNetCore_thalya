@@ -2,6 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 namespace Desafio.Application;
 
@@ -53,13 +54,12 @@ public abstract class ServiceBase
 
         string newId = $"{date:yyyyMMddHHmmss}-{input}";
 
-        byte[] bytesBase64 = System.Text.Encoding.ASCII.GetBytes(newId);
-        string idBase64 = Convert.ToBase64String(bytesBase64);
+        string idBase64 = Convert.ToBase64String(Encoding.ASCII.GetBytes(newId));
 
         string shortId = new string(idBase64
             .Where(x => char.IsLetterOrDigit(x))
-            .ToArray())
-            .Substring(0, 10);
+            .ToArray());
+        shortId = shortId.Substring(shortId.Length - 10);
 
         return shortId;
     }
