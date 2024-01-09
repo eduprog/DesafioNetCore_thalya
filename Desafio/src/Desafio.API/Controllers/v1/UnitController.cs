@@ -27,7 +27,7 @@ public class UnitController : DesafioControllerBase
     [HttpGet("get-by-acronym")]
     public async Task<ActionResult<UnitResponse>> GetUnitAsync(string acronym)
     {
-        var result = await _unitService.GetByAcronymAsync(acronym);
+        UnitResponse result = await _unitService.GetByAcronymAsync(acronym);
 
         return CustomResponse(result);
 
@@ -36,7 +36,7 @@ public class UnitController : DesafioControllerBase
     [HttpGet("get-by-short-id")]
     public async Task<ActionResult<UnitResponse>> GetUnitByShortIdAsync(string shortId)
     {
-        var result = await _unitService.GetByShortIdAsync(shortId);
+        UnitResponse result = await _unitService.GetByShortIdAsync(shortId);
 
         return CustomResponse(result);
 
@@ -68,7 +68,7 @@ public class UnitController : DesafioControllerBase
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var result = await _unitService.RemoveAsync(acronym.ToUpper());
+        UnitResponse result = await _unitService.RemoveAsync(acronym.ToUpper());
 
         return CustomResponse(result);
 

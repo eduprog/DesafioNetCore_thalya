@@ -50,7 +50,7 @@ public class UserService : ServiceBase, IUserService
         identityUser.EmailConfirmed = true;
         identityUser.Document = OnlyDocumentNumbers(registerUserRequest.Document);
 
-        if (!ExecuteValidationIdentity(new UserValidator(this), identityUser))
+        if (!await ExecuteValidationIdentityAsync(new UserValidator(this), identityUser))
         {
             return null;
         }

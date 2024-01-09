@@ -1,31 +1,75 @@
 ﻿using Desafio.Domain;
+using Desafio.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.Application;
 
 public class PersonRepository : IPersonRepository
 {
-    public Task<Person> GetAllAsync()
+    private readonly AppDbContext _appDbContext;
+
+    public PersonRepository(AppDbContext appDbContext)
     {
-        throw new NotImplementedException();
+        _appDbContext = appDbContext;
     }
 
-    public Task<Person> GetByIdAsync(int id)
+    public async Task<List<Person>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _appDbContext.People.ToListAsync();
     }
 
-    public Task InsertAsync(Person product)
+    public async Task<Person> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _appDbContext.People.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public Task RemoveAsync(int id)
+    public async Task InsertAsync(Person person)
     {
-        throw new NotImplementedException();
+        person.Id = Guid.NewGuid();
+        await _appDbContext.People.AddAsync(person);
+        await SaveChangesAsync();
     }
 
-    public Task UpdateAsync(Person product)
+    public async Task RemoveAsync(Guid id)
     {
-        throw new NotImplementedException();
+        Person person = await GetByIdAsync(id);
+
+        if (person == null)
+        {
+            throw new Exception($"Person {id} doesn't exists.");
+        }
+        _appDbContext.People.Remove(person);
+        await SaveChangesAsync();
+    }
+
+    public async Task<Person> UpdateAsync(Person person)
+    {
+        try
+        {
+            _appDbContext.Update(person);
+            await SaveChangesAsync();
+            return person;
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while updating person");
+        }
+    }
+
+    public async Task<int> SaveChangesAsync()
+    {
+        try
+        {
+            return await _appDbContext.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error while saving person");
+        }
+    }
+
+    public async Task<Person> GetByShortIdAsync(string shortId)
+    {
+        return await _appDbContext.People.FirstOrDefaultAsync(x => x.ShortId == shortId);
     }
 }

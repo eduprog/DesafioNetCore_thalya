@@ -68,6 +68,17 @@ public abstract class ServiceBase
 
         return false;
     }
+
+    protected async Task<bool> ExecuteValidationIdentityAsync<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : IdentityUser
+    {
+        var validator = await validacao.ValidateAsync(entidade);
+
+        if (validator.IsValid) return true;
+
+        Notificate(validator);
+
+        return false;
+    }
     protected string GenerateShortId(string input)
     {
         DateTime date = DateTime.Now;

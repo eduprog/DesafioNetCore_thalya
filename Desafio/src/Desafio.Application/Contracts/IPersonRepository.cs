@@ -4,9 +4,11 @@ namespace Desafio.Application;
 
 public interface IPersonRepository
 {
-    Task InsertAsync(Person product);
-    Task UpdateAsync(Person product);
-    Task RemoveAsync(int id);
-    Task<Person> GetByIdAsync(int id);
-    Task<Person> GetAllAsync();
+    Task InsertAsync(Person person);
+    Task<Person> UpdateAsync(Person person);
+    Task RemoveAsync(Guid id);
+    Task<Person> GetByIdAsync(Guid id);
+    Task<List<Person>> GetAllAsync();
+    Task<int> SaveChangesAsync();
+    Task<Person> GetByShortIdAsync(string shortId);
 }

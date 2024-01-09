@@ -17,7 +17,7 @@ public class UserValidator : AbstractValidator<User>
         RuleFor(x => x.Document)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
             .MustAsync(UniqueDocument).WithMessage("The Document must be unique.")
-            .Must(ValidLenght).WithMessage("The Document must be between 11 and 14 caracteres and be numeric only.");
+            .MustAsync(ValidLenght).WithMessage("The Document must be between 11 and 14 caracteres and be numeric only.");
     }
 
     private async Task<bool> UniqueEmailAsync(string email, CancellationToken token)
@@ -30,7 +30,7 @@ public class UserValidator : AbstractValidator<User>
         // Verificar se existe cadastro desse documento
         return !await _userService.DocumentAlreadyExisistsAsync(document);
     }
-    private bool ValidLenght(string document)
+    private async Task<bool> ValidLenght(string document, CancellationToken token)
     {
         // Verificar se o valor digitado é valido (não tem valores repetidos)
         return  _userService.IsValidDocument(document);

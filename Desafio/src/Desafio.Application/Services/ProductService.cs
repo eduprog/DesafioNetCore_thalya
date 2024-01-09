@@ -125,9 +125,9 @@ public class ProductService : ServiceBase, IProductService
 
         await _productRepository.UpdateAsync(existingProduct);
 
-        var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
+        var productResponse = _mapper.Map<ProductResponse>(existingProduct);
 
-        return unitResponse;
+        return productResponse;
     }
 
     public async Task<ProductResponse> UpdateEnableProductAsync(EnabledProductRequest productRequest)
@@ -144,9 +144,9 @@ public class ProductService : ServiceBase, IProductService
 
         await _productRepository.UpdateAsync(existingProduct);
 
-        var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
+        var productResponse = _mapper.Map<ProductResponse>(existingProduct);
 
-        return unitResponse;
+        return productResponse;
     }
 
     public async Task<ProductResponse> UpdateSellableProductAsync(SellableProductRequest productRequest)
@@ -163,9 +163,9 @@ public class ProductService : ServiceBase, IProductService
 
         await _productRepository.UpdateAsync(existingProduct);
 
-        var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
+        var productResponse = _mapper.Map<ProductResponse>(existingProduct);
 
-        return unitResponse;
+        return productResponse;
     }
 
     #endregion

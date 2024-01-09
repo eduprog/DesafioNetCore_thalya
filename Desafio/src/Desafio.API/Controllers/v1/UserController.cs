@@ -19,7 +19,7 @@ public class UserController : DesafioControllerBase
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var result = await _userService.RegisterUserAsync(registerUserRequest);
+        RegisterUserResponse result = await _userService.RegisterUserAsync(registerUserRequest);
         
         return CustomResponse(result);   
     }
@@ -29,7 +29,7 @@ public class UserController : DesafioControllerBase
     {
         if(!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var result = await _userService.LoginAsync(loginUserRequest);
+        LoginUserResponse result = await _userService.LoginAsync(loginUserRequest);
 
         return CustomResponse(result);
     }
@@ -37,7 +37,7 @@ public class UserController : DesafioControllerBase
     [HttpGet("get-all-users")]
     public async Task<ActionResult<UserResponse>> GetAllUsers()
     {
-        var result = await _userService.GetAllAsync(false);
+        IEnumerable<UserResponse> result = await _userService.GetAllAsync(false);
         
         if (result.Count() == 0) return CustomResponse(result, "No users were found.");
 
@@ -47,7 +47,7 @@ public class UserController : DesafioControllerBase
     [HttpGet("get-all-users-roles")]
     public async Task<ActionResult<UserResponse>> GetAllUsersRoles()
     {
-        var result = await _userService.GetAllAsync(true);
+        IEnumerable<UserResponse> result = await _userService.GetAllAsync(true);
 
         if (result.Count() == 0) return CustomResponse(result, "No users were found.");
 
@@ -57,7 +57,7 @@ public class UserController : DesafioControllerBase
     [HttpGet("get-all-administrator-users")]
     public async Task<ActionResult<UserResponse>> GetAllAdministratorUsers()
     {
-        var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Administrator.ToString().ToUpper());
+        IEnumerable<UserResponse> result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Administrator.ToString().ToUpper());
 
         if (result.Count() == 0) return CustomResponse(result, "No administrator users were found.");
 
@@ -67,7 +67,7 @@ public class UserController : DesafioControllerBase
     [HttpGet("get-all-manager-users")]
     public async Task<ActionResult<UserResponse>> GetAllManagerUsers()
     {
-        var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Manager.ToString().ToUpper());
+        IEnumerable<UserResponse> result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Manager.ToString().ToUpper());
         
         if(result.Count() ==  0) return CustomResponse(result, "No manager users were found.");
         
@@ -77,7 +77,7 @@ public class UserController : DesafioControllerBase
     [HttpGet("get-all-seller-users")]
     public async Task<ActionResult<UserResponse>> GetAllSellerUsers()
     {
-        var result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Seller.ToString().ToUpper());
+        IEnumerable<UserResponse> result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Seller.ToString().ToUpper());
 
         if (result.Count() == 0) return CustomResponse(result, "No seller users were found.");
 
@@ -114,7 +114,7 @@ public class UserController : DesafioControllerBase
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var result = await _userService.RemoveAsync(email);
+        UserResponse result = await _userService.RemoveAsync(email);
 
         return CustomResponse(result);
 
@@ -123,7 +123,7 @@ public class UserController : DesafioControllerBase
     [HttpGet("get-by-short-id")]
     public async Task<ActionResult<UserResponse>> GetUnitByShortIdAsync(string shortId)
     {
-        var result = await _userService.GetByShortIdAsync(shortId);
+        UserResponse result = await _userService.GetByShortIdAsync(shortId);
 
         return CustomResponse(result);
 

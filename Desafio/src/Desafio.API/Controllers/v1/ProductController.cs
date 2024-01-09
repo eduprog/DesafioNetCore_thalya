@@ -27,10 +27,9 @@ public class ProductController : DesafioControllerBase
     [HttpGet("get-by-id")]
     public async Task<ActionResult<ProductResponse>> GetProductAsync(Guid id)
     {
-        var result = await _productService.GetByIdAsync(id);
+        ProductResponse result = await _productService.GetByIdAsync(id);
 
         return CustomResponse(result);
-
     }
 
     [HttpGet("get-all")]
@@ -67,16 +66,15 @@ public class ProductController : DesafioControllerBase
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var result = await _productService.RemoveAsync(id);
+        ProductResponse result = await _productService.RemoveAsync(id);
 
         return CustomResponse(result);
-
     }
 
     [HttpGet("get-by-short-id")]
     public async Task<ActionResult<ProductResponse>> GetProductByShortIdAsync(string shortId)
     {
-        var result = await _productService.GetByShortIdAsync(shortId);
+        ProductResponse result = await _productService.GetByShortIdAsync(shortId);
 
         return CustomResponse(result);
     }
