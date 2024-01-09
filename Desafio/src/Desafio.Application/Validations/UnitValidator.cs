@@ -15,7 +15,7 @@ public class UnitValidator : AbstractValidator<Unit>
         {
             RuleFor(x => x.Acronym)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
-            .Must(HasBeenUsedBefore).WithMessage("It's not possible to remove a unit that is being used in a product.")
+            .MustAsync(HasBeenUsedBeforeAsync).WithMessage("It's not possible to remove a unit that is being used in a product.")
             .Length(2, 4)
             .WithMessage("The field {PropertyName} must have between {MinLength} and {MaxLength} caracters.");
 
@@ -24,7 +24,7 @@ public class UnitValidator : AbstractValidator<Unit>
 
         RuleFor(x => x.Acronym)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
-            .Must(UniqueAcronym).WithMessage("The Acronym must be unique.")
+            .MustAsync(UniqueAcronymAsync).WithMessage("The Acronym must be unique.")
             .Length(2, 4)
             .WithMessage("The field {PropertyName} must have between {MinLength} and {MaxLength} caracters.");
 
@@ -35,13 +35,13 @@ public class UnitValidator : AbstractValidator<Unit>
     }
     
 
-    private bool UniqueAcronym(string acronym)
+    private async Task<bool> UniqueAcronymAsync(string acronym, CancellationToken token)
     {
         // Verificar se existe cadastro dessa unidade
-        return !_unitService.UnitAlreadyExists(acronym);
+        return !await _unitService.UnitAlreadyExistsAsync(acronym);
     }
-    private bool HasBeenUsedBefore(string acronym)
+    private async Task<bool> HasBeenUsedBeforeAsync(string acronym, CancellationToken token)
     {
-        return !_unitService.HasBeenUsedBefore(acronym);
+        return !await _unitService.HasBeenUsedBeforeAsync(acronym);
     }
 }

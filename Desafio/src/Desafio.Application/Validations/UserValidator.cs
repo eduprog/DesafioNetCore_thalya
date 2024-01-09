@@ -13,26 +13,26 @@ public class UserValidator : AbstractValidator<User>
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
-            .Must(UniqueEmail).WithMessage("The Email must be unique.");
+            .MustAsync(UniqueEmailAsync).WithMessage("The Email must be unique.");
         RuleFor(x => x.Document)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
-            .Must(UniqueDocument).WithMessage("The Document must be unique.")
+            .MustAsync(UniqueDocument).WithMessage("The Document must be unique.")
             .Must(ValidLenght).WithMessage("The Document must be between 11 and 14 caracteres and be numeric only.");
     }
 
-    private bool UniqueEmail(string email)
+    private async Task<bool> UniqueEmailAsync(string email, CancellationToken token)
     {
         // Verificar se existe cadastro desse e-mail
-        return !_userService.EmailAlreadyExisists(email);
+        return !await _userService.EmailAlreadyExisistsAsync(email);
     }
-    private bool UniqueDocument(string document)
+    private async Task<bool> UniqueDocument(string document, CancellationToken token)
     {
         // Verificar se existe cadastro desse documento
-        return !_userService.DocumentAlreadyExisists(document);
+        return !await _userService.DocumentAlreadyExisistsAsync(document);
     }
     private bool ValidLenght(string document)
     {
         // Verificar se o valor digitado é valido (não tem valores repetidos)
-        return _userService.IsValidDocument(document);
+        return  _userService.IsValidDocument(document);
     }
 }

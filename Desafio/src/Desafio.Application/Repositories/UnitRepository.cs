@@ -90,12 +90,13 @@ public class UnitRepository : IUnitRepository
         
     }
 
-    public bool HasBeenUsedBefore(string acronym)
+    public async Task<bool> HasBeenUsedBeforeAsync(string acronym)
     {
-        return _appDbContext.Products.Any(x => x.Acronym == acronym);
+        return await _appDbContext.Products.AnyAsync(x => x.Acronym == acronym);
     }
-    public bool IsRegistered(string acronym)
+
+    public async Task<bool> IsRegisteredAsync(string acronym)
     {
-        return _appDbContext.Units.Any(x => x.Acronym == acronym);
+        return await _appDbContext.Units.AnyAsync(x => x.Acronym == acronym);
     }
 }

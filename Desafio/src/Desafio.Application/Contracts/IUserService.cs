@@ -10,7 +10,7 @@ public interface IUserService
     Task<UserResponse> UpdateAsync(UpdateUserRequest userRequest);
     Task<UserResponse> UpdateAsync(UpdateLoginUserRequest userRequest);
     Task<UserResponse> RemoveAsync(string email);
-    bool EmailAlreadyExisists(string email);
-    bool DocumentAlreadyExisists(string document);
+    Task<bool> EmailAlreadyExisistsAsync(string email);
+    Task<bool> DocumentAlreadyExisistsAsync(string document);
     bool IsValidDocument(string document);
 }

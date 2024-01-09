@@ -248,14 +248,16 @@ public class UserService : ServiceBase, IUserService
     #endregion
 
     #region Validations Methods
-    public bool EmailAlreadyExisists(string email)
+    public async Task<bool> EmailAlreadyExisistsAsync(string email)
     {
-        return _userManager.Users.FirstOrDefault(x => x.Email == email) != null;
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email) != null;
     }
-    public bool DocumentAlreadyExisists(string document)
+
+    public async Task<bool> DocumentAlreadyExisistsAsync(string document)
     {
-        return _userManager.Users.FirstOrDefault(x => x.Document == document) != null;
+        return await _userManager.Users.FirstOrDefaultAsync(x => x.Document == document) != null;
     }
+
     public bool IsValidDocument(string document)
     {
         string documentNumber = OnlyDocumentNumbers(document);
@@ -269,6 +271,7 @@ public class UserService : ServiceBase, IUserService
         return true;
 
     }
+
     public static string OnlyDocumentNumbers(string document)
     {
         var onlyNumber = "";
@@ -281,6 +284,7 @@ public class UserService : ServiceBase, IUserService
         }
         return onlyNumber.Trim();
     }
+
     private static bool HasRepeatedValues(string document)
     {
         string[] invalidNumbers =
