@@ -25,7 +25,7 @@ public class ProductRequest
     [Required(ErrorMessage = "The field {0} is required")]
     public bool Enable { get; set; } = true;
     [Required(ErrorMessage = "The field {0} is required")]
-    public bool Salable { get; set; } = false;
+    public bool Sellable { get; set; } = false;
     [Required(ErrorMessage = "The field {0} is required")]
     public string BarCode { get; set; } = string.Empty;
 

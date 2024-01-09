@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Buffers.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.RegularExpressions;
 
 namespace Desafio.Identity;
 
@@ -47,6 +48,7 @@ public class UserService : ServiceBase, IUserService
     {
         var identityUser = _mapper.Map<User>(registerUserRequest);
         identityUser.EmailConfirmed = true;
+        identityUser.Document = OnlyDocumentNumbers(registerUserRequest.Document);
 
         if (!ExecuteValidationIdentity(new UserValidator(this), identityUser))
         {
@@ -181,7 +183,6 @@ public class UserService : ServiceBase, IUserService
         return null;
         
     }
-
 
     public async Task<UserResponse> RemoveAsync(string email)
     {

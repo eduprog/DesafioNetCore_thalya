@@ -29,9 +29,9 @@ public class ProductService : ServiceBase, IProductService
         return result;
     }
 
-    public async Task<IEnumerable<ProductResponse>> GetAllSalableAsync()
+    public async Task<IEnumerable<ProductResponse>> GetAllSellableAsync()
     {
-        var result = _mapper.Map<IEnumerable<ProductResponse>>(await _productRepository.GetAllSalableAsync());
+        var result = _mapper.Map<IEnumerable<ProductResponse>>(await _productRepository.GetAllSellableAsync());
 
         if (result == null)
         {
@@ -45,6 +45,19 @@ public class ProductService : ServiceBase, IProductService
     public async Task<ProductResponse> GetByIdAsync(Guid id)
     {
         var product = await _productRepository.GetByIdAsync(id);
+
+        if (product == null)
+        {
+            Notificate("Product was not found.");
+            return null;
+        }
+
+        return _mapper.Map<ProductResponse>(product);
+    }
+
+    public async Task<ProductResponse> GetByShortIdAsync(string shortId)
+    {
+        var product = await _productRepository.GetByShortIdAsync(shortId);
 
         if (product == null)
         {
@@ -91,46 +104,70 @@ public class ProductService : ServiceBase, IProductService
 
         if (existingProduct != null)
         {
-            existingProduct.StoredQuantity = productRequest.StoredQuantity;
-            existingProduct.Price = productRequest.Price;
-            existingProduct.BarCode = productRequest.BarCode;
-            existingProduct.Salable = productRequest.Salable;
-            existingProduct.Acronym = productRequest.Acronym;
-            existingProduct.Description = productRequest.Description;
-            existingProduct.Enable = productRequest.Enable;
-            existingProduct.Id = productRequest.Id;
-            existingProduct.ShortDescription = productRequest.ShortDescription;
-
-            if (!await ExecuteValidationAsync(new ProductValidator(this), existingProduct))
-            {
-                return null;
-            }
-
-            await _productRepository.UpdateAsync(existingProduct);
-
-            var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
-
-            return unitResponse;
+            Notificate("The product was not found.");
+            return null;
         }
-        else
+
+        existingProduct.StoredQuantity = productRequest.StoredQuantity;
+        existingProduct.Price = productRequest.Price;
+        existingProduct.BarCode = productRequest.BarCode;
+        existingProduct.Sellable = productRequest.Sellable;
+        existingProduct.Acronym = productRequest.Acronym;
+        existingProduct.Description = productRequest.Description;
+        existingProduct.Enable = productRequest.Enable;
+        existingProduct.Id = productRequest.Id;
+        existingProduct.ShortDescription = productRequest.ShortDescription;
+
+        if (!await ExecuteValidationAsync(new ProductValidator(this), existingProduct))
+        {
+            return null;
+        }
+
+        await _productRepository.UpdateAsync(existingProduct);
+
+        var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
+
+        return unitResponse;
+    }
+
+    public async Task<ProductResponse> UpdateEnableProductAsync(EnabledProductRequest productRequest)
+    {
+        var existingProduct = await _productRepository.GetByIdAsync(productRequest.Id);
+
+        if (existingProduct == null)
         {
             Notificate("The product was not found.");
             return null;
         }
+
+        existingProduct.Enable = productRequest.Enable;
+
+        await _productRepository.UpdateAsync(existingProduct);
+
+        var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
+
+        return unitResponse;
     }
 
-    public async Task<ProductResponse> GetByShortIdAsync(string shortId)
+    public async Task<ProductResponse> UpdateSellableProductAsync(SellableProductRequest productRequest)
     {
-        var product = await _productRepository.GetByShortIdAsync(shortId);
+        var existingProduct = await _productRepository.GetByIdAsync(productRequest.Id);
 
-        if(product == null)
+        if (existingProduct == null)
         {
-            Notificate("Product was not found.");
+            Notificate("The product was not found.");
             return null;
         }
 
-        return _mapper.Map<ProductResponse>(product);
+        existingProduct.Sellable = productRequest.Sellable;
+
+        await _productRepository.UpdateAsync(existingProduct);
+
+        var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
+
+        return unitResponse;
     }
+
     #endregion
 
     #region Validations Methods

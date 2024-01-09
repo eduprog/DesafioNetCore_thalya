@@ -15,11 +15,11 @@ public class ProductController : DesafioControllerBase
 
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
     [HttpPost]
-    public async Task<ActionResult<ProductResponse>> PostProductAsync(InsertProductRequest ProductRequest)
+    public async Task<ActionResult<ProductResponse>> InsertProductAsync(InsertProductRequest productRequest)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        ProductResponse result = await _productService.InsertAsync(ProductRequest);
+        ProductResponse result = await _productService.InsertAsync(productRequest);
 
         return CustomResponse(result);
     }
@@ -41,10 +41,10 @@ public class ProductController : DesafioControllerBase
 
         return CustomResponseList(result);
     }
-    [HttpGet("get-all-salable")]
+    [HttpGet("get-all-sellable")]
     public async Task<ActionResult<IEnumerable<ProductResponse>>> GetAllSalabeProductsAsync()
     {
-        IEnumerable<ProductResponse> result = await _productService.GetAllSalableAsync();
+        IEnumerable<ProductResponse> result = await _productService.GetAllSellableAsync();
         if (!result.Any()) return CustomResponseList(result, "No Products were found.");
 
         return CustomResponseList(result);
@@ -52,18 +52,18 @@ public class ProductController : DesafioControllerBase
 
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
     [HttpPut]
-    public async Task<ActionResult<ProductResponse>> PutProductAsync(ProductRequest ProductRequest)
+    public async Task<ActionResult<ProductResponse>> UpdateProductAsync(ProductRequest productRequest)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        ProductResponse result = await _productService.UpdateAsync(ProductRequest);
+        ProductResponse result = await _productService.UpdateAsync(productRequest);
 
         return CustomResponse(result);
-
     }
+
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
     [HttpDelete]
-    public async Task<ActionResult<ProductResponse>> DeleteProductAsync(Guid id)
+    public async Task<ActionResult<ProductResponse>> RemoveProductAsync(Guid id)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -79,6 +79,27 @@ public class ProductController : DesafioControllerBase
         var result = await _productService.GetByShortIdAsync(shortId);
 
         return CustomResponse(result);
+    }
 
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpPut("update-enabled-property")]
+    public async Task<ActionResult<bool>> UpdateProductEnabled(EnabledProductRequest productRequest)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        ProductResponse result = await _productService.UpdateEnableProductAsync(productRequest);
+
+        return CustomResponse(result);
+    }
+
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpPut("update-sellable-property")]
+    public async Task<ActionResult<bool>> UpdateProductSellable(SellableProductRequest productRequest)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        ProductResponse result = await _productService.UpdateSellableProductAsync(productRequest);
+
+        return CustomResponse(result);
     }
 }

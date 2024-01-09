@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Desafio.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240107160634_AppDbContext_V_00_01")]
+    [Migration("20240109184855_AppDbContext_V_00_01")]
     partial class AppDbContext_V_00_01
     {
         /// <inheritdoc />
@@ -107,9 +107,9 @@ namespace Desafio.Infrastructure.Migrations
                         .HasColumnType("numeric(15,4)")
                         .HasColumnName("price");
 
-                    b.Property<bool>("Salable")
+                    b.Property<bool>("Sellable")
                         .HasColumnType("boolean")
-                        .HasColumnName("salable");
+                        .HasColumnName("sellable");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()

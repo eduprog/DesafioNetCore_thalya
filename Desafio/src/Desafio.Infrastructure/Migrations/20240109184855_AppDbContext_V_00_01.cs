@@ -61,7 +61,7 @@ namespace Desafio.Infrastructure.Migrations
                     price = table.Column<decimal>(type: "numeric(15,4)", precision: 15, scale: 4, nullable: false),
                     stored_quantity = table.Column<decimal>(type: "numeric(15,4)", precision: 15, scale: 4, nullable: false),
                     enable = table.Column<bool>(type: "boolean", nullable: false),
-                    salable = table.Column<bool>(type: "boolean", nullable: false),
+                    sellable = table.Column<bool>(type: "boolean", nullable: false),
                     bar_code = table.Column<string>(type: "text", nullable: false),
                     short_id = table.Column<string>(type: "text", nullable: false)
                 },

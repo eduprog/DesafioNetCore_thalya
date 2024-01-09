@@ -39,6 +39,12 @@ public class UnitService : ServiceBase, IUnitService
     {
         var unit = await _unitRepository.GetByShortIdAsync(shortId);
 
+        if (unit == null)
+        {
+            Notificate("No units were found.");
+            return null;
+        }
+
         return _mapper.Map<UnitResponse>(unit);
     }
 

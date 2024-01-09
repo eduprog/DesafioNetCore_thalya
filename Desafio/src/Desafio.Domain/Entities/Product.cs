@@ -8,7 +8,7 @@ public class Product : Entity
     public decimal Price { get; set; }
     public decimal StoredQuantity { get; set; }
     public bool Enable { get; set; } = true;
-    public bool Salable { get; set; } = false;
+    public bool Sellable { get; set; } = false;
     public string BarCode { get; set; } = string.Empty;
 
     #region Navigation Properties

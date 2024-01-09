@@ -17,9 +17,9 @@ public class ProductRepository : IProductRepository
     {
         return await _appDbContext.Products.ToListAsync();
     }
-    public async Task<List<Product>> GetAllSalableAsync()
+    public async Task<List<Product>> GetAllSellableAsync()
     {
-        return await _appDbContext.Products.Where(x => x.Salable).ToListAsync();
+        return await _appDbContext.Products.Where(x => x.Sellable).ToListAsync();
     }
 
     public async Task<Product> GetByBarCodeAsync(string barCode)

@@ -104,9 +104,9 @@ namespace Desafio.Infrastructure.Migrations
                         .HasColumnType("numeric(15,4)")
                         .HasColumnName("price");
 
-                    b.Property<bool>("Salable")
+                    b.Property<bool>("Sellable")
                         .HasColumnType("boolean")
-                        .HasColumnName("salable");
+                        .HasColumnName("sellable");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
