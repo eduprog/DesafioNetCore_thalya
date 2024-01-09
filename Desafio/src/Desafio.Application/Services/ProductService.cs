@@ -15,20 +15,29 @@ public class ProductService : ServiceBase, IProductService
         _mapper = mapper;
     }
 
-    public bool ExistingBarCode(string barCode)
-    {
-        return _productRepository.GetByBarCode(barCode) != null;
-    }
-
+    #region Controller Methods
     public async Task<IEnumerable<ProductResponse>> GetAllAsync()
     {
         var result = _mapper.Map<IEnumerable<ProductResponse>>(await _productRepository.GetAllAsync());
 
+        if (result == null)
+        {
+            Notificate("No products were found.");
+            return null;
+        }
+
         return result;
     }
+
     public async Task<IEnumerable<ProductResponse>> GetAllSalableAsync()
     {
         var result = _mapper.Map<IEnumerable<ProductResponse>>(await _productRepository.GetAllSalableAsync());
+
+        if (result == null)
+        {
+            Notificate("No products were found.");
+            return null;
+        }
 
         return result;
     }
@@ -37,15 +46,20 @@ public class ProductService : ServiceBase, IProductService
     {
         var product = await _productRepository.GetByIdAsync(id);
 
+        if (product == null)
+        {
+            Notificate("Product was not found.");
+            return null;
+        }
+
         return _mapper.Map<ProductResponse>(product);
     }
 
     public async Task<ProductResponse> InsertAsync(InsertProductRequest productRequest)
     {
-
         var product = _mapper.Map<Product>(productRequest);
 
-        if (!ExecuteValidation(new ProductValidator(this), product))
+        if (!await ExecuteValidationAsync(new ProductValidator(this), product))
         {
             return null;
         }
@@ -59,6 +73,13 @@ public class ProductService : ServiceBase, IProductService
 
     public async Task<ProductResponse> RemoveAsync(Guid id)
     {
+        var product = await _productRepository.GetByIdAsync(id);
+
+        if (product == null)
+        {
+            Notificate("Product was not found.");
+            return null;
+        }
         await _productRepository.RemoveAsync(id);
 
         return null;
@@ -66,23 +87,28 @@ public class ProductService : ServiceBase, IProductService
 
     public async Task<ProductResponse> UpdateAsync(ProductRequest productRequest)
     {
-        var existingUnit = await _productRepository.GetByIdAsync(productRequest.Id);
+        var existingProduct = await _productRepository.GetByIdAsync(productRequest.Id);
 
-        if (existingUnit != null)
+        if (existingProduct != null)
         {
-            existingUnit.StoredQuantity = productRequest.StoredQuantity;
-            existingUnit.Price = productRequest.Price;
-            existingUnit.BarCode = productRequest.BarCode;
-            existingUnit.Salable = productRequest.Salable;
-            existingUnit.Acronym = productRequest.Acronym;
-            existingUnit.Description = productRequest.Description;
-            existingUnit.Enable = productRequest.Enable;
-            existingUnit.Id = productRequest.Id;
-            existingUnit.ShortDescription = productRequest.ShortDescription;
+            existingProduct.StoredQuantity = productRequest.StoredQuantity;
+            existingProduct.Price = productRequest.Price;
+            existingProduct.BarCode = productRequest.BarCode;
+            existingProduct.Salable = productRequest.Salable;
+            existingProduct.Acronym = productRequest.Acronym;
+            existingProduct.Description = productRequest.Description;
+            existingProduct.Enable = productRequest.Enable;
+            existingProduct.Id = productRequest.Id;
+            existingProduct.ShortDescription = productRequest.ShortDescription;
 
-            await _productRepository.UpdateAsync(existingUnit);
+            if (!await ExecuteValidationAsync(new ProductValidator(this), existingProduct))
+            {
+                return null;
+            }
 
-            var unitResponse = _mapper.Map<ProductResponse>(existingUnit);
+            await _productRepository.UpdateAsync(existingProduct);
+
+            var unitResponse = _mapper.Map<ProductResponse>(existingProduct);
 
             return unitResponse;
         }
@@ -92,4 +118,30 @@ public class ProductService : ServiceBase, IProductService
             return null;
         }
     }
+
+    public async Task<ProductResponse> GetByShortIdAsync(string shortId)
+    {
+        var product = await _productRepository.GetByShortIdAsync(shortId);
+
+        if(product == null)
+        {
+            Notificate("Product was not found.");
+            return null;
+        }
+
+        return _mapper.Map<ProductResponse>(product);
+    }
+    #endregion
+
+    #region Validations Methods
+    public async Task<bool> ExistingBarCodeAsync(string barCode)
+    {
+        return await _productRepository.GetByBarCodeAsync(barCode) != null;
+    }
+
+    public async Task<bool> UnitAlreadyExistsAsync(string acronym)
+    {
+        return await _productRepository.UnitAlreadyExistsAsync(acronym);
+    }
+    #endregion
 }

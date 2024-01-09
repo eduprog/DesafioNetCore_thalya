@@ -44,7 +44,7 @@ public class ProductController : DesafioControllerBase
     [HttpGet("get-all-salable")]
     public async Task<ActionResult<IEnumerable<ProductResponse>>> GetAllSalabeProductsAsync()
     {
-        IEnumerable<ProductResponse> result = await _productService.GetAllAsync();
+        IEnumerable<ProductResponse> result = await _productService.GetAllSalableAsync();
         if (!result.Any()) return CustomResponseList(result, "No Products were found.");
 
         return CustomResponseList(result);
@@ -68,6 +68,15 @@ public class ProductController : DesafioControllerBase
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
         var result = await _productService.RemoveAsync(id);
+
+        return CustomResponse(result);
+
+    }
+
+    [HttpGet("get-by-short-id")]
+    public async Task<ActionResult<ProductResponse>> GetProductByShortIdAsync(string shortId)
+    {
+        var result = await _productService.GetByShortIdAsync(shortId);
 
         return CustomResponse(result);
 

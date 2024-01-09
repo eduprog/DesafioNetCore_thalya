@@ -119,4 +119,13 @@ public class UserController : DesafioControllerBase
         return CustomResponse(result);
 
     }
+
+    [HttpGet("get-by-short-id")]
+    public async Task<ActionResult<UserResponse>> GetUnitByShortIdAsync(string shortId)
+    {
+        var result = await _userService.GetByShortIdAsync(shortId);
+
+        return CustomResponse(result);
+
+    }
 }

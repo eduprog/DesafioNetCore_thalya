@@ -14,6 +14,7 @@ public class UnitService : ServiceBase, IUnitService
         _mapper = mapper;
     }
 
+    #region Controller Methods
     public async Task<IEnumerable<UnitResponse>> GetAllAsync()
     {
         var result = _mapper.Map<IEnumerable<UnitResponse>>(await _unitRepository.GetAllAsync());
@@ -23,7 +24,13 @@ public class UnitService : ServiceBase, IUnitService
 
     public async Task<UnitResponse> GetByAcronymAsync(string acronym)
     {
-        var unit = await _unitRepository.GetByAcronymAsync(acronym);
+        var unit = await _unitRepository.GetByAcronymAsync(acronym.ToUpper());
+
+        if (unit == null)
+        {
+            Notificate("The unit was not found.");
+            return null;
+        }
 
         return _mapper.Map<UnitResponse>(unit);
     }
@@ -92,6 +99,9 @@ public class UnitService : ServiceBase, IUnitService
             return null;
         }
     }
+    #endregion
+
+    #region Validations Methods
     public bool UnitAlreadyExists(string acronym)
     {
         return _unitRepository.IsRegistered(acronym);
@@ -100,4 +110,5 @@ public class UnitService : ServiceBase, IUnitService
     {
         return _unitRepository.HasBeenUsedBefore(acronym);
     }
+    #endregion
 }

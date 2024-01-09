@@ -46,6 +46,17 @@ public abstract class ServiceBase
 
         return false;
     }
+    protected async Task<bool> ExecuteValidationAsync<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : Entity
+    {
+        var validator = await validacao.ValidateAsync(entidade);
+
+        if (validator.IsValid) return true;
+
+        Notificate(validator);
+
+        return false;
+    }
+
     protected bool ExecuteValidationIdentity<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : IdentityUser
     {
         var validator = validacao.Validate(entidade);

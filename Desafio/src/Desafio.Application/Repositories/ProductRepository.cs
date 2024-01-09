@@ -22,9 +22,9 @@ public class ProductRepository : IProductRepository
         return await _appDbContext.Products.Where(x => x.Salable).ToListAsync();
     }
 
-    public async Task<Product> GetByBarCode(string barCode)
+    public async Task<Product> GetByBarCodeAsync(string barCode)
     {
-        return await _appDbContext.Products.FirstAsync(x => x.BarCode == barCode);
+        return await _appDbContext.Products.FirstOrDefaultAsync(x => x.BarCode == barCode);
     }
 
     public async Task<Product> GetByIdAsync(Guid id)
@@ -89,5 +89,15 @@ public class ProductRepository : IProductRepository
         {
             throw new Exception("Error while updating product");
         }
+    }
+
+    public async Task<Product> GetByShortIdAsync(string shortId)
+    {
+        return await _appDbContext.Products.FirstOrDefaultAsync(x => x.ShortId == shortId);
+    }
+
+    public async Task<bool> UnitAlreadyExistsAsync(string acronym)
+    {
+        return await _appDbContext.Units.FirstOrDefaultAsync(x => x.Acronym == acronym) != null;
     }
 }

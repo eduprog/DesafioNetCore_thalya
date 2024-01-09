@@ -11,4 +11,5 @@ public class ProductResponse
     public bool Enable { get; set; } = true;
     public bool Salable { get; set; } = false;
     public string BarCode { get; set; } = string.Empty;
+    public string ShortId { get; set; } = string.Empty;
 }

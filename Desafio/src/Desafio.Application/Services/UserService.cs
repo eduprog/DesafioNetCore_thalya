@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Desafio.Identity;
 
@@ -57,10 +58,7 @@ public class UserService : ServiceBase, IUserService
 
         if (!result.Succeeded)
         {
-            foreach(var error in result.Errors)
-            {
-                Notificate(error.Description);
-            }
+            Notificate(result.Errors);
             return null;
         }
 
@@ -95,6 +93,22 @@ public class UserService : ServiceBase, IUserService
         return mappedUsers;
     }
 
+    public async Task<UserResponse> GetByShortIdAsync(string shortId)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.ShortId == shortId);
+
+        if(user == null)
+        {
+            Notificate("No user was found.");
+            return null;
+        }
+        
+        UserResponse userResponse = _mapper.Map<UserResponse>(user);
+        userResponse.Roles = _userManager.GetRolesAsync(user).Result;
+
+        return userResponse;
+    }
+
     public async Task<IEnumerable<UserResponse>> GetAllUsersByRoleAsync(string role)
     {
         IEnumerable<User> users = await _userManager.GetUsersInRoleAsync(role);
@@ -116,13 +130,15 @@ public class UserService : ServiceBase, IUserService
     public async Task<UserResponse> UpdateAsync(UpdateUserRequest userRequest)
     {
         var existingUser = await _userManager.FindByEmailAsync(userRequest.Email);
-        var existingRole = await _userManager.GetRolesAsync(existingUser);
+        
 
         if (existingUser == null)
         {
             Notificate("The user was not found.");
             return null;
         }
+
+        var existingRole = await _userManager.GetRolesAsync(existingUser);
 
         existingUser.Document = userRequest.Document ?? existingUser.Document;
         existingUser.Name = userRequest.Name ?? existingUser.Name;
@@ -218,7 +234,8 @@ public class UserService : ServiceBase, IUserService
         {
             Email = email,
             Token = encodedToken,
-            DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour)
+            DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
+            ShortId = user.ShortId
         };
     }
 
