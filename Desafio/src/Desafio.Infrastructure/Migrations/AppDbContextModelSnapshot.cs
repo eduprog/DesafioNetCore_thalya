@@ -35,9 +35,9 @@ namespace Desafio.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("alternative_code");
 
-                    b.Property<bool>("CanSell")
+                    b.Property<bool>("CanBuy")
                         .HasColumnType("boolean")
-                        .HasColumnName("can_sell");
+                        .HasColumnName("can_buy");
 
                     b.Property<string>("City")
                         .IsRequired()

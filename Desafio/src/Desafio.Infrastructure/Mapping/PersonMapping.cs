@@ -17,7 +17,7 @@ public class PersonMapping : IEntityTypeConfiguration<Person>
         person.Property(x => x.Document).HasColumnName("document").IsRequired();
         person.Property(x => x.City).HasColumnName("city").IsRequired();
         person.Property(x => x.Enable).HasColumnName("enable").IsRequired();
-        person.Property(x => x.CanSell).HasColumnName("can_sell").IsRequired();
+        person.Property(x => x.CanBuy).HasColumnName("can_buy").IsRequired();
         person.Property(x => x.Notes).HasColumnName("notes").IsRequired();
         person.Property(x => x.AlternativeCode).HasColumnName("alternative_code").IsRequired();
         person.Property(x => x.ShortId).HasColumnName("short_id").IsRequired();

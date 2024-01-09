@@ -24,7 +24,7 @@ namespace Desafio.Infrastructure.Migrations
                     document = table.Column<string>(type: "text", nullable: false),
                     city = table.Column<string>(type: "text", nullable: false),
                     enable = table.Column<bool>(type: "boolean", nullable: false),
-                    can_sell = table.Column<bool>(type: "boolean", nullable: false),
+                    can_buy = table.Column<bool>(type: "boolean", nullable: false),
                     notes = table.Column<string>(type: "text", nullable: false),
                     alternative_code = table.Column<string>(type: "text", nullable: false),
                     short_id = table.Column<string>(type: "text", nullable: false)
