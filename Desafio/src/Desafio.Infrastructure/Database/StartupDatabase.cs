@@ -1,4 +1,4 @@
-﻿using Desafio.Identity.Database;
+﻿using Desafio.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

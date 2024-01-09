@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desafio.Infrastructure.Mapping;
+namespace Desafio.Infrastructure;
 
 public class PersonMapping : IEntityTypeConfiguration<Person>
 {

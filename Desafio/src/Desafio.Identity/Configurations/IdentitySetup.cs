@@ -1,5 +1,4 @@
 ﻿using Desafio.Domain;
-using Desafio.Identity.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

@@ -3,7 +3,6 @@ using Desafio.Infrastructure;
 using Desafio.Identity;
 using Desafio.Application;
 using AutoMapper;
-using Desafio.API.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 {

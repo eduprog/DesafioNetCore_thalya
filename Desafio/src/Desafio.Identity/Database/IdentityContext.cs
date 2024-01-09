@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desafio.Identity.Database;
+namespace Desafio.Identity;
 
 public class IdentityContext : IdentityDbContext<User>
 {
