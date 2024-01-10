@@ -52,7 +52,7 @@ public class UnitService : ServiceBase, IUnitService
     {
         var unit = _mapper.Map<Unit>(unitRequest);
 
-        if (!ExecuteValidation(new UnitValidator(this), unit))
+        if (!await ExecuteValidationAsync(new UnitValidator(this), unit))
         {
             return null;
         }
@@ -74,7 +74,7 @@ public class UnitService : ServiceBase, IUnitService
             return null;
         }
 
-        if (!ExecuteValidation(new UnitValidator(this, removeUnit: true), unit))
+        if (!await ExecuteValidationAsync(new RemoveUnitValidator(this), unit))
         {
             return null;
         }
@@ -88,22 +88,21 @@ public class UnitService : ServiceBase, IUnitService
     {
         var existingUnit = await _unitRepository.GetByAcronymAsync(unitRequest.Acronym.ToUpper());
 
-        if (existingUnit != null)
-        {
-            existingUnit.Acronym = unitRequest.Acronym.ToUpper();
-            existingUnit.Description = unitRequest.Description.ToUpper();
-
-            await _unitRepository.UpdateAsync(existingUnit);
-
-            var unitResponse = _mapper.Map<UnitResponse>(existingUnit);
-
-            return unitResponse;
-        }
-        else
+        if (existingUnit == null)
         {
             Notificate("The unit was not found.");
             return null;
         }
+
+        existingUnit.Acronym = unitRequest.Acronym.ToUpper();
+        existingUnit.Description = unitRequest.Description.ToUpper();
+
+        await _unitRepository.UpdateAsync(existingUnit);
+
+        var unitResponse = _mapper.Map<UnitResponse>(existingUnit);
+
+        return unitResponse;
+
     }
     #endregion
 

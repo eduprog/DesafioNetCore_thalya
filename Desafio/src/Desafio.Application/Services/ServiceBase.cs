@@ -36,31 +36,9 @@ public abstract class ServiceBase
         _error.Handle(new ErrorMessage(mensagem));
     }
 
-    protected bool ExecuteValidation<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : Entity
-    {
-        var validator = validacao.Validate(entidade);
-
-        if (validator.IsValid) return true;
-
-        Notificate(validator);
-
-        return false;
-    }
-
     protected async Task<bool> ExecuteValidationAsync<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : Entity
     {
         var validator = await validacao.ValidateAsync(entidade);
-
-        if (validator.IsValid) return true;
-
-        Notificate(validator);
-
-        return false;
-    }
-
-    protected bool ExecuteValidationIdentity<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : IdentityUser
-    {
-        var validator = validacao.Validate(entidade);
 
         if (validator.IsValid) return true;
 
@@ -93,5 +71,46 @@ public abstract class ServiceBase
         shortId = shortId.Substring(shortId.Length - 10);
 
         return shortId;
+    }
+
+    protected string OnlyDocumentNumbers(string document)
+    {
+        var onlyNumber = "";
+        foreach (var value in document)
+        {
+            if (char.IsDigit(value))
+            {
+                onlyNumber += value;
+            }
+        }
+        return onlyNumber.Trim();
+    }
+
+    protected bool HasRepeatedValues(string document)
+    {
+        string[] invalidNumbers =
+        {
+                "00000000000",
+                "11111111111",
+                "22222222222",
+                "33333333333",
+                "44444444444",
+                "55555555555",
+                "66666666666",
+                "77777777777",
+                "88888888888",
+                "99999999999",
+                "00000000000000",
+                "11111111111111",
+                "22222222222222",
+                "33333333333333",
+                "44444444444444",
+                "55555555555555",
+                "66666666666666",
+                "77777777777777",
+                "88888888888888",
+                "99999999999999"
+            };
+        return invalidNumbers.Contains(document);
     }
 }

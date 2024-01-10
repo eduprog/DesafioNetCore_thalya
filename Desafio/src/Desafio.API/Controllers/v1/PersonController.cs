@@ -13,18 +13,8 @@ public class PersonController : DesafioControllerBase
         _personService = personService;
     }
 
-    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpPost]
-    public async Task<ActionResult<PersonResponse>> InsertPersonAsync(InsertPersonRequest personRequest)
-    {
-        if(!ModelState.IsValid) return CustomResponse(ModelState);
-
-        PersonResponse result = await _personService.InsertAsync(personRequest);
-
-        return CustomResponse(result);
-    }
-
-    [HttpGet("get-by-id")]
+    #region Get
+    [HttpGet("get-person-by-id")]
     public async Task<ActionResult<PersonResponse>> GetPersonAsync(Guid id)
     {
         PersonResponse result = await _personService.GetByIdAsync(id);
@@ -32,43 +22,62 @@ public class PersonController : DesafioControllerBase
         return CustomResponse(result);
     }
 
-    [HttpGet("get-all")]
+    [HttpGet("get-all-person")]
     public async Task<ActionResult<PersonResponse>> GetAllPerson()
     {
         IEnumerable<PersonResponse> result = await _personService.GetAllAsync();
 
-        if (!result.Any()) return CustomResponseList(result, "No person was foud");
-
         return CustomResponseList(result);
 
-    }
-
-    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpPut]
-    public async Task<ActionResult<PersonResponse>> UpdatePersonAsync(PersonRequest personRequest)
-    {
-        if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-        PersonResponse result = await _personService.UpdateAsync(personRequest);
-
-        return CustomResponse(result);
-    }
-
-    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpDelete]
-    public async Task<ActionResult<PersonResponse>> RemovePersonAsync(Guid id)
-    {
-        if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-        PersonResponse result = await _personService.RemoveAsync(id);
-
-        return CustomResponse(result);
     }
 
     [HttpGet("get-by-short-id")]
     public async Task<ActionResult<PersonResponse>> GetPersonByShortIdAsync(string shortId)
     {
         PersonResponse result = await _personService.GetByShortIdAsync(shortId);
+
+        return CustomResponse(result);
+    }
+
+    [HttpGet("get-all-clients")]
+    public async Task<ActionResult<PersonResponse>> GetAllClients()
+    {
+        IEnumerable<PersonResponse> result = await _personService.GetAllClientAsync();
+
+        return CustomResponseList(result);
+
+    }
+
+    [HttpGet("get-client-by-id")]
+    public async Task<ActionResult<PersonResponse>> GetClientAsync(Guid id)
+    {
+        PersonResponse result = await _personService.GetClientByIdAsync(id);
+
+        return CustomResponse(result);
+    }
+    #endregion
+
+    #region Post
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpPost("insert-person")]
+    public async Task<ActionResult<PersonResponse>> InsertPersonAsync(InsertPersonRequest personRequest)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        PersonResponse result = await _personService.InsertAsync(personRequest);
+
+        return CustomResponse(result);
+    }
+    #endregion
+
+    #region Put
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpPut("update-person-information")]
+    public async Task<ActionResult<PersonResponse>> UpdatePersonAsync(PersonRequest personRequest)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        PersonResponse result = await _personService.UpdateAsync(personRequest);
 
         return CustomResponse(result);
     }
@@ -94,4 +103,31 @@ public class PersonController : DesafioControllerBase
 
         return CustomResponse(result);
     }
+    #endregion
+
+    #region Delete
+    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [HttpDelete("delete-person")]
+    public async Task<ActionResult<PersonResponse>> RemovePersonAsync(Guid id)
+    {
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+        PersonResponse result = await _personService.RemoveAsync(id);
+
+        return CustomResponse(result);
+    }
+    #endregion
+
+
+
+
+
+
+
+
+
+
+   
+
+    
 }

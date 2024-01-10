@@ -271,46 +271,5 @@ public class UserService : ServiceBase, IUserService
         return true;
 
     }
-
-    public static string OnlyDocumentNumbers(string document)
-    {
-        var onlyNumber = "";
-        foreach (var value in document)
-        {
-            if (char.IsDigit(value))
-            {
-                onlyNumber += value;
-            }
-        }
-        return onlyNumber.Trim();
-    }
-
-    private static bool HasRepeatedValues(string document)
-    {
-        string[] invalidNumbers =
-        {
-                "00000000000",
-                "11111111111",
-                "22222222222",
-                "33333333333",
-                "44444444444",
-                "55555555555",
-                "66666666666",
-                "77777777777",
-                "88888888888",
-                "99999999999",
-                "00000000000000",
-                "11111111111111",
-                "22222222222222",
-                "33333333333333",
-                "44444444444444",
-                "55555555555555",
-                "66666666666666",
-                "77777777777777",
-                "88888888888888",
-                "99999999999999"
-            };
-        return invalidNumbers.Contains(document);
-    }
     #endregion
 }

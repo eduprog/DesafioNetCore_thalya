@@ -102,7 +102,7 @@ public class ProductService : ServiceBase, IProductService
     {
         var existingProduct = await _productRepository.GetByIdAsync(productRequest.Id);
 
-        if (existingProduct != null)
+        if (existingProduct == null)
         {
             Notificate("The product was not found.");
             return null;
@@ -111,10 +111,8 @@ public class ProductService : ServiceBase, IProductService
         existingProduct.StoredQuantity = productRequest.StoredQuantity;
         existingProduct.Price = productRequest.Price;
         existingProduct.BarCode = productRequest.BarCode;
-        existingProduct.Sellable = productRequest.Sellable;
         existingProduct.Acronym = productRequest.Acronym;
         existingProduct.Description = productRequest.Description;
-        existingProduct.Enable = productRequest.Enable;
         existingProduct.Id = productRequest.Id;
         existingProduct.ShortDescription = productRequest.ShortDescription;
 

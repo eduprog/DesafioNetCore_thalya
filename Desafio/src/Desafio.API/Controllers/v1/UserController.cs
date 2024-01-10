@@ -14,40 +14,33 @@ public class UserController : DesafioControllerBase
         _userService = identityService;
     }
 
-    [HttpPost("register")]
+    #region Post
+    [HttpPost("register-user")]
     public async Task<ActionResult<RegisterUserResponse>> RegisterUserAsync(RegisterUserRequest registerUserRequest)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
         RegisterUserResponse result = await _userService.RegisterUserAsync(registerUserRequest);
-        
-        return CustomResponse(result);   
+
+        return CustomResponse(result);
     }
-    
+
     [HttpPost("login")]
     public async Task<ActionResult<LoginUserResponse>> LoginUserAsync(LoginUserRequest loginUserRequest)
     {
-        if(!ModelState.IsValid) return CustomResponse(ModelState);
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
 
         LoginUserResponse result = await _userService.LoginAsync(loginUserRequest);
 
         return CustomResponse(result);
     }
+    #endregion
 
+    #region Get
     [HttpGet("get-all-users")]
     public async Task<ActionResult<UserResponse>> GetAllUsers()
     {
         IEnumerable<UserResponse> result = await _userService.GetAllAsync(false);
-        
-        if (result.Count() == 0) return CustomResponse(result, "No users were found.");
-
-        return CustomResponse(result);
-    }
-
-    [HttpGet("get-all-users-roles")]
-    public async Task<ActionResult<UserResponse>> GetAllUsersRoles()
-    {
-        IEnumerable<UserResponse> result = await _userService.GetAllAsync(true);
 
         if (result.Count() == 0) return CustomResponse(result, "No users were found.");
 
@@ -68,9 +61,9 @@ public class UserController : DesafioControllerBase
     public async Task<ActionResult<UserResponse>> GetAllManagerUsers()
     {
         IEnumerable<UserResponse> result = await _userService.GetAllUsersByRoleAsync(EUserLevel.Manager.ToString().ToUpper());
-        
-        if(result.Count() ==  0) return CustomResponse(result, "No manager users were found.");
-        
+
+        if (result.Count() == 0) return CustomResponse(result, "No manager users were found.");
+
         return CustomResponse(result);
     }
 
@@ -84,9 +77,20 @@ public class UserController : DesafioControllerBase
         return CustomResponse(result);
     }
 
+    [HttpGet("get-by-short-id")]
+    public async Task<ActionResult<UserResponse>> GetUnitByShortIdAsync(string shortId)
+    {
+        UserResponse result = await _userService.GetByShortIdAsync(shortId);
+
+        return CustomResponse(result);
+
+    }
+    #endregion
+
+    #region Put
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpPut]
-    public async Task<ActionResult<UserResponse>> PutUserAsync(UpdateUserRequest userRequest)
+    [HttpPut("update-user-informations")]
+    public async Task<ActionResult<UserResponse>> UpdateUserAsync(UpdateUserRequest userRequest)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -97,8 +101,8 @@ public class UserController : DesafioControllerBase
     }
 
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpPut("put-login")]
-    public async Task<ActionResult<UserResponse>> PutLoginUserAsync(UpdateLoginUserRequest userRequest)
+    [HttpPut("update-login")]
+    public async Task<ActionResult<UserResponse>> UpdateLoginUserAsync(UpdateLoginUserRequest userRequest)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -107,9 +111,11 @@ public class UserController : DesafioControllerBase
         return CustomResponse(result);
 
     }
+    #endregion
 
+    #region Delete
     [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
-    [HttpDelete]
+    [HttpDelete("delete-user")]
     public async Task<ActionResult<UserResponse>> DeleteUserAsync(string email)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -119,13 +125,5 @@ public class UserController : DesafioControllerBase
         return CustomResponse(result);
 
     }
-
-    [HttpGet("get-by-short-id")]
-    public async Task<ActionResult<UserResponse>> GetUnitByShortIdAsync(string shortId)
-    {
-        UserResponse result = await _userService.GetByShortIdAsync(shortId);
-
-        return CustomResponse(result);
-
-    }
+    #endregion
 }
