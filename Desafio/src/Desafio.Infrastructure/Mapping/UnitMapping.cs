@@ -15,6 +15,7 @@ public class UnitMapping : IEntityTypeConfiguration<Unit>
         unit.Property(x => x.Acronym).HasColumnName("acronym").IsRequired();
         unit.HasKey(x => x.Acronym);
         unit.Property(x => x.Description).HasColumnName("description").IsRequired();
+        unit.Property(x => x.ShortId).HasColumnName("short_id").IsRequired();
 
 
         #region Relations

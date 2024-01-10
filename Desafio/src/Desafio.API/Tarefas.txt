@@ -1,0 +1,43 @@
+﻿- VERIFICAR REFRESH TOKEN
+- IMPLEMENTAR PARA OUTROS BANCOS
+- MEDIATR 
+- TRATAR EXCEÇÕES (EXEMPLO: TRAZER INFORMAÇÕES NULAS NA REQUISIÇÃO)
+- VERIFICAR DATA DE EXPIRAÇÃO DO TOKEN
+- VERIFICAR MIDLEWARES
+- VERIFICAR AULA SOBRE DOCUMENTAÇÃO E VERSIONAMENTO
+
+--------
+
+dados de usuários para teste
+{
+  "userName": "thalyatabezerra@gmail.com",
+  "email": "thalyatabezerra@gmail.com",
+  "password": "Bezerr@1",
+  "confirmPassword": "Bezerr@1",
+  "userLevel": 1,
+  "name": "Thalya Seller",
+  "nickName": "Teste",
+  "document": "02350399770"
+}
+
+{
+  "userName": "thaytetavares@gmail.com",
+  "email": "thaytetavares@gmail.com",
+  "password": "Bezerr@1",
+  "confirmPassword": "Bezerr@1",
+  "userLevel": 2,
+  "name": "Thalya Manager",
+  "nickName": "Teste",
+  "document": "02131513755"
+}
+
+{
+  "userName": "thalya_bezerra@hotmail.com",
+  "email": "thalya_bezerra@hotmail.com",
+  "password": "Bezerr@1",
+  "confirmPassword": "Bezerr@1",
+  "userLevel": 3,
+  "name": "Thalya Administrator",
+  "nickName": "Teste",
+  "document": "13519852640"
+}

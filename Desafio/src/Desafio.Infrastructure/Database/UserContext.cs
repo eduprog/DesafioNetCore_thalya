@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Desafio.Domain;
-using Desafio.Infrastructure.Mapping;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Desafio.Infrastructure;
 
-public class UserContext : DbContext
+public class UserContext : IdentityDbContext
 {
     #region DbSet
     public DbSet<User> Users => Set<User>();
@@ -17,7 +17,12 @@ public class UserContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema("public");
-        modelBuilder.ApplyConfiguration(new UserMapping());
+        //modelBuilder.ApplyConfiguration(new UserMapping());
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
     }
 }

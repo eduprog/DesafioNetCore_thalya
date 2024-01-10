@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desafio.Infrastructure.Mapping;
+namespace Desafio.Infrastructure;
 
 public class ProductMapping : IEntityTypeConfiguration<Product>
 {
@@ -19,8 +19,9 @@ public class ProductMapping : IEntityTypeConfiguration<Product>
         product.Property(x => x.Price).HasColumnName("price").HasPrecision(15, 4).IsRequired();
         product.Property(x => x.StoredQuantity).HasColumnName("stored_quantity").HasPrecision(15, 4).IsRequired();
         product.Property(x => x.Enable).HasColumnName("enable").IsRequired();
-        product.Property(x => x.Salable).HasColumnName("salable").IsRequired();
+        product.Property(x => x.Sellable).HasColumnName("sellable").IsRequired();
         product.Property(x => x.BarCode).HasColumnName("bar_code").IsRequired();
+        product.Property(x => x.ShortId).HasColumnName("short_id").IsRequired();
 
         #region Relations
         product.HasOne(x => x.Unit)

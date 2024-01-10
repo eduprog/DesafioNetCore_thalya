@@ -1,55 +1,64 @@
 ﻿using Desafio.Domain;
-using Desafio.Domain.Enum;
+using Desafio.Identity;
 using Desafio.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desafio.API
+namespace Desafio.API;
+
+public static class DbMigrationHelperExtension
 {
-    public static class DbMigrationHelperExtension
+    public static void UseDbMigrationHelper(this WebApplication app)
     {
-        public static void UseDbMigrationHelper(this WebApplication app)
-        {
-            DbMigrationHelpers.EnsureSeedData(app).Wait();
-        }
+        DbMigrationHelpers.EnsureSeedData(app).Wait();
     }
-    public static class DbMigrationHelpers
+}
+public static class DbMigrationHelpers
+{
+    public static async Task EnsureSeedData(WebApplication serviceScope)
     {
-        public static async Task EnsureSeedData(WebApplication serviceScope)
+        var services = serviceScope.Services.CreateScope().ServiceProvider;
+        await EnsureSeedData(services);
+    }
+
+    public static async Task EnsureSeedData(IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+
+        var identityContext = scope.ServiceProvider.GetRequiredService<IdentityContext>();
+        var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        //Utilizar com Postgres e SQLite
+        //await identityContext.Database.MigrateAsync();
+        //await appDbContext.Database.MigrateAsync();
+
+        //Utilizar com InMemory
+        identityContext.Database.EnsureCreated();
+        appDbContext.Database.EnsureCreated();
+
+        //Usar caso for necessário criar dados iniciais
+        await EnsureSeedUserLevel(identityContext, appDbContext);
+    }
+
+    public static async Task EnsureSeedUserLevel(IdentityContext identityContext, AppDbContext appDbContext)
+    {
+        EUserLevel[] roles = (EUserLevel[])Enum.GetValues(typeof(EUserLevel));
+        foreach(var role in roles)
         {
-            var services = serviceScope.Services.CreateScope().ServiceProvider;
-            await EnsureSeedData(services);
-        }
-
-        public static async Task EnsureSeedData(IServiceProvider serviceProvider)
-        {
-            using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-
-            var userContext = scope.ServiceProvider.GetRequiredService<UserContext>();
-            var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            await userContext.Database.MigrateAsync();
-            await appDbContext.Database.MigrateAsync();
-
-            await EnsureSeedProducts(userContext);
-
-        }
-
-        public static async Task EnsureSeedProducts(UserContext userContext)
-        {
-            if (userContext.Users.Any()) return;
-
-            var idUsuario = Guid.NewGuid();
-
-            await userContext.Users.AddAsync(new User()
+            if(!identityContext.Roles.Any(x => x.Name == role.ToString().ToUpper()))
             {
-                Id = idUsuario,
-                Name = "Defaut User",
-                Password = "1", //LEMBRAR DE SALVAR EM HASH
-                UserLevel = EUserLevel.Administrator
-            });
+                IdentityRole identityRole = new IdentityRole
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = role.ToString().ToUpper(),
+                    NormalizedName = role.ToString().ToUpper()
+                };
+                await identityContext.Roles.AddAsync(identityRole);
+            }
 
-            await userContext.SaveChangesAsync();
         }
+
+        await identityContext.SaveChangesAsync();
     }
 }
