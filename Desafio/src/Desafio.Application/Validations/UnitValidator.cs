@@ -13,9 +13,8 @@ public class UnitValidator : AbstractValidator<Unit>
 
         RuleFor(x => x.Acronym)
             .NotEmpty().NotNull().WithMessage("The field {PropertyName} is required.")
-            .MustAsync(UniqueAcronymAsync).WithMessage("The Acronym must be unique.")
-            .Length(2, 4)
-            .WithMessage("The field {PropertyName} must have between {MinLength} and {MaxLength} caracters.");
+            .MustAsync(UnitDoesNotExistsAsync).WithMessage("The Acronym must be unique.")
+            .Length(2, 4).WithMessage("The field {PropertyName} must have between {MinLength} and {MaxLength} caracters.");
 
         RuleFor(x => x.Description)
             .NotEmpty().NotNull().WithMessage("The field {PropertyName} is required.")
@@ -24,9 +23,9 @@ public class UnitValidator : AbstractValidator<Unit>
     }
     
 
-    private async Task<bool> UniqueAcronymAsync(string acronym, CancellationToken token)
+    private async Task<bool> UnitDoesNotExistsAsync(string acronym, CancellationToken token)
     {
         // Verificar se existe cadastro dessa unidade
-        return !await _unitService.UnitAlreadyExistsAsync(acronym);
+        return !await _unitService.UnitDoesNotExistsAsync(acronym);
     }
 }

@@ -16,17 +16,17 @@ public class UnitRepository : IUnitRepository
 
     public async Task<List<Unit>> GetAllAsync()
     {
-        return await _appDbContext.Units.ToListAsync();
+        return await _appDbContext.Units.AsNoTracking().ToListAsync();
     }
 
     public async Task<Unit> GetByAcronymAsync(string acronym)
     {
-        return await _appDbContext.Units.FirstOrDefaultAsync(x => x.Acronym == acronym);
+        return await _appDbContext.Units.AsNoTracking().FirstOrDefaultAsync(x => x.Acronym == acronym);
     }
 
     public async Task<Unit> GetByShortIdAsync(string shortId)
     {
-        return await _appDbContext.Units.FirstOrDefaultAsync(x => x.ShortId == shortId);
+        return await _appDbContext.Units.AsNoTracking().FirstOrDefaultAsync(x => x.ShortId == shortId);
     }
 
     public async Task InsertAsync(Unit unit)
@@ -87,16 +87,11 @@ public class UnitRepository : IUnitRepository
         {
             throw new Exception("Error while saving unit");
         }
-        
     }
 
-    public async Task<bool> HasBeenUsedBeforeAsync(string acronym)
+    public async Task<bool> HasNotBeenUsedBeforeAsync(string acronym)
     {
-        return await _appDbContext.Products.AnyAsync(x => x.Acronym == acronym);
+        return !await _appDbContext.Products.AsNoTracking().AnyAsync(x => x.Acronym == acronym);
     }
 
-    public async Task<bool> IsRegisteredAsync(string acronym)
-    {
-        return await _appDbContext.Units.AnyAsync(x => x.Acronym == acronym);
-    }
 }

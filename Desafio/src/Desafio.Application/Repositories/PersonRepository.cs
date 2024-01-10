@@ -15,22 +15,22 @@ public class PersonRepository : IPersonRepository
 
     public async Task<List<Person>> GetAllAsync()
     {
-        return await _appDbContext.People.ToListAsync();
+        return await _appDbContext.People.AsNoTracking().ToListAsync();
     }
 
     public async Task<List<Person>> GetAllClientAsync()
     {
-        return await _appDbContext.People.Where(x => x.CanBuy).ToListAsync();
+        return await _appDbContext.People.AsNoTracking().Where(x => x.CanBuy).ToListAsync();
     }
 
     public async Task<Person> GetByIdAsync(Guid id)
     {
-        return await _appDbContext.People.FirstOrDefaultAsync(x => x.Id == id);
+        return await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<Person> GetClientByIdAsync(Guid id)
     {
-        return await _appDbContext.People.FirstOrDefaultAsync(x => x.Id == id && x.CanBuy);
+        return await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.CanBuy);
     }
 
     public async Task InsertAsync(Person person)
@@ -80,17 +80,17 @@ public class PersonRepository : IPersonRepository
 
     public async Task<Person> GetByShortIdAsync(string shortId)
     {
-        return await _appDbContext.People.FirstOrDefaultAsync(x => x.ShortId == shortId);
+        return await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(x => x.ShortId == shortId);
     }
 
     public async Task<bool> AlternativeCodeAlreadyExistsAsync(string alternativeCode)
     {
-        return await _appDbContext.People.AnyAsync(x => x.AlternativeCode == alternativeCode);
+        return await _appDbContext.People.AsNoTracking().AnyAsync(x => x.AlternativeCode == alternativeCode);
     }
 
     public async Task<bool> DocumentAlreadyExistsAsync(string document)
     {
-        return await _appDbContext.People.AnyAsync(x => x.Document == document);
+        return await _appDbContext.People.AsNoTracking().AnyAsync(x => x.Document == document);
     }
 
     public async Task<bool> PersonCanBuyAsync(Guid id)

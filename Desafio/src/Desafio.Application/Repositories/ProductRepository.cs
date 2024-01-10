@@ -15,21 +15,21 @@ public class ProductRepository : IProductRepository
 
     public async Task<List<Product>> GetAllAsync()
     {
-        return await _appDbContext.Products.ToListAsync();
+        return await _appDbContext.Products.AsNoTracking().ToListAsync();
     }
     public async Task<List<Product>> GetAllSellableAsync()
     {
-        return await _appDbContext.Products.Where(x => x.Sellable).ToListAsync();
+        return await _appDbContext.Products.AsNoTracking().Where(x => x.Sellable).ToListAsync();
     }
 
     public async Task<Product> GetByBarCodeAsync(string barCode)
     {
-        return await _appDbContext.Products.FirstOrDefaultAsync(x => x.BarCode == barCode);
+        return await _appDbContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.BarCode == barCode);
     }
 
     public async Task<Product> GetByIdAsync(Guid id)
     {
-        return await _appDbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
+        return await _appDbContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task InsertAsync(Product product)
@@ -37,7 +37,7 @@ public class ProductRepository : IProductRepository
         try
         {
             product.Id = Guid.NewGuid();
-            product.Unit = _appDbContext.Units.FirstOrDefault();
+            product.Unit = _appDbContext.Units.AsNoTracking().FirstOrDefault();
             await _appDbContext.Products.AddAsync(product);
             await SaveChangesAsync();
         }
@@ -93,11 +93,11 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetByShortIdAsync(string shortId)
     {
-        return await _appDbContext.Products.FirstOrDefaultAsync(x => x.ShortId == shortId);
+        return await _appDbContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.ShortId == shortId);
     }
 
     public async Task<bool> UnitAlreadyExistsAsync(string acronym)
     {
-        return await _appDbContext.Units.FirstOrDefaultAsync(x => x.Acronym == acronym) != null;
+        return await _appDbContext.Units.AsNoTracking().FirstOrDefaultAsync(x => x.Acronym == acronym) != null;
     }
 }

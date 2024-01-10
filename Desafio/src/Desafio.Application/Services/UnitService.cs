@@ -107,13 +107,13 @@ public class UnitService : ServiceBase, IUnitService
     #endregion
 
     #region Validations Methods
-    public async Task<bool> UnitAlreadyExistsAsync(string acronym)
+    public async Task<bool> UnitDoesNotExistsAsync(string acronym)
     {
-        return await _unitRepository.IsRegisteredAsync(acronym);
+        return await _unitRepository.GetByAcronymAsync(acronym) == null;
     }
-    public async Task<bool> HasBeenUsedBeforeAsync(string acronym)
+    public async Task<bool> HasNotBeenUsedBeforeAsync(string acronym)
     {
-        return await _unitRepository.HasBeenUsedBeforeAsync(acronym);
+        return await _unitRepository.HasNotBeenUsedBeforeAsync(acronym);
     }
     #endregion
 }

@@ -15,10 +15,10 @@ internal static class StartupDatabase
             //options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
 
             //Utilizar InMemory
-            //options.UseInMemoryDatabase(config.GetConnectionString("InMemory_Identity"));
+            options.UseInMemoryDatabase(databaseName: "InMemory_Desafio_Identity");
 
             //Utilizar SQLite
-            options.UseSqlite("Data Source=Desafio_identity.db");
+            //options.UseSqlite("Data Source=Desafio_identity.db");
         });
 
         services.AddDbContext<AppDbContext>(options =>
@@ -27,10 +27,10 @@ internal static class StartupDatabase
             //options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
 
             //Utilizar InMemory
-            //options.UseInMemoryDatabase(config.GetConnectionString("InMemory"));
+            options.UseInMemoryDatabase(databaseName: "InMemory_Desafio");
 
             //Utilizar SQLite
-            options.UseSqlite("Data Source=Desafio.db");
+            //options.UseSqlite("Data Source=Desafio.db");
         });
 
         return services;
