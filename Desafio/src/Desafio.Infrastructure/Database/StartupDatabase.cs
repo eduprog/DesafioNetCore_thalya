@@ -13,12 +13,20 @@ internal static class StartupDatabase
         {
             //Utilizar Postgres
             options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
+
+            //Utilizar InMemory
+
+            //Utilizar SQLite
         });
 
         services.AddDbContext<AppDbContext>(options =>
         {
             //Utilizar Postgres
             options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
+
+            //Utilizar InMemory
+
+            //Utilizar SQLite
         });
 
         return services;
