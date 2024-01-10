@@ -1,16 +1,13 @@
 ﻿using AutoMapper;
 using Desafio.Application;
 using Desafio.Domain;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Buffers.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Desafio.Identity;
 
@@ -54,13 +51,14 @@ public class UserService : ServiceBase, IUserService
             return null;
         }
 
-        if (string.IsNullOrWhiteSpace(authenticatedUser))
+        if (string.IsNullOrWhiteSpace(authenticatedUser) && HasAnyUserRegisteredOnDatabase())
         {
             Notificate("No user is authenticated.");
             return null;
         }
 
-        if(ReturnUserRole(authenticatedUser) != "ADMINISTRATOR")
+        string userRole = ReturnUserRole(authenticatedUser);
+        if (!string.IsNullOrEmpty(userRole) && userRole != "ADMINISTRATOR" && HasAnyUserRegisteredOnDatabase())
         {
             Notificate("Only administrator user can register another user.");
             return null;
@@ -301,6 +299,8 @@ public class UserService : ServiceBase, IUserService
     private string ReturnUserRole(string id)
     {
         User user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+
+        if (user == null) return string.Empty;
 
         return _userManager.GetRolesAsync(user).Result.ToList().FirstOrDefault();
     }

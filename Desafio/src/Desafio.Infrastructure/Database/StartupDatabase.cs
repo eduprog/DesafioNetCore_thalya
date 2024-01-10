@@ -12,21 +12,25 @@ internal static class StartupDatabase
         services.AddDbContext<IdentityContext>(options =>
         {
             //Utilizar Postgres
-            options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
+            //options.UseNpgsql(config.GetConnectionString("PgsqlConnectionIdentity"));
 
             //Utilizar InMemory
+            //options.UseInMemoryDatabase(config.GetConnectionString("InMemory_Identity"));
 
             //Utilizar SQLite
+            options.UseSqlite("Data Source=Desafio_identity.db");
         });
 
         services.AddDbContext<AppDbContext>(options =>
         {
             //Utilizar Postgres
-            options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
+            //options.UseNpgsql(config.GetConnectionString("PgsqlConnection"));
 
             //Utilizar InMemory
+            //options.UseInMemoryDatabase(config.GetConnectionString("InMemory"));
 
             //Utilizar SQLite
+            options.UseSqlite("Data Source=Desafio.db");
         });
 
         return services;
