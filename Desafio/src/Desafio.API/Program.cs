@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
-    var mapconfig = new MapperConfiguration(config => config.AddProfile<AutoMapperConfig>());
+    var mapconfig = new MapperConfiguration(config => config.AddProfile<AutoMapperConfiguration>());
     app.UseSwaggerUI();
     app.UseHttpsRedirection();
     app.UseAuthentication();

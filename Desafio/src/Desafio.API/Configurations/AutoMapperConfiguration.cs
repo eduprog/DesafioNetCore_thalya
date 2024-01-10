@@ -4,9 +4,9 @@ using Desafio.Domain;
 
 namespace Desafio.API;
 
-public class AutoMapperConfig : Profile
+public class AutoMapperConfiguration : Profile
 {
-    public AutoMapperConfig()
+    public AutoMapperConfiguration()
     {
         #region Unit
         CreateMap<Unit, UnitRequest>().ReverseMap();
