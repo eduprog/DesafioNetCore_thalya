@@ -203,23 +203,5 @@ public class PersonService : ServiceBase, IPersonService
     {
         return await _personRepository.PersonCanBuyAsync(id);
     }
-
-    public bool IsValidDocument(string document, bool canBeNullOrEmpty = false)
-    {
-        if(canBeNullOrEmpty && string.IsNullOrWhiteSpace(document))
-        {
-            return true;
-        }
-        string documentNumber = OnlyDocumentNumbers(document);
-        bool validLength = documentNumber.Length == 11 || documentNumber.Length == 14;
-
-        if (string.IsNullOrWhiteSpace(documentNumber) || HasRepeatedValues(documentNumber) || !validLength)
-        {
-            return false;
-        }
-
-        return true;
-
-    }
     #endregion
 }

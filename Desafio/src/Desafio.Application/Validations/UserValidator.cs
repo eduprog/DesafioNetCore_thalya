@@ -14,10 +14,13 @@ public class UserValidator : AbstractValidator<User>
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
             .MustAsync(UniqueEmailAsync).WithMessage("The Email must be unique.");
+
         RuleFor(x => x.Document)
             .NotEmpty().WithMessage("The field {PropertyName} is required.")
-            .MustAsync(UniqueDocument).WithMessage("The Document must be unique.")
-            .MustAsync(ValidLenght).WithMessage("The Document must be between 11 and 14 caracteres and be numeric only.");
+            .MustAsync(UniqueDocument).WithMessage("The Document must be unique.");
+
+        RuleFor(x => x.Document).IsValidCNPJ().When(x => x.Document.Length >= 14)
+            .IsValidCPF().When(x => x.Document.Length < 14);
     }
 
     private async Task<bool> UniqueEmailAsync(string email, CancellationToken token)

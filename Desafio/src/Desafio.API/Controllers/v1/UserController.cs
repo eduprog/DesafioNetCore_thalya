@@ -79,7 +79,7 @@ public class UserController : DesafioControllerBase
 
     }
 
-    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [Authorize(Roles = "ADMINISTRATOR")]
     [HttpPut("update-login")]
     public async Task<ActionResult<UserResponse>> UpdateLoginUserAsync(UpdateLoginUserRequest userRequest)
     {
