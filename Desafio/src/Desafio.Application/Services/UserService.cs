@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Desafio.Application;
 using Desafio.Domain;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -44,9 +45,29 @@ public class UserService : ServiceBase, IUserService
         return null;
     }
 
-    public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest)
+    public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, string authenticatedUser)
     {
+        //verificar se existe usuário na base
+        if(!HasAnyUserRegisteredOnDatabase()  && registerUserRequest.UserLevel != EUserLevel.Administrator)
+        {
+            Notificate("There must be at least one administrator user before entering any other information on the database.");
+            return null;
+        }
+
+        if (string.IsNullOrWhiteSpace(authenticatedUser))
+        {
+            Notificate("No user is authenticated.");
+            return null;
+        }
+
+        if(ReturnUserRole(authenticatedUser) != "ADMINISTRATOR")
+        {
+            Notificate("Only administrator user can register another user.");
+            return null;
+        }
+
         var identityUser = _mapper.Map<User>(registerUserRequest);
+
         identityUser.EmailConfirmed = true;
         identityUser.Document = OnlyDocumentNumbers(registerUserRequest.Document);
 
@@ -270,6 +291,18 @@ public class UserService : ServiceBase, IUserService
 
         return true;
 
+    }
+
+    public bool HasAnyUserRegisteredOnDatabase()
+    {
+        return _userManager.GetUsersInRoleAsync("ADMINISTRATOR").Result.Count > 0;
+    }
+
+    private string ReturnUserRole(string id)
+    {
+        User user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+
+        return _userManager.GetRolesAsync(user).Result.ToList().FirstOrDefault();
     }
     #endregion
 }

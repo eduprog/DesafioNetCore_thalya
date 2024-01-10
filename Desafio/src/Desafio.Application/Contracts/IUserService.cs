@@ -2,7 +2,7 @@
 
 public interface IUserService
 {
-    Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest);
+    Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, string authenticatedUser);
     Task<LoginUserResponse> LoginAsync(LoginUserRequest loginUserRequest);
     Task<IEnumerable<UserResponse>> GetAllAsync(bool selectRoles);
     Task<IEnumerable<UserResponse>> GetAllUsersByRoleAsync(string role);

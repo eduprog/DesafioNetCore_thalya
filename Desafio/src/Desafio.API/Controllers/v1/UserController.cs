@@ -2,6 +2,7 @@
 using Desafio.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Desafio.API;
 
@@ -20,7 +21,9 @@ public class UserController : DesafioControllerBase
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        RegisterUserResponse result = await _userService.RegisterUserAsync(registerUserRequest);
+        var authenticatedUser = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        RegisterUserResponse result = await _userService.RegisterUserAsync(registerUserRequest, authenticatedUser);
 
         return CustomResponse(result);
     }
