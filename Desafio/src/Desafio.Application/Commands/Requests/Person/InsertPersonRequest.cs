@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Desafio.Application;
 
@@ -14,7 +15,8 @@ public class InsertPersonRequest
 
     public bool Enable { get; set; } = true;
 
-    public bool CanBuy { get; set; } = false;
+    [DefaultValue(false)]
+    public bool CanBuy { get; set; }
 
     public string Notes { get; set; } = string.Empty;
 

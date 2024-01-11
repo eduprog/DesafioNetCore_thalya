@@ -1,9 +1,7 @@
-﻿using System.Buffers.Text;
+﻿namespace Desafio.Domain;
 
-namespace Desafio.Domain;
-
-public class Entity
+public abstract class Entity
 {
-    public Guid Id { get; set; }
-    public string ShortId { get; set; } = string.Empty;
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string ShortId { get; set; } = GenerateShortId.GetShortId();
 }

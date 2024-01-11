@@ -42,23 +42,22 @@ public class UserService : ServiceBase, IUserService
         return null;
     }
 
-    public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, string authenticatedUser)
+    public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, ClaimsPrincipal user)
     {
         //verificar se existe usuário na base
-        if(!HasAnyUserRegisteredOnDatabase()  && registerUserRequest.UserLevel != EUserLevel.Administrator)
+        if(!HasAnyUserRegisteredOnDatabase() && registerUserRequest.UserLevel != EUserLevel.Administrator)
         {
             Notificate("There must be at least one administrator user before entering any other information on the database.");
             return null;
         }
 
-        if (string.IsNullOrWhiteSpace(authenticatedUser) && HasAnyUserRegisteredOnDatabase())
+        if (!user.Identity.IsAuthenticated && HasAnyUserRegisteredOnDatabase())
         {
             Notificate("No user is authenticated.");
             return null;
         }
 
-        string userRole = ReturnUserRole(authenticatedUser);
-        if (!string.IsNullOrEmpty(userRole) && userRole != "ADMINISTRATOR" && HasAnyUserRegisteredOnDatabase())
+        if (!user.IsInRole("ADMINISTRATOR") && HasAnyUserRegisteredOnDatabase())
         {
             Notificate("Only administrator user can register another user.");
             return null;
@@ -74,7 +73,6 @@ public class UserService : ServiceBase, IUserService
             return null;
         }
 
-        identityUser.ShortId = GenerateShortId("USER");
         var result = await _userManager.CreateAsync(identityUser, registerUserRequest.Password);
 
         if (!result.Succeeded)
@@ -294,15 +292,6 @@ public class UserService : ServiceBase, IUserService
     public bool HasAnyUserRegisteredOnDatabase()
     {
         return _userManager.GetUsersInRoleAsync("ADMINISTRATOR").Result.Count > 0;
-    }
-
-    private string ReturnUserRole(string id)
-    {
-        User user = _userManager.Users.FirstOrDefault(x => x.Id == id);
-
-        if (user == null) return string.Empty;
-
-        return _userManager.GetRolesAsync(user).Result.ToList().FirstOrDefault();
     }
     #endregion
 }

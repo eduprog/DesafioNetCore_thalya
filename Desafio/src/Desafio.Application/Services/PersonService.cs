@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Desafio.Domain;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Net.Http.Headers;
 
 namespace Desafio.Application;
@@ -21,7 +22,7 @@ public class PersonService : ServiceBase, IPersonService
     {
         var result = _mapper.Map<IEnumerable<PersonResponse>>(await _personRepository.GetAllAsync());
 
-        if(result == null)
+        if(result == null || result.Count() == 0)
         {
             Notificate("No person was found");
             return null;    
@@ -33,7 +34,7 @@ public class PersonService : ServiceBase, IPersonService
     {
         var result = _mapper.Map<IEnumerable<PersonResponse>>(await _personRepository.GetAllClientAsync());
 
-        if (result == null)
+        if (result == null || result.Count() == 0)
         {
             Notificate("No client was found");
             return null;
@@ -93,8 +94,6 @@ public class PersonService : ServiceBase, IPersonService
             return null;
         }
 
-        person.ShortId = GenerateShortId("PERSON");
-
         await _personRepository.InsertAsync(person);
         var newperson = _mapper.Map<PersonResponse>(person);
         return newperson;
@@ -132,11 +131,11 @@ public class PersonService : ServiceBase, IPersonService
             return null;
         }
 
-        existingperson.Name = personRequest.Name ?? existingperson.Name;
-        existingperson.Document = personRequest.Document ?? existingperson.Document;
-        existingperson.City = personRequest.City ?? existingperson.City;
-        existingperson.Notes = personRequest.Notes ?? existingperson.Notes;
-        existingperson.AlternativeCode = personRequest.AlternativeCode ?? existingperson.AlternativeCode;
+        existingperson.Name = personRequest.Name;
+        existingperson.Document = OnlyDocumentNumbers(personRequest.Document);
+        existingperson.City = personRequest.City;
+        existingperson.Notes = personRequest.Notes;
+        existingperson.AlternativeCode = personRequest.AlternativeCode;
 
 
         if (!await ExecuteValidationAsync(new PersonValidator(this), existingperson))

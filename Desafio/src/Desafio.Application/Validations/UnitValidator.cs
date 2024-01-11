@@ -26,6 +26,6 @@ public class UnitValidator : AbstractValidator<Unit>
     private async Task<bool> UnitDoesNotExistsAsync(string acronym, CancellationToken token)
     {
         // Verificar se existe cadastro dessa unidade
-        return !await _unitService.UnitDoesNotExistsAsync(acronym);
+        return await _unitService.UnitDoesNotExistsAsync(acronym);
     }
 }

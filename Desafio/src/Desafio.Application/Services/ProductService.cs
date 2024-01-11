@@ -77,8 +77,6 @@ public class ProductService : ServiceBase, IProductService
             return null;
         }
 
-        product.ShortId = GenerateShortId("PRODUCT");
-
         await _productRepository.InsertAsync(product);
         var newProduct = _mapper.Map<ProductResponse>(product);
         return newProduct;

@@ -57,8 +57,6 @@ public class UnitService : ServiceBase, IUnitService
             return null;
         }
 
-        unit.ShortId = GenerateShortId("UNIT");
-
         await _unitRepository.InsertAsync(unit);
         var newUnit = _mapper.Map<UnitResponse>(unit);
         return newUnit;

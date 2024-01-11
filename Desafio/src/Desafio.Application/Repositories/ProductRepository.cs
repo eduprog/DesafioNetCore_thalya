@@ -36,8 +36,7 @@ public class ProductRepository : IProductRepository
     {
         try
         {
-            product.Id = Guid.NewGuid();
-            product.Unit = _appDbContext.Units.AsNoTracking().FirstOrDefault();
+            //product.Unit = _appDbContext.Units.AsNoTracking().FirstOrDefault(x => x.Acronym == product.Acronym);
             await _appDbContext.Products.AddAsync(product);
             await SaveChangesAsync();
         }

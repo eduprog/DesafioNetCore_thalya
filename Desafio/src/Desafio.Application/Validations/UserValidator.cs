@@ -16,11 +16,11 @@ public class UserValidator : AbstractValidator<User>
             .MustAsync(UniqueEmailAsync).WithMessage("The Email must be unique.");
 
         RuleFor(x => x.Document)
-            .NotEmpty().WithMessage("The field {PropertyName} is required.")
+            .NotEmpty().NotNull().WithMessage("The field {PropertyName} is required.")
             .MustAsync(UniqueDocument).WithMessage("The Document must be unique.");
 
-        RuleFor(x => x.Document).IsValidCNPJ().When(x => x.Document.Length >= 14)
-            .IsValidCPF().When(x => x.Document.Length < 14);
+        RuleFor(x => x.Document).IsValidCNPJ().Unless(x => x.Document.Length <= 11);
+        RuleFor(x => x.Document).IsValidCPF().Unless(x => x.Document.Length > 11);
     }
 
     private async Task<bool> UniqueEmailAsync(string email, CancellationToken token)
@@ -32,10 +32,5 @@ public class UserValidator : AbstractValidator<User>
     {
         // Verificar se existe cadastro desse documento
         return !await _userService.DocumentAlreadyExisistsAsync(document);
-    }
-    private async Task<bool> ValidLenght(string document, CancellationToken token)
-    {
-        // Verificar se o valor digitado é valido (não tem valores repetidos)
-        return  _userService.IsValidDocument(document);
     }
 }

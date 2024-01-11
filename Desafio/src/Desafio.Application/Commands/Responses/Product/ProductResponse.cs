@@ -9,7 +9,7 @@ public class ProductResponse
     public decimal Price { get; set; }
     public decimal StoredQuantity { get; set; }
     public bool Enable { get; set; } = true;
-    public bool Sellable { get; set; } = false;
+    public bool Sellable { get; set; } 
     public string BarCode { get; set; } = string.Empty;
     public string ShortId { get; set; } = string.Empty;
 }

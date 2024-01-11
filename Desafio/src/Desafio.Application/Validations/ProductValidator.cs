@@ -35,6 +35,9 @@ public class ProductValidator : AbstractValidator<Product>
 
     private async Task<bool> UniqueBarCode(string barCode, CancellationToken token)
     {
+        //Descrição completa, descrição resumida e unidade não poderam ser vazias
+        if (string.IsNullOrWhiteSpace(barCode)) return true;
+
         // Verificar se existe cadastro utilizando o mesmo código de barras
         return !await _productService.ExistingBarCodeAsync(barCode);
     }

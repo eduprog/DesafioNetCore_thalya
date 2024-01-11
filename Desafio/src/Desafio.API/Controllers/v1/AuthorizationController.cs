@@ -21,9 +21,7 @@ public class AuthorizationController : DesafioControllerBase
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var authenticatedUser = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        RegisterUserResponse result = await _userService.RegisterUserAsync(registerUserRequest, authenticatedUser);
+        RegisterUserResponse result = await _userService.RegisterUserAsync(registerUserRequest, User);
 
         return CustomResponse(result);
     }
