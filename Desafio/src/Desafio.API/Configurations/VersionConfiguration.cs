@@ -2,9 +2,9 @@
 
 namespace Desafio.API;
 
-public static class VersionConfiguration
+internal static class VersionConfiguration
 {
-    public static void AddVersioning(this IServiceCollection services)
+    internal static IServiceCollection AddVersioning(this IServiceCollection services)
     {
         services.AddApiVersioning(options =>
         {
@@ -17,5 +17,7 @@ public static class VersionConfiguration
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
+
+        return services;
     }
 }

@@ -3,9 +3,9 @@ using Microsoft.OpenApi.Models;
 
 namespace Desafio.API;
 
-public static class SwaggerConfiguration
+internal static class SwaggerConfiguration
 {
-    public static void AddSwagger(this IServiceCollection services)
+    internal static IServiceCollection AddSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
@@ -44,14 +44,16 @@ public static class SwaggerConfiguration
                 }
             });
         });
+
+        return services;
     }
 
-    public static void UseSwaggerUI(this WebApplication app)
+    internal static IApplicationBuilder UseSwaggerUI(this IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            var apiVersionProvider = app.Services.GetService<IApiVersionDescriptionProvider>();
+            var apiVersionProvider = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
             if (apiVersionProvider == null)
                 throw new ArgumentException("API Versioning not registered.");
 
@@ -62,23 +64,6 @@ public static class SwaggerConfiguration
                 description.GroupName);
             }
         });
-    }
-
-    public class SwaggerAuthorizedMiddleware
-    {
-        public readonly RequestDelegate _next;
-        public SwaggerAuthorizedMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-        public async Task Invoke(HttpContext context)
-        {
-            if (context.Request.Path.StartsWithSegments("/swagger") && !context.User.Identity.IsAuthenticated)
-            {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
-            }
-            await _next.Invoke(context);
-        }
+        return app; 
     }
 }

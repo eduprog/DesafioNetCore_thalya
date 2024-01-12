@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Desafio.Application;
 
-internal static class StartupRepositories
+internal static class AddRepositoriesStartup
 {
     internal static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration config)
     {

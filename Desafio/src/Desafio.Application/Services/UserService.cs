@@ -236,13 +236,14 @@ public class UserService : ServiceBase, IUserService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+        var expiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour);
 
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
             Issuer = _jwtOptions.Sender,
             Audience = _jwtOptions.ValidIn,
             Subject = identityClaims,
-            Expires = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
+            Expires = expiration,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         });
 
@@ -252,7 +253,7 @@ public class UserService : ServiceBase, IUserService
         {
             Email = email,
             Token = encodedToken,
-            DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
+            DataExpiration = expiration,
             ShortId = user.ShortId
         };
     }
@@ -260,6 +261,7 @@ public class UserService : ServiceBase, IUserService
     //Converter corretamente os segundos da data
     private static long ToUnixEpochDate(DateTime date)
     {
+        //Retorna os segundos da data passada
         return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }
     #endregion

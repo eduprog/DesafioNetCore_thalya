@@ -8,24 +8,19 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddControllers();
     builder.Services.AddRouting(options => options.LowercaseUrls = true);
-    builder.Services.AddVersioning();
-    builder.Services.AddSwagger();
+    builder.Services.AddIdentityConfigurations(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
-    builder.Services.AddIdentityConfiguration(builder.Configuration);
     builder.Services.AddApplicationConfigurations(builder.Configuration);
-    //builder.Services.AddAutoMapperConfiguration();
-    builder.Services.AddAutoMapper(typeof(Program));
+    builder.Services.AddApiConfigurations();
 }
 
 var app = builder.Build();
 {
-    var mapconfig = new MapperConfiguration(config => config.AddProfile<AutoMapperConfiguration>());
-    app.UseSwaggerUI();
+    app.AddBuilderConfiguration();
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    app.UseDbMigrationHelper();
 
     app.Run();
 }
