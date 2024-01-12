@@ -87,8 +87,6 @@ public class PersonService : ServiceBase, IPersonService
         
         var person = _mapper.Map<Person>(personRequest);
 
-        person.Document = OnlyDocumentNumbers(personRequest.Document);
-
         if (!await ExecuteValidationAsync(new PersonValidator(this), person))
         {
             return null;
@@ -122,7 +120,6 @@ public class PersonService : ServiceBase, IPersonService
 
     public async Task<PersonResponse> UpdateAsync(PersonRequest personRequest)
     {
-
         var existingperson = await _personRepository.GetByIdAsync(personRequest.Id);
 
         if (existingperson == null)
@@ -131,18 +128,13 @@ public class PersonService : ServiceBase, IPersonService
             return null;
         }
 
-        existingperson.Name = personRequest.Name;
-        existingperson.Document = OnlyDocumentNumbers(personRequest.Document);
-        existingperson.City = personRequest.City;
-        existingperson.Notes = personRequest.Notes;
-        existingperson.AlternativeCode = personRequest.AlternativeCode;
-
+        _mapper.Map<Person>(personRequest);
 
         if (!await ExecuteValidationAsync(new PersonValidator(this), existingperson))
         {
             return null;
         }
-
+        _mapper.Map(personRequest, existingperson);
         await _personRepository.UpdateAsync(existingperson);
 
         var personResponse = _mapper.Map<PersonResponse>(existingperson);
@@ -159,9 +151,7 @@ public class PersonService : ServiceBase, IPersonService
             Notificate("No person was found.");
             return null;
         }
-
-        existingperson.CanBuy = personRequest.CanBuy;
-
+        _mapper.Map(personRequest, existingperson);
         await _personRepository.UpdateAsync(existingperson);
 
         var personResponse = _mapper.Map<PersonResponse>(existingperson);
@@ -179,13 +169,10 @@ public class PersonService : ServiceBase, IPersonService
             return null;
         }
 
-        existingperson.Enable = personRequest.Enabled;
-
+        _mapper.Map(personRequest, existingperson);
         await _personRepository.UpdateAsync(existingperson);
 
-        var personResponse = _mapper.Map<PersonResponse>(existingperson);
-
-        return personResponse;
+        return _mapper.Map<PersonResponse>(existingperson);
     }
     #endregion
 

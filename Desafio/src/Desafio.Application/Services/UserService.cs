@@ -66,7 +66,6 @@ public class UserService : ServiceBase, IUserService
         var identityUser = _mapper.Map<User>(registerUserRequest);
 
         identityUser.EmailConfirmed = true;
-        identityUser.Document = OnlyDocumentNumbers(registerUserRequest.Document);
 
         if (!await ExecuteValidationIdentityAsync(new UserValidator(this), identityUser))
         {
@@ -150,7 +149,6 @@ public class UserService : ServiceBase, IUserService
     {
         var existingUser = await _userManager.FindByEmailAsync(userRequest.Email);
         
-
         if (existingUser == null)
         {
             Notificate("The user was not found.");
@@ -159,11 +157,7 @@ public class UserService : ServiceBase, IUserService
 
         var existingRole = await _userManager.GetRolesAsync(existingUser);
 
-        existingUser.Document = userRequest.Document ?? existingUser.Document;
-        existingUser.Name = userRequest.Name ?? existingUser.Name;
-        existingUser.UserName = userRequest.UserName ?? existingUser.UserName;
-        existingUser.Email = userRequest.Email;
-        existingUser.NickName = userRequest.NickName ?? existingUser.NickName;
+        _mapper.Map(userRequest, existingUser);
 
         await _userManager.UpdateAsync(existingUser);
 
@@ -253,7 +247,7 @@ public class UserService : ServiceBase, IUserService
         {
             Email = email,
             Token = encodedToken,
-            DataExpiration = expiration,
+            Expiration = TimeSpan.FromHours(_jwtOptions.ExpirationHour).TotalMinutes,
             ShortId = user.ShortId
         };
     }
@@ -277,9 +271,8 @@ public class UserService : ServiceBase, IUserService
         return await _userManager.Users.FirstOrDefaultAsync(x => x.Document == document) != null;
     }
 
-    public bool IsValidDocument(string document)
+    public bool IsValidDocument(string documentNumber)
     {
-        string documentNumber = OnlyDocumentNumbers(document);
         bool validLength = documentNumber.Length == 11 || documentNumber.Length == 14;
 
         if (string.IsNullOrWhiteSpace(documentNumber) || HasRepeatedValues(documentNumber) || !validLength)

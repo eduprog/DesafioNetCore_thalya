@@ -106,13 +106,7 @@ public class ProductService : ServiceBase, IProductService
             return null;
         }
 
-        existingProduct.StoredQuantity = productRequest.StoredQuantity;
-        existingProduct.Price = productRequest.Price;
-        existingProduct.BarCode = productRequest.BarCode;
-        existingProduct.Acronym = productRequest.Acronym;
-        existingProduct.Description = productRequest.Description;
-        existingProduct.Id = productRequest.Id;
-        existingProduct.ShortDescription = productRequest.ShortDescription;
+        _mapper.Map(productRequest, existingProduct);
 
         if (!await ExecuteValidationAsync(new ProductValidator(this), existingProduct))
         {
@@ -136,7 +130,7 @@ public class ProductService : ServiceBase, IProductService
             return null;
         }
 
-        existingProduct.Enable = productRequest.Enable;
+        _mapper.Map(productRequest, existingProduct);
 
         await _productRepository.UpdateAsync(existingProduct);
 
@@ -155,7 +149,7 @@ public class ProductService : ServiceBase, IProductService
             return null;
         }
 
-        existingProduct.Sellable = productRequest.Sellable;
+        _mapper.Map(productRequest, existingProduct);
 
         await _productRepository.UpdateAsync(existingProduct);
 

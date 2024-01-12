@@ -5,6 +5,8 @@ namespace Desafio.Application;
 
 public class UpdateUserRequest
 {
+    private string _document;
+
     [Required(ErrorMessage = "The field {0} is required.")]
     [EmailAddress(ErrorMessage = "The field {0} is invalid.")]
     public string Email { get; set; }
@@ -19,5 +21,9 @@ public class UpdateUserRequest
 
     public string NickName { get; set; }
 
-    public string Document { get; set; }
+    public string Document
+    {
+        get => _document;
+        set => _document = value.GetOnlyDocumentNumber();
+    }
 }

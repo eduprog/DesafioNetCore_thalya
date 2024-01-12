@@ -27,12 +27,16 @@ public class AutoMapperConfiguration : Profile
         CreateMap<Product, InsertProductRequest>().ReverseMap();
         CreateMap<Product, ProductRequest>().ReverseMap();
         CreateMap<Product, ProductResponse>().ReverseMap();
+        CreateMap<Product, EnabledProductRequest>().ReverseMap();
+        CreateMap<Product, SellableProductRequest>().ReverseMap();
         #endregion
 
         #region Person
         CreateMap<Person, PersonResponse>().ReverseMap();
         CreateMap<Person, InsertPersonRequest>().ReverseMap();
         CreateMap<Person, PersonRequest>().ReverseMap();
+        CreateMap<Person, EnabledPersonRequest>().ReverseMap();
+        CreateMap<Person, CanBuyPersonRequest>().ReverseMap();
         #endregion
     }
 }

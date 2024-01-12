@@ -10,6 +10,7 @@ public static class StartupApplication
     public static IServiceCollection AddApplicationConfigurations(this IServiceCollection services, IConfiguration config)
     {
         services
+            .AddExceptionMiddleware()
             .AddRepositories(config)
             .AddServices()
             .AddAutoMapper(Assembly.GetExecutingAssembly());

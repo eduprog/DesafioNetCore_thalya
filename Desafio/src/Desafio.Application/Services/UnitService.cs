@@ -92,8 +92,7 @@ public class UnitService : ServiceBase, IUnitService
             return null;
         }
 
-        existingUnit.Acronym = unitRequest.Acronym.ToUpper();
-        existingUnit.Description = unitRequest.Description.ToUpper();
+        _mapper.Map(unitRequest, existingUnit);
 
         await _unitRepository.UpdateAsync(existingUnit);
 

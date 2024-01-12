@@ -58,19 +58,6 @@ public abstract class ServiceBase
         return false;
     }
 
-    protected string OnlyDocumentNumbers(string document)
-    {
-        var onlyNumber = "";
-        foreach (var value in document)
-        {
-            if (char.IsDigit(value))
-            {
-                onlyNumber += value;
-            }
-        }
-        return onlyNumber.Trim();
-    }
-
     protected bool HasRepeatedValues(string document)
     {
         string[] invalidNumbers =
