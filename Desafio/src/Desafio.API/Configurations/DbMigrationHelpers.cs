@@ -2,6 +2,7 @@
 using Desafio.Identity;
 using Desafio.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.API;
 
@@ -30,12 +31,12 @@ internal static class DbMigrationHelpers
         var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         //Utilizar com Postgres e SQLite
-        //await identityContext.Database.MigrateAsync();
-        //await appDbContext.Database.MigrateAsync();
+        await identityContext.Database.MigrateAsync();
+        await appDbContext.Database.MigrateAsync();
 
         //Utilizar com InMemory
-        identityContext.Database.EnsureCreated();
-        appDbContext.Database.EnsureCreated();
+        //identityContext.Database.EnsureCreated();
+        //appDbContext.Database.EnsureCreated();
 
         //Usar caso for necessário criar dados iniciais
         await EnsureSeedUserLevel(identityContext, appDbContext);

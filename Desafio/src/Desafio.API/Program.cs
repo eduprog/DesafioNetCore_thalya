@@ -2,7 +2,6 @@ using Desafio.API;
 using Desafio.Infrastructure;
 using Desafio.Identity;
 using Desafio.Application;
-using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -16,11 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    app.UseExceptionMiddleware();
     app.AddBuilderConfiguration();
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-
+    
     app.Run();
 }

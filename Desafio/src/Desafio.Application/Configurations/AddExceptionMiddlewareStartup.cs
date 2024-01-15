@@ -11,8 +11,4 @@ internal static class AddExceptionMiddlewareStartup
         services.AddScoped<ExceptionMiddleware>();
         return services;
     }
-    internal static IApplicationBuilder ExceptionMiddleware(this IApplicationBuilder app)
-    {
-        return app.UseMiddleware<ExceptionMiddleware>();
-    }
 }

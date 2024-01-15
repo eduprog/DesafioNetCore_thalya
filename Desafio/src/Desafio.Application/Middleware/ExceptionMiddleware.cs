@@ -1,6 +1,8 @@
 ﻿using Desafio.Domain;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Text.Json;
 
 namespace Desafio.Application;
 
@@ -11,7 +13,6 @@ public class ExceptionMiddleware : IMiddleware
         try
         {
             await next(context);
-
         }
         catch (Exception exception)
         {
@@ -23,21 +24,27 @@ public class ExceptionMiddleware : IMiddleware
                 ErrorId = errorId
             };
 
-            switch (exception)
-            {
-                case CustomException e:
-                    errorResult.StatusCode = (int)e.StatusCode;
-                    if(e.ErrorMessages is not null) 
-                    {
-                        errorResult.Messages = e.ErrorMessages;
-                    }
-                break;
+            errorResult.StatusCode = (int)ReturnStatusCode(exception);
 
-                default:
-                    errorResult.StatusCode = (int)HttpStatusCode.InternalServerError;
-                break;
-            }
+           
+            HttpResponse response = context.Response;
+            response.ContentType = "application/json";
 
+            await response.WriteAsync(JsonSerializer.Serialize(errorResult));
+        }
+    }
+    private HttpStatusCode ReturnStatusCode(Exception exception)
+    {
+        switch (exception)
+        {
+            case KeyNotFoundException:
+                return HttpStatusCode.NotFound;
+            case ValidationException:
+                return HttpStatusCode.BadRequest;
+            case FluentValidation.ValidationException:
+                return HttpStatusCode.UnprocessableEntity;
+            default:
+               return HttpStatusCode.InternalServerError;
         }
     }
 }
