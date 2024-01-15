@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.Infrastructure", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.API", "src\Desafio.API\Desafio.API.csproj", "{2BB6329D-985C-4F68-8380-D1436242A9D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desafio.Identity", "src\Desafio.Identity\Desafio.Identity.csproj", "{0D0CA50C-F266-4B6E-9AC1-D746C6B53E48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.Identity", "src\Desafio.Identity\Desafio.Identity.csproj", "{0D0CA50C-F266-4B6E-9AC1-D746C6B53E48}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arquivos", "Arquivos", "{8FADCEC0-5AE1-4AB8-A97D-C5F5AEF20BCA}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +56,7 @@ Global
 		{1D69DDD7-836F-4AEA-9CCE-3F45E949F282} = {E1ED062F-715B-47AF-85C5-6676267E7934}
 		{2BB6329D-985C-4F68-8380-D1436242A9D8} = {E1ED062F-715B-47AF-85C5-6676267E7934}
 		{0D0CA50C-F266-4B6E-9AC1-D746C6B53E48} = {E1ED062F-715B-47AF-85C5-6676267E7934}
+		{8FADCEC0-5AE1-4AB8-A97D-C5F5AEF20BCA} = {E1ED062F-715B-47AF-85C5-6676267E7934}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E04A7B67-7FEA-4DB6-BB57-E2FEF7B60B43}
