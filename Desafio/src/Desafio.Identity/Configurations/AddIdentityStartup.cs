@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Desafio.Identity;
 
-public static class IdentitySetup
+public static class AddIdentityStartup
 {
-    public static void AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static void AddIdentitySetup(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDefaultIdentity<User>()
             .AddRoles<IdentityRole>()

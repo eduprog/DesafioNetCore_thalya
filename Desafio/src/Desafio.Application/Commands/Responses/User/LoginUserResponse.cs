@@ -7,6 +7,6 @@ public class LoginUserResponse
     public string Email { get; set; } = string.Empty;
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Token { get; set; }
-    public DateTime DataExpiration { get; set; }
+    public double Expiration { get; set; }
     public string ShortId { get; set; }
 }

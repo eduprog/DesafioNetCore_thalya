@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Desafio.Application;
 
@@ -29,7 +30,8 @@ public class InsertProductRequest
     public bool Enable { get; set; } = true;
 
     [Required(ErrorMessage = "The field {0} is required")]
-    public bool Sellable { get; set; } = false;
+    [DefaultValue(false)]
+    public bool Sellable { get; set; } 
 
     [Required(ErrorMessage = "The field {0} is required")]
     public string BarCode { get; set; } = string.Empty;

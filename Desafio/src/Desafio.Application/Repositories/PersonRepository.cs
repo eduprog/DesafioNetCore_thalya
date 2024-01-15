@@ -25,17 +25,16 @@ public class PersonRepository : IPersonRepository
 
     public async Task<Person> GetByIdAsync(Guid id)
     {
-        return await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        return await _appDbContext.People.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<Person> GetClientByIdAsync(Guid id)
     {
-        return await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.CanBuy);
+        return await _appDbContext.People.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id && x.CanBuy);
     }
 
     public async Task InsertAsync(Person person)
     {
-        person.Id = Guid.NewGuid();
         await _appDbContext.People.AddAsync(person);
         await SaveChangesAsync();
     }
@@ -80,7 +79,7 @@ public class PersonRepository : IPersonRepository
 
     public async Task<Person> GetByShortIdAsync(string shortId)
     {
-        return await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(x => x.ShortId == shortId);
+        return await _appDbContext.People.AsNoTracking().SingleOrDefaultAsync(x => x.ShortId == shortId);
     }
 
     public async Task<bool> AlternativeCodeAlreadyExistsAsync(string alternativeCode)

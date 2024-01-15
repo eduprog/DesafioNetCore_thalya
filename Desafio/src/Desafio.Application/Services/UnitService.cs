@@ -57,8 +57,6 @@ public class UnitService : ServiceBase, IUnitService
             return null;
         }
 
-        unit.ShortId = GenerateShortId("UNIT");
-
         await _unitRepository.InsertAsync(unit);
         var newUnit = _mapper.Map<UnitResponse>(unit);
         return newUnit;
@@ -94,8 +92,7 @@ public class UnitService : ServiceBase, IUnitService
             return null;
         }
 
-        existingUnit.Acronym = unitRequest.Acronym.ToUpper();
-        existingUnit.Description = unitRequest.Description.ToUpper();
+        _mapper.Map(unitRequest, existingUnit);
 
         await _unitRepository.UpdateAsync(existingUnit);
 

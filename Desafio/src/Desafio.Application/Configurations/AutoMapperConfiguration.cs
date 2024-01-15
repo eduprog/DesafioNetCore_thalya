@@ -4,9 +4,9 @@ using Desafio.Domain;
 
 namespace Desafio.API;
 
-public class AutoMapperConfig : Profile
+public class AutoMapperConfiguration : Profile
 {
-    public AutoMapperConfig()
+    public AutoMapperConfiguration()
     {
         #region Unit
         CreateMap<Unit, UnitRequest>().ReverseMap();
@@ -27,12 +27,16 @@ public class AutoMapperConfig : Profile
         CreateMap<Product, InsertProductRequest>().ReverseMap();
         CreateMap<Product, ProductRequest>().ReverseMap();
         CreateMap<Product, ProductResponse>().ReverseMap();
+        CreateMap<Product, EnabledProductRequest>().ReverseMap();
+        CreateMap<Product, SellableProductRequest>().ReverseMap();
         #endregion
 
         #region Person
         CreateMap<Person, PersonResponse>().ReverseMap();
         CreateMap<Person, InsertPersonRequest>().ReverseMap();
         CreateMap<Person, PersonRequest>().ReverseMap();
+        CreateMap<Person, EnabledPersonRequest>().ReverseMap();
+        CreateMap<Person, CanBuyPersonRequest>().ReverseMap();
         #endregion
     }
 }

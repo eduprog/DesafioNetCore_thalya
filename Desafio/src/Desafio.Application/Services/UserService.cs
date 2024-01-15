@@ -42,23 +42,22 @@ public class UserService : ServiceBase, IUserService
         return null;
     }
 
-    public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, string authenticatedUser)
+    public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, ClaimsPrincipal user)
     {
         //verificar se existe usuário na base
-        if(!HasAnyUserRegisteredOnDatabase()  && registerUserRequest.UserLevel != EUserLevel.Administrator)
+        if(!HasAnyUserRegisteredOnDatabase() && registerUserRequest.UserLevel != EUserLevel.Administrator)
         {
             Notificate("There must be at least one administrator user before entering any other information on the database.");
             return null;
         }
 
-        if (string.IsNullOrWhiteSpace(authenticatedUser) && HasAnyUserRegisteredOnDatabase())
+        if (!user.Identity.IsAuthenticated && HasAnyUserRegisteredOnDatabase())
         {
             Notificate("No user is authenticated.");
             return null;
         }
 
-        string userRole = ReturnUserRole(authenticatedUser);
-        if (!string.IsNullOrEmpty(userRole) && userRole != "ADMINISTRATOR" && HasAnyUserRegisteredOnDatabase())
+        if (!user.IsInRole("ADMINISTRATOR") && HasAnyUserRegisteredOnDatabase())
         {
             Notificate("Only administrator user can register another user.");
             return null;
@@ -67,14 +66,12 @@ public class UserService : ServiceBase, IUserService
         var identityUser = _mapper.Map<User>(registerUserRequest);
 
         identityUser.EmailConfirmed = true;
-        identityUser.Document = OnlyDocumentNumbers(registerUserRequest.Document);
 
         if (!await ExecuteValidationIdentityAsync(new UserValidator(this), identityUser))
         {
             return null;
         }
 
-        identityUser.ShortId = GenerateShortId("USER");
         var result = await _userManager.CreateAsync(identityUser, registerUserRequest.Password);
 
         if (!result.Succeeded)
@@ -152,7 +149,6 @@ public class UserService : ServiceBase, IUserService
     {
         var existingUser = await _userManager.FindByEmailAsync(userRequest.Email);
         
-
         if (existingUser == null)
         {
             Notificate("The user was not found.");
@@ -161,11 +157,7 @@ public class UserService : ServiceBase, IUserService
 
         var existingRole = await _userManager.GetRolesAsync(existingUser);
 
-        existingUser.Document = userRequest.Document ?? existingUser.Document;
-        existingUser.Name = userRequest.Name ?? existingUser.Name;
-        existingUser.UserName = userRequest.UserName ?? existingUser.UserName;
-        existingUser.Email = userRequest.Email;
-        existingUser.NickName = userRequest.NickName ?? existingUser.NickName;
+        _mapper.Map(userRequest, existingUser);
 
         await _userManager.UpdateAsync(existingUser);
 
@@ -238,13 +230,14 @@ public class UserService : ServiceBase, IUserService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+        var expiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour);
 
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
             Issuer = _jwtOptions.Sender,
             Audience = _jwtOptions.ValidIn,
             Subject = identityClaims,
-            Expires = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
+            Expires = expiration,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         });
 
@@ -254,7 +247,7 @@ public class UserService : ServiceBase, IUserService
         {
             Email = email,
             Token = encodedToken,
-            DataExpiration = DateTime.UtcNow.AddHours(_jwtOptions.ExpirationHour),
+            Expiration = TimeSpan.FromHours(_jwtOptions.ExpirationHour).TotalMinutes,
             ShortId = user.ShortId
         };
     }
@@ -262,6 +255,7 @@ public class UserService : ServiceBase, IUserService
     //Converter corretamente os segundos da data
     private static long ToUnixEpochDate(DateTime date)
     {
+        //Retorna os segundos da data passada
         return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }
     #endregion
@@ -277,9 +271,8 @@ public class UserService : ServiceBase, IUserService
         return await _userManager.Users.FirstOrDefaultAsync(x => x.Document == document) != null;
     }
 
-    public bool IsValidDocument(string document)
+    public bool IsValidDocument(string documentNumber)
     {
-        string documentNumber = OnlyDocumentNumbers(document);
         bool validLength = documentNumber.Length == 11 || documentNumber.Length == 14;
 
         if (string.IsNullOrWhiteSpace(documentNumber) || HasRepeatedValues(documentNumber) || !validLength)
@@ -294,15 +287,6 @@ public class UserService : ServiceBase, IUserService
     public bool HasAnyUserRegisteredOnDatabase()
     {
         return _userManager.GetUsersInRoleAsync("ADMINISTRATOR").Result.Count > 0;
-    }
-
-    private string ReturnUserRole(string id)
-    {
-        User user = _userManager.Users.FirstOrDefault(x => x.Id == id);
-
-        if (user == null) return string.Empty;
-
-        return _userManager.GetRolesAsync(user).Result.ToList().FirstOrDefault();
     }
     #endregion
 }

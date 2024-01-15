@@ -15,30 +15,6 @@ public class UserController : DesafioControllerBase
         _userService = identityService;
     }
 
-    #region Post
-    [HttpPost("register-user")]
-    public async Task<ActionResult<RegisterUserResponse>> RegisterUserAsync(RegisterUserRequest registerUserRequest)
-    {
-        if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-        var authenticatedUser = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        RegisterUserResponse result = await _userService.RegisterUserAsync(registerUserRequest, authenticatedUser);
-
-        return CustomResponse(result);
-    }
-
-    [HttpPost("login")]
-    public async Task<ActionResult<LoginUserResponse>> LoginUserAsync(LoginUserRequest loginUserRequest)
-    {
-        if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-        LoginUserResponse result = await _userService.LoginAsync(loginUserRequest);
-
-        return CustomResponse(result);
-    }
-    #endregion
-
     #region Get
     [HttpGet("get-all-users")]
     public async Task<ActionResult<UserResponse>> GetAllUsers()
@@ -103,7 +79,7 @@ public class UserController : DesafioControllerBase
 
     }
 
-    [Authorize(Roles = "ADMINISTRATOR, MANAGER")]
+    [Authorize(Roles = "ADMINISTRATOR")]
     [HttpPut("update-login")]
     public async Task<ActionResult<UserResponse>> UpdateLoginUserAsync(UpdateLoginUserRequest userRequest)
     {

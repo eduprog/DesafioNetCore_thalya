@@ -21,19 +21,18 @@ public class UnitRepository : IUnitRepository
 
     public async Task<Unit> GetByAcronymAsync(string acronym)
     {
-        return await _appDbContext.Units.AsNoTracking().FirstOrDefaultAsync(x => x.Acronym == acronym);
+        return await _appDbContext.Units.AsNoTracking().SingleOrDefaultAsync(x => x.Acronym == acronym);
     }
 
     public async Task<Unit> GetByShortIdAsync(string shortId)
     {
-        return await _appDbContext.Units.AsNoTracking().FirstOrDefaultAsync(x => x.ShortId == shortId);
+        return await _appDbContext.Units.AsNoTracking().SingleOrDefaultAsync(x => x.ShortId == shortId);
     }
 
     public async Task InsertAsync(Unit unit)
     {
         try
         {
-            unit.Id = Guid.NewGuid();
             await _appDbContext.Units.AddAsync(unit);
             await SaveChangesAsync();
         }

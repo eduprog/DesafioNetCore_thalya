@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Desafio.Infrastructure;
 
-internal static class StartupService
+internal static class AddServicesStartup
 {
     internal static IServiceCollection AddServices(this IServiceCollection services)
     {

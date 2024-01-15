@@ -24,20 +24,18 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetByBarCodeAsync(string barCode)
     {
-        return await _appDbContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.BarCode == barCode);
+        return await _appDbContext.Products.AsNoTracking().SingleOrDefaultAsync(x => x.BarCode == barCode);
     }
 
     public async Task<Product> GetByIdAsync(Guid id)
     {
-        return await _appDbContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        return await _appDbContext.Products.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task InsertAsync(Product product)
     {
         try
         {
-            product.Id = Guid.NewGuid();
-            product.Unit = _appDbContext.Units.AsNoTracking().FirstOrDefault();
             await _appDbContext.Products.AddAsync(product);
             await SaveChangesAsync();
         }
@@ -93,11 +91,11 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetByShortIdAsync(string shortId)
     {
-        return await _appDbContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.ShortId == shortId);
+        return await _appDbContext.Products.AsNoTracking().SingleOrDefaultAsync(x => x.ShortId == shortId);
     }
 
     public async Task<bool> UnitAlreadyExistsAsync(string acronym)
     {
-        return await _appDbContext.Units.AsNoTracking().FirstOrDefaultAsync(x => x.Acronym == acronym) != null;
+        return await _appDbContext.Units.AsNoTracking().SingleOrDefaultAsync(x => x.Acronym == acronym) != null;
     }
 }

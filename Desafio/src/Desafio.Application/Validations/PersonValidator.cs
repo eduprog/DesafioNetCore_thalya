@@ -1,6 +1,8 @@
 ﻿using Desafio.Domain;
 using Desafio.Identity;
 using FluentValidation;
+using System.Reflection.Metadata;
+using System.Xml.Linq;
 
 namespace Desafio.Application;
 
@@ -15,23 +17,23 @@ public class PersonValidator : AbstractValidator<Person>
         RuleFor(x => x.AlternativeCode)
                 .MustAsync(UniqueAlternativeCodeAsync).WithMessage("The Alternative Code must be unique.");
         RuleFor(x => x.Document)
-            .MustAsync(UniqueDocumentAsync).WithMessage("The Document must be unique.")
-            .MustAsync(IsValid).WithMessage("The Document must be between 11 and 14 caracteres and be numeric only.");
+            .MustAsync(UniqueDocumentAsync).WithMessage("The Document must be unique.");
+
+        RuleFor(x => x.Document).IsValidCNPJ().Unless(x => x.Document.Equals("") || x.Document.Length <= 11);
+        RuleFor(x => x.Document).IsValidCPF().Unless(x => x.Document.Equals("") || x.Document.Length > 11);
 
     }
     private async Task<bool> UniqueAlternativeCodeAsync(string alternativeCode, CancellationToken token)
     {
         //Verificar se existe o código alternativo sendo usado em outro cadastro
+        if (string.IsNullOrWhiteSpace(alternativeCode)) return true;
         return !await _personService.AlternativeCodeAlreadyExistsAsync(alternativeCode);
     }
     private async Task<bool> UniqueDocumentAsync(string document, CancellationToken token)
     {
         //Verificar se existe o documento alternativo sendo usado em outro cadastro
+
+        if (string.IsNullOrWhiteSpace(document)) return true;
         return !await _personService.DocumentAlreadyExistsAsync(document);
-    }
-    private async Task<bool> IsValid(string document, CancellationToken token)
-    {
-        // Verificar se o valor digitado é valido (não tem valores repetidos)
-        return _personService.IsValidDocument(document, canBeNullOrEmpty: true);
     }
 }

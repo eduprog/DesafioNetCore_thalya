@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Desafio.Domain;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Net.Http.Headers;
 
 namespace Desafio.Application;
@@ -21,7 +22,7 @@ public class PersonService : ServiceBase, IPersonService
     {
         var result = _mapper.Map<IEnumerable<PersonResponse>>(await _personRepository.GetAllAsync());
 
-        if(result == null)
+        if(result == null || result.Count() == 0)
         {
             Notificate("No person was found");
             return null;    
@@ -33,7 +34,7 @@ public class PersonService : ServiceBase, IPersonService
     {
         var result = _mapper.Map<IEnumerable<PersonResponse>>(await _personRepository.GetAllClientAsync());
 
-        if (result == null)
+        if (result == null || result.Count() == 0)
         {
             Notificate("No client was found");
             return null;
@@ -86,14 +87,10 @@ public class PersonService : ServiceBase, IPersonService
         
         var person = _mapper.Map<Person>(personRequest);
 
-        person.Document = OnlyDocumentNumbers(personRequest.Document);
-
         if (!await ExecuteValidationAsync(new PersonValidator(this), person))
         {
             return null;
         }
-
-        person.ShortId = GenerateShortId("PERSON");
 
         await _personRepository.InsertAsync(person);
         var newperson = _mapper.Map<PersonResponse>(person);
@@ -123,7 +120,6 @@ public class PersonService : ServiceBase, IPersonService
 
     public async Task<PersonResponse> UpdateAsync(PersonRequest personRequest)
     {
-
         var existingperson = await _personRepository.GetByIdAsync(personRequest.Id);
 
         if (existingperson == null)
@@ -132,18 +128,13 @@ public class PersonService : ServiceBase, IPersonService
             return null;
         }
 
-        existingperson.Name = personRequest.Name ?? existingperson.Name;
-        existingperson.Document = personRequest.Document ?? existingperson.Document;
-        existingperson.City = personRequest.City ?? existingperson.City;
-        existingperson.Notes = personRequest.Notes ?? existingperson.Notes;
-        existingperson.AlternativeCode = personRequest.AlternativeCode ?? existingperson.AlternativeCode;
-
+        _mapper.Map<Person>(personRequest);
 
         if (!await ExecuteValidationAsync(new PersonValidator(this), existingperson))
         {
             return null;
         }
-
+        _mapper.Map(personRequest, existingperson);
         await _personRepository.UpdateAsync(existingperson);
 
         var personResponse = _mapper.Map<PersonResponse>(existingperson);
@@ -160,9 +151,7 @@ public class PersonService : ServiceBase, IPersonService
             Notificate("No person was found.");
             return null;
         }
-
-        existingperson.CanBuy = personRequest.CanBuy;
-
+        _mapper.Map(personRequest, existingperson);
         await _personRepository.UpdateAsync(existingperson);
 
         var personResponse = _mapper.Map<PersonResponse>(existingperson);
@@ -180,13 +169,10 @@ public class PersonService : ServiceBase, IPersonService
             return null;
         }
 
-        existingperson.Enable = personRequest.Enabled;
-
+        _mapper.Map(personRequest, existingperson);
         await _personRepository.UpdateAsync(existingperson);
 
-        var personResponse = _mapper.Map<PersonResponse>(existingperson);
-
-        return personResponse;
+        return _mapper.Map<PersonResponse>(existingperson);
     }
     #endregion
 
@@ -202,24 +188,6 @@ public class PersonService : ServiceBase, IPersonService
     public async Task<bool> PersonCanBuyAsync(Guid id)
     {
         return await _personRepository.PersonCanBuyAsync(id);
-    }
-
-    public bool IsValidDocument(string document, bool canBeNullOrEmpty = false)
-    {
-        if(canBeNullOrEmpty && string.IsNullOrWhiteSpace(document))
-        {
-            return true;
-        }
-        string documentNumber = OnlyDocumentNumbers(document);
-        bool validLength = documentNumber.Length == 11 || documentNumber.Length == 14;
-
-        if (string.IsNullOrWhiteSpace(documentNumber) || HasRepeatedValues(documentNumber) || !validLength)
-        {
-            return false;
-        }
-
-        return true;
-
     }
     #endregion
 }

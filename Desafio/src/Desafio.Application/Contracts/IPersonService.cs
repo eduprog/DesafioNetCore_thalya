@@ -17,5 +17,4 @@ public interface IPersonService
     Task<bool> AlternativeCodeAlreadyExistsAsync(string alternativeCode);
     Task<bool> DocumentAlreadyExistsAsync(string document);
     Task<bool> PersonCanBuyAsync(Guid id);
-    bool IsValidDocument(string document, bool canBeNullOrEmpty = false);
 }

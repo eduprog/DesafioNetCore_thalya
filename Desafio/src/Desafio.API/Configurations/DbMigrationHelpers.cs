@@ -6,22 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desafio.API;
 
-public static class DbMigrationHelperExtension
+internal static class DbMigrationHelperExtension
 {
-    public static void UseDbMigrationHelper(this WebApplication app)
+    internal static IApplicationBuilder UseDbMigrationHelper(this IApplicationBuilder app)
     {
         DbMigrationHelpers.EnsureSeedData(app).Wait();
+        return app;
     }
 }
-public static class DbMigrationHelpers
+internal static class DbMigrationHelpers
 {
-    public static async Task EnsureSeedData(WebApplication serviceScope)
+    internal static async Task EnsureSeedData(IApplicationBuilder serviceScope)
     {
-        var services = serviceScope.Services.CreateScope().ServiceProvider;
+        var services = serviceScope.ApplicationServices.CreateScope().ServiceProvider;
         await EnsureSeedData(services);
     }
 
-    public static async Task EnsureSeedData(IServiceProvider serviceProvider)
+    internal static async Task EnsureSeedData(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
         var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
@@ -30,18 +31,18 @@ public static class DbMigrationHelpers
         var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         //Utilizar com Postgres e SQLite
-        //await identityContext.Database.MigrateAsync();
-        //await appDbContext.Database.MigrateAsync();
+        await identityContext.Database.MigrateAsync();
+        await appDbContext.Database.MigrateAsync();
 
         //Utilizar com InMemory
-        identityContext.Database.EnsureCreated();
-        appDbContext.Database.EnsureCreated();
+        //identityContext.Database.EnsureCreated();
+        //appDbContext.Database.EnsureCreated();
 
         //Usar caso for necessário criar dados iniciais
         await EnsureSeedUserLevel(identityContext, appDbContext);
     }
 
-    public static async Task EnsureSeedUserLevel(IdentityContext identityContext, AppDbContext appDbContext)
+    internal static async Task EnsureSeedUserLevel(IdentityContext identityContext, AppDbContext appDbContext)
     {
         EUserLevel[] roles = (EUserLevel[])Enum.GetValues(typeof(EUserLevel));
         foreach(var role in roles)

@@ -1,8 +1,10 @@
-﻿namespace Desafio.Application;
+﻿using System.Security.Claims;
+
+namespace Desafio.Application;
 
 public interface IUserService
 {
-    Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, string authenticatedUser);
+    Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest registerUserRequest, ClaimsPrincipal user);
     Task<LoginUserResponse> LoginAsync(LoginUserRequest loginUserRequest);
     Task<IEnumerable<UserResponse>> GetAllAsync(bool selectRoles);
     Task<IEnumerable<UserResponse>> GetAllUsersByRoleAsync(string role);
