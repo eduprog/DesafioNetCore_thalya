@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E1ED062F-715B-47AF-85C5-6676267E7934}"
+	ProjectSection(SolutionItems) = preProject
+		src\Desafio.API\Configurations\DbMigrationHelpers.cs = src\Desafio.API\Configurations\DbMigrationHelpers.cs
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio.Domain", "src\Desafio.Domain\Desafio.Domain.csproj", "{EFDD38E2-4243-4188-8D9C-C503140C9F9B}"
 EndProject
